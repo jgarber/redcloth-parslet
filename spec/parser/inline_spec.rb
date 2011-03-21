@@ -1,4 +1,4 @@
-describe RedClothParslet::Parser::InlineParser do
+describe RedClothParslet::Parser::Inline do
   let(:parser) { described_class.new }
   
   context "plain text" do
@@ -13,21 +13,39 @@ describe RedClothParslet::Parser::InlineParser do
     it { should parse("*strong phrase*").
       as({:strong => {:s => "strong phrase"}}) }
     
-    it { should parse("plain *strong* plain", {:trace => true}).
+    it "should parse a strong word surrounded by plain text" do
+      subject.should parse("plain *strong* plain").
       as([{:s => "plain "}, 
           {:strong => {:s => "strong"}},
-          {:s => " plain"}]) }
+          {:s => " plain"}])
+    end
     
-    it { should parse("plain *strong phrase* plain").
+    it "should parse a strong phrase surrounded by plain text" do
+      subject.should parse("plain *strong phrase* plain").
       as([{:s => "plain "}, 
           {:strong => {:s => "strong phrase"}},
-          {:s => " plain"}]) }
+          {:s => " plain"}])
+    end
     
-    it { should parse("yes * we * can").
-      as({:s => "yes * we * can"}) }
+    it "should allow a strong phrase at the end of a sentence before punctuation" do
+      subject.should parse("Are you *veg*an*?").
+        as([{:s => "Are you "}, {:strong => {:s => "veg*an"}}, {:s => "?"}])
+    end
+    
+    it "should parse a phrase with standalone asterisks that is not a strong phrase" do
+      subject.should parse("yes * we * can").
+        as({:s => "yes * we * can"})
+    end
 
-    it { should parse("yeah *that's * it!").
-      as({:s => "yeah *that's * it!"}) }
+    it "should parse a phrase with asterisky words that is not a strong phrase" do
+      subject.should parse("The veg*an options are for veg*ans only.").
+        as({:s => "The veg*an options are for veg*ans only."})
+    end
+
+    it "should parse a phrase that is not a strong because it has space at the end" do
+      subject.should parse("yeah *that's * it!").
+        as({:s => "yeah *that's * it!"})
+    end
   end
   
   # describe "strong" do
