@@ -9,6 +9,26 @@ describe RedClothParslet::Parser::Inline do
       as({:s => "One sentence. Two."}) }
   end
   
+  describe "#strong" do
+    it "should consume a strong word" do
+      parser.strong.should parse('*hey*')
+    end
+
+    it "should consume a strong phrase" do
+      parser.strong.should parse('*hey now!*')
+    end
+    
+    it "should capture trailing space" do
+      parser.strong.should parse('*hey* ').
+        as([{:strong => [{:s => "hey"}]}, {:tr_sp => ' '}])
+    end
+
+    it "should capture trailing space" do
+      parser.strong.should parse('*hey there!* ').
+        as([{:strong => [{:s => "hey "}, {:s => "there!"}]}, {:tr_sp => ' '}])
+    end
+  end
+  
   context "strong phrase" do
     it { should parse("*strong phrase*").
       as({:strong => {:s => "strong phrase"}}) }
