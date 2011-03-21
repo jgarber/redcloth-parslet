@@ -17,6 +17,21 @@ describe RedClothParslet::Parser::Inline do
     it "should consume a strong phrase" do
       parser.strong.should parse('*hey now!*')
     end
+    
+    it "should allow standalone asterisks" do
+      parser.strong.should parse('*Five * five is twenty-five*').
+        as({:inline => "*", :content => [:s => "Five * five is twenty-five"]})
+    end
+    
+    it "should pass internal strong_start as plain text" do
+      parser.strong.should parse('*A little *pearl here.*').
+        as({:inline => "*", :content => [:s => "A little *pearl here."]})
+    end
+    
+    it "should not parse strong phrase containing strong_end" do
+      parser.strong.should_not parse('*Another pearl* there.*')
+    end
+    
   end
   
   context "strong phrase" do
@@ -38,7 +53,7 @@ describe RedClothParslet::Parser::Inline do
     end
     
     it "should allow a strong phrase at the end of a sentence before punctuation" do
-      subject.should parse("Are you *veg*an*?", {:trace => true}).
+      subject.should parse("Are you *veg*an*?").
         as([{:s => "Are you "}, {:inline => "*", :content => [:s => "veg*an"]}, {:s => "?"}])
     end
     
@@ -62,23 +77,5 @@ describe RedClothParslet::Parser::Inline do
         as([{:s => "oh, * here* it is!"}])
     end
   end
-  
-  # describe "strong" do
-  #   it "should parse a strong phrase" do
-  #     parse("*strong phrase*").should ==
-  #       [[:strong, {}, ["strong phrase"]]]
-  #   end
-  #   
-  #   it "should parse a strong phrase surrounded by plain text" do
-  #     parse("plain *strong phrase* plain").should ==
-  #       ["plain ", [:strong, {}, ["strong phrase"]], " plain"]
-  #   end
-  #   
-  #   it "should allow a strong phrase at the end of a sentence before punctuation" do
-  #     parse("Are you *veg*an*?").should ==
-  #       ["Are you ", [:strong, {}, ["veg*an"]], "?"]
-  #   end
-  #   
-  # end
   
 end
