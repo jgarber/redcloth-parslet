@@ -1,0 +1,30 @@
+PATH
+  remote: .
+  specs:
+    redcloth-parslet (0.0.1)
+      parslet (~> 1.2)
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    blankslate (2.1.2.4)
+    diff-lcs (1.1.2)
+    parslet (1.2.0)
+      blankslate (~> 2.0)
+    rake (0.8.7)
+    rspec (2.5.0)
+      rspec-core (~> 2.5.0)
+      rspec-expectations (~> 2.5.0)
+      rspec-mocks (~> 2.5.0)
+    rspec-core (2.5.1)
+    rspec-expectations (2.5.0)
+      diff-lcs (~> 1.1.2)
+    rspec-mocks (2.5.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  rake
+  redcloth-parslet!
+  rspec (~> 2.0)
