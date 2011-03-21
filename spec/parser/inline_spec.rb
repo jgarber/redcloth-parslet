@@ -11,7 +11,7 @@ describe RedClothParslet::Parser::Inline do
   
   describe "#strong" do
     it "should consume a strong word" do
-      parser.strong.should parse('*hey*')
+      parser.strong.should parse('*hey*', {:trace => true})
     end
 
     it "should consume a strong phrase" do
@@ -48,7 +48,7 @@ describe RedClothParslet::Parser::Inline do
     end
     
     it "should allow a strong phrase at the end of a sentence before punctuation" do
-      subject.should parse("Are you *veg*an*?").
+      subject.should parse("Are you *veg*an*?", {:trace => true}).
         as([{:s => "Are you "}, {:strong => {:s => "veg*an"}}, {:s => "?"}])
     end
     
