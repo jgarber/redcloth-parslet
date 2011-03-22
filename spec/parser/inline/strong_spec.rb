@@ -24,6 +24,10 @@ describe RedClothParslet::Parser::Inline do
       parser.strong.should_not parse('*Another pearl* there.*')
     end
     
+    it "should parse em contents" do
+      parser.strong.should parse("*This is _really_ strong!*").
+        as({:inline=>"*", :c=>[{:s=>"This is"}, {:pre=>" ", :inline=>"_", :c=>[{:s=>"really"}]}, {:pre=>" ", :s=>"strong!"}]})
+    end
   end
   
   context "strong phrase" do
