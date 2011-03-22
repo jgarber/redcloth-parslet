@@ -12,7 +12,7 @@ describe RedClothParslet::Parser::Inline do
     
     it "should pass internal em_start as plain text" do
       parser.em.should parse('_Written by _why the lucky stiff_').
-        as({:inline => "_", :content => [:s => "Written by _why the lucky stiff"]})
+        matching({:inline => "_", :c => [:s => "Written by _why the lucky stiff"]})
     end
     
     it "should not parse an emphasized phrase containing em_end" do
@@ -23,40 +23,40 @@ describe RedClothParslet::Parser::Inline do
   
   context "em phrase" do
     it { should parse("_em phrase_").
-      as([{:inline => "_", :content => [:s => "em phrase"]}]) }
+      matching([{:inline => "_", :c => [:s => "em phrase"]}]) }
     
     it "should parse an emphasized word surrounded by plain text" do
       subject.should parse("plain _em_ plain").
-      as([{:s => "plain "}, 
-          {:inline => "_", :content => [{:s => "em"}]},
-          {:s => " plain"}])
+      matching([{:s => "plain "}, 
+          {:inline => "_", :c => [{:s => "em"}]},
+          {:pre => " ", :s => "plain"}])
     end
     
     it "should parse an emphasized phrase surrounded by plain text" do
       subject.should parse("plain _em phrase_ plain").
-      as([{:s => "plain "}, 
-          {:inline => "_", :content => [{:s => "em phrase"}]},
-          {:s => " plain"}])
+      matching([{:s => "plain "}, 
+          {:inline => "_", :c => [{:s => "em phrase"}]},
+          {:pre => " ", :s => "plain"}])
     end
     
     it "should allow an emphasized phrase at the end of a sentence before punctuation" do
       subject.should parse("Are you _fo' realz_?").
-        as([{:s => "Are you "}, {:inline => "_", :content => [:s => "fo' realz"]}, {:s => "?"}])
+        matching([{:s => "Are you "}, {:inline => "_", :c => [:s => "fo' realz"]}, {:s => "?"}])
     end
 
     it "should parse a phrase with underscored words that is not an emphasized phrase" do
       subject.should parse("The form_test_helper plugin was my first.").
-        as([{:s => "The form_test_helper plugin was my first."}])
+        matching([{:s => "The form_test_helper plugin was my first."}])
     end
 
     it "should parse a phrase that is not emphasized because it has space at the end" do
       subject.should parse("no _em _ here!").
-        as([{:s => "no _em _ here!"}])
+        matching([{:s => "no _em _ here!"}])
     end
     
     it "should parse a phrase that is not emphasized because it has space at the beginning" do
       subject.should parse("surely you _ can't_ be serious").
-        as([{:s => "surely you _ can't_ be serious"}])
+        matching([{:s => "surely you _ can't_ be serious"}])
     end
   end
   

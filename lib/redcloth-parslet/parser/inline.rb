@@ -24,8 +24,8 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   end
   
   def plain_phrase
+    leading_spaces? >> 
     (
-      inline_sp? >> 
       word >> 
       (inline_sp >> term.absent? >> word).repeat >> 
       safe_trailing_space.repeat
@@ -43,4 +43,5 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   rule(:mchar) { match('\S') }
   rule(:inline_sp?) { inline_sp.repeat }
   rule(:inline_sp) { match('[ \t]').repeat(1) }
+  rule(:leading_spaces?) { match('[ \t]').repeat.as(:pre) }
 end

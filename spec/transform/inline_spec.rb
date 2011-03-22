@@ -9,6 +9,6 @@ describe RedClothParslet::Transform::Inline do
   end
   
   describe "strong" do
-    let(:tree) { {:strong_start => {:start => "*", :content => {:s => "inside"}}, :strong_end => "*"} }
+    let(:tree) { {:strong_start => {:start => "*", :c => {:s => "inside"}}, :strong_end => "*"} }
   end
 end
