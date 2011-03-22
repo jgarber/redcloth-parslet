@@ -1,7 +1,9 @@
 require 'redcloth-parslet/parser/inline/strong'
+require 'redcloth-parslet/parser/inline/em'
 
 class RedClothParslet::Parser::Inline < Parslet::Parser
   include RedClothParslet::Parser::Strong
+  include RedClothParslet::Parser::Em
   
   root(:inline)
   rule(:inline) do
@@ -17,7 +19,8 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   end
   
   rule(:term) do
-    strong
+    strong |
+    em
   end
   
   def plain_phrase
