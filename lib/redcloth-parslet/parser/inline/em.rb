@@ -2,23 +2,21 @@ module RedClothParslet::Parser
   module Em
     include Parslet
     
-    rule(:em) { leading_spaces? >> (str('_').as(:inline) >> inline_inside_em.as(:c) >> end_em) }
+    rule(:em) { (str('_').as(:inline) >> inline_inside_em.as(:content) >> end_em) }
     rule(:end_em) { str('_') >> match("[a-zA-Z0-9]").absent? }
     
     def inline_inside_em
       inline_sp.absent? >>
       (
-        strong |
         plain_phrase_inside_em
       ).repeat(1)
     end
 
     def plain_phrase_inside_em
-      leading_spaces? >> 
       (
         inline_sp? >> 
         word_inside_em >> 
-        (inline_sp >> strong.absent? >> subsequent_word_inside_em).repeat
+        (inline_sp >> subsequent_word_inside_em).repeat
       ).as(:s)
     end
 
