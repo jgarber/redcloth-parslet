@@ -5,28 +5,30 @@ module RedClothParslet::Parser
     rule(:strong) { (str('*').as(:inline) >> inline_inside_strong.as(:content) >> end_strong) }
     rule(:end_strong) { str('*') >> match("[a-zA-Z0-9]").absent? }
     
-    def inline_inside_strong
+    rule :inline_inside_strong do
       inline_sp.absent? >>
       (
-        plain_phrase_inside_strong
+        inline_sp.as(:s) >> term_inside_strong.present? |
+        (inline_sp >> str('*')).as(:s) >> inline_sp.present? |
+        term_inside_strong
       ).repeat(1)
     end
-
-    def plain_phrase_inside_strong
-      (
-        inline_sp? >> 
-        word_inside_strong >> 
-        (inline_sp >> subsequent_word_inside_strong).repeat
-      ).as(:s)
+    
+    rule :term_inside_strong do
+      em |
+      word_inside_strong.as(:s)
     end
+    # 
+    # rule :plain_phrase_inside_strong do
+    #   (
+    #     word_inside_strong >> 
+    #     (inline_sp >> subsequent_word_inside_strong).repeat
+    #   ).as(:s)
+    # end
 
-    def word_inside_strong
+    rule :word_inside_strong do
       char = (end_strong.absent? >> mchar)
       char.repeat(1)
-    end
-    def subsequent_word_inside_strong
-      char = (end_strong.absent? >> mchar)
-      mchar >> char.repeat
     end
     
   end

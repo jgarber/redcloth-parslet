@@ -3,7 +3,6 @@ Bundler.setup
 
 require "rspec"
 require "redcloth-parslet"
-require 'parslet/rig/rspec'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.

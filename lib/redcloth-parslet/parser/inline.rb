@@ -14,31 +14,30 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   # Inline elements are terms (words) divided by spaces. The term's
   # trailing spaces (if any) are captured by the term.
   rule(:inline_element) do
-    term | 
-    plain_phrase
+    inline_sp.as(:s) >> term.present? |
+    term
   end
   
   rule(:term) do
     strong |
-    em
+    em |
+    word.as(:s)
   end
   
-  def plain_phrase
-    (
-      inline_sp? >> 
-      word >> 
-      (inline_sp >> term.absent? >> word).repeat >> 
-      safe_trailing_space.repeat
-    ).as(:s)
-  end
+  # def plain_phrase
+  #   (
+  #     word >> 
+  #     (inline_sp >> term.absent? >> word).repeat
+  #   ).as(:s)
+  # end
   
-  def word
+  rule :word do
     mchar.repeat(1)
   end
   
-  def safe_trailing_space
-    match('[ \t]')
-  end
+  # def safe_trailing_space
+  #   match('[ \t]')
+  # end
 
   rule(:mchar) { match('\S') }
   rule(:inline_sp?) { inline_sp.repeat }
