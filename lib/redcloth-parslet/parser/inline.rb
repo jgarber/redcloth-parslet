@@ -1,43 +1,46 @@
-require 'redcloth-parslet/parser/inline/strong'
-require 'redcloth-parslet/parser/inline/em'
-
-class RedClothParslet::Parser::Inline < Parslet::Parser
-  include RedClothParslet::Parser::Strong
-  include RedClothParslet::Parser::Em
-  
+class RedClothParslet::Parser::Inline < Parslet::Parser  
   root(:inline)
   rule(:inline) do
     inline_sp.absent? >>
     inline_element.repeat(1)
   end
   
-  # Inline elements are terms (words) divided by spaces. The term's
-  # trailing spaces (if any) are captured by the term.
+  # Inline elements are terms (words) divided by spaces or spaces themselves.
   rule(:inline_element) do
     inline_sp.as(:s) >> term.present? |
+    (inline_sp >> str('*')).as(:s) >> inline_sp.present? |
+    (inline_sp >> str('_')).as(:s) >> inline_sp.present? |
     term
   end
   
   rule(:term) do
-    strong |
-    em |
+    strong.unless_excluded(:strong) |
+    em.unless_excluded(:em) |
     word.as(:s)
   end
   
-  # def plain_phrase
-  #   (
-  #     word >> 
-  #     (inline_sp >> term.absent? >> word).repeat
-  #   ).as(:s)
-  # end
+  rule(:strong) do
+    str('*').as(:inline) >>
+    inline.exclude(:strong).as(:content) >> 
+    end_strong
+  end
+  rule(:end_strong) { str('*') >> match("[a-zA-Z0-9]").absent? }
+  
+  rule(:em) do
+    (str('_').as(:inline) >> 
+    inline.exclude(:em).as(:content) >> 
+    end_em)
+  end
+  rule(:end_em) { str('_') >> match("[a-zA-Z0-9]").absent? }
   
   rule :word do
-    mchar.repeat(1)
+    char = (exclude_significant_end_characters >> mchar)
+    char.repeat(1)
   end
-  
-  # def safe_trailing_space
-  #   match('[ \t]')
-  # end
+  rule :exclude_significant_end_characters do
+    end_strong.absent?.if_excluded(:strong) >>
+    end_em.absent?.if_excluded(:em)
+  end
 
   rule(:mchar) { match('\S') }
   rule(:inline_sp?) { inline_sp.repeat }
