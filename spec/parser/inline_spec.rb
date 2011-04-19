@@ -14,5 +14,11 @@ describe RedClothParslet::Parser::Inline do
       as([{:inline=>"*", :content=>["This is ", {:inline=>"_", :content=>["really"]}, " strong!"]}])
     }
   end
+
+  context "strong inside em" do
+    it { should parse("_No tengo *ningún* idea._").
+      as([{:inline=>"_", :content=>["No tengo ", {:inline=>"*", :content=>["ningún"]}, " idea."]}])
+    }
+  end
   
 end
