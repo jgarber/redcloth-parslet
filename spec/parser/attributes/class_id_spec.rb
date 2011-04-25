@@ -7,13 +7,14 @@ describe RedClothParslet::Parser::Attributes do
   it { should parse("(my-class#myid)").as([{:class=>"my-class", :id => "myid"}]) }
   it { should parse("(one-class another-class#myid)").as([{:class=>"one-class another-class", :id => "myid"}]) }
   
-  
+  # Valid classes
   it { should parse("(my-class)") }
   it { should parse("(my_class)") }
   it { should parse("(my-class-7)") }
   it { should parse("(q99)") }
   it { should parse("(c)") }
   
+  # Valid IDs
   it { should parse("(#my-id)") }
   it { should parse("(#my_id)") }
   it { should parse("(#my-id-9)") }
