@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
 
   # If you have other dependencies, add them here
   s.add_dependency "parslet", "~> 1.2"
+  s.add_dependency "nokogiri"
   
   s.add_development_dependency 'rspec', "~> 2.0"
   s.add_development_dependency 'rake'
