@@ -1,4 +1,4 @@
-class RedClothParslet::Parser::Inline < Parslet::Parser  
+class RedClothParslet::Parser::Inline < Parslet::Parser
   root(:inline)
   rule(:inline) do
     inline_sp.absent? >>
