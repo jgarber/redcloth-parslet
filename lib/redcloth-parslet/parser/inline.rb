@@ -21,14 +21,14 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   
   rule(:strong) do
     str('*').as(:inline) >>
-    inline.exclude(:strong).as(:content) >> 
+    maybe_preceded_by_attributes(inline.exclude(:strong).as(:content)) >> 
     end_strong
   end
   rule(:end_strong) { str('*') >> match("[a-zA-Z0-9]").absent? }
   
   rule(:em) do
     (str('_').as(:inline) >> 
-    inline.exclude(:em).as(:content) >> 
+    maybe_preceded_by_attributes(inline.exclude(:em).as(:content)) >> 
     end_em)
   end
   rule(:end_em) { str('_') >> match("[a-zA-Z0-9]").absent? }
@@ -45,4 +45,14 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   rule(:mchar) { match('\S') }
   rule(:inline_sp?) { inline_sp.repeat }
   rule(:inline_sp) { match('[ \t]').repeat(1) }
+  
+  def maybe_preceded_by_attributes(content_rule)
+    attributes?.as(:attributes) >> content_rule |
+    content_rule
+  end
+
+  rule(:attributes) do
+    RedClothParslet::Parser::Attributes.new
+  end
+  rule(:attributes?) { attributes.maybe }
 end

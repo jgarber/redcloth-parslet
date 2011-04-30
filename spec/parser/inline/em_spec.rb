@@ -19,6 +19,11 @@ describe RedClothParslet::Parser::Inline do
       parser.em.should_not parse('_the mouse_ has a tail_')
     end
     
+    context "with attributes" do
+      it { should parse("_(foo)This is emphasized._").
+        as([{:inline=>"_", :content=>["This is emphasized."], :attributes=>[{:class=>"foo"}]}])
+      }
+    end
   end
   
   context "em phrase" do

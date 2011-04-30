@@ -66,7 +66,9 @@ module RedClothParslet
           @as = @as_compacted
           transform = Parslet::Transform.new do
             rule(:s => simple(:s)) { s }
-            rule(sequence(:s)) { s }
+            rule(:inline => simple(:i), :attributes => nil, :content => subtree(:c)) do
+              {:inline => i, :content => c}
+            end
           end
           @result = join_adjacent_strings(transform.apply(@result))
         end

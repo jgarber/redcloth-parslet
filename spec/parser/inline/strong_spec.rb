@@ -28,6 +28,12 @@ describe RedClothParslet::Parser::Inline do
       parser.strong.should parse("*This is _really_ strong!*").
         as({:inline=>"*", :content=>["This is ", {:inline=>"_", :content=>["really"]}, " strong!"]})
     end
+    
+    context "with attributes" do
+      it { should parse("*(widget)This is strong!*").
+        as([{:inline=>"*", :content=>["This is strong!"], :attributes=>[{:class=>"widget"}]}])
+      }
+    end
   end
   
   context "strong phrase" do
