@@ -1,3 +1,11 @@
+GIT
+  remote: git@github.com:jgarber/parslet.git
+  revision: 1a3f41372a635ce71b8715b00408eb75bd23b324
+  branch: transform_instance_eval
+  specs:
+    parslet (1.2.0)
+      blankslate (~> 2.0)
+
 PATH
   remote: .
   specs:
@@ -17,8 +25,6 @@ GEM
     diff-lcs (1.1.2)
     linecache (0.43)
     nokogiri (1.4.4)
-    parslet (1.2.0)
-      blankslate (~> 2.0)
     rake (0.8.7)
     rspec (2.5.0)
       rspec-core (~> 2.5.0)
@@ -42,6 +48,7 @@ DEPENDENCIES
   autotest-fsevent
   autotest-growl
   autotest-standalone
+  parslet!
   rake
   redcloth-parslet!
   rspec (~> 2.0)
