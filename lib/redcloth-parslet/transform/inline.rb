@@ -13,13 +13,33 @@ class RedClothParslet::Transform::Inline < Parslet::Transform
   rule(:inline => simple(:i), :content => sequence(:c), :attributes => subtree(:a)) do |match|
     name = {'*'=>'strong', '_'=>'em'}[match[:i]]
     Nokogiri::XML::Element.new(name, doc) do |n|
-      match[:a].each do |attrs|
-        attrs.each do |k,v|
-          n[k.to_s] = ((n[k.to_s] || '').split(/\s/) + [v]).join(' ')
-        end
-      end
+      apply_attributes(n, match[:a])
       n.add_child(Nokogiri::XML::NodeSet.new(doc, match[:c]))
     end
   end
-
+  
+  def apply_attributes(node, attribute_hashes)
+    style = {}
+    attribute_hashes.each do |attrs|
+      attrs.each do |k,v|
+        case k
+        when :padding
+          l_or_r = v == '(' ? 'left' : 'right'
+          style["padding-#{l_or_r}"] ||= 0
+          style["padding-#{l_or_r}"] += 1
+        when :align
+          # TODO: handle alignment styling
+        else
+          node[k.to_s] = ((node[k.to_s] || '').split(/\s/) + [v]).join(' ')
+        end
+      end
+    end
+    node['style'] = style.map do |k,v|
+      case k
+      when /padding/
+        "#{k}:#{v}em"
+      end
+    end.join("; ") if style.any?
+    
+  end
 end

@@ -38,10 +38,25 @@ describe RedClothParslet::Transform::Inline do
       it { should == %{<strong class="class1 class2 class3">inside</strong>} }
     end
     
-    describe "multiple padding" do
-      pending # WIP on making a helper method that can handle multiple padding
+    describe "pad left" do
+      let(:tree) { {:inline=>"*", :content=>[{:s=>"inside"}], :attributes=>[{:padding=>'('}]} }
+      it { should == %{<strong style="padding-left:1em">inside</strong>} }
+    end
+    describe "pad right" do
+      let(:tree) { {:inline=>"*", :content=>[{:s=>"inside"}], :attributes=>[{:padding=>')'}]} }
+      it { should == %{<strong style="padding-right:1em">inside</strong>} }
+    end
+    describe "multiple pad left" do
       let(:tree) { {:inline=>"*", :content=>[{:s=>"inside"}], :attributes=>[{:padding=>'('},{:padding=>'('}]} }
-      it { should == %{<strong class="myclass">inside</strong>} }
+      it { should == %{<strong style="padding-left:2em">inside</strong>} }
+    end
+    describe "multiple pad right" do
+      let(:tree) { {:inline=>"*", :content=>[{:s=>"inside"}], :attributes=>[{:padding=>')'},{:padding=>')'}]} }
+      it { should == %{<strong style="padding-right:2em">inside</strong>} }
+    end
+    describe "pad both" do
+      let(:tree) { {:inline=>"*", :content=>[{:s=>"inside"}], :attributes=>[{:padding=>'('},{:padding=>')'}]} }
+      it { should == %{<strong style="padding-right:1em; padding-left:1em">inside</strong>} }
     end
   end
 
