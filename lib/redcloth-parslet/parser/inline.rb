@@ -51,8 +51,5 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     content_rule
   end
 
-  rule(:attributes) do
-    RedClothParslet::Parser::Attributes.new
-  end
-  rule(:attributes?) { attributes.maybe }
+  rule(:attributes?) { RedClothParslet::Parser::Attributes.new.attribute.repeat }
 end

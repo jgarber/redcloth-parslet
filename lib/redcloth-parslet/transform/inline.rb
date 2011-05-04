@@ -1,4 +1,21 @@
 class RedClothParslet::Transform::Inline < Parslet::Transform
+  
+  rule(:s => simple(:s)) do 
+    Nokogiri::XML::Text.new(s, doc)
+  end
+  
+  rule(:inline => simple(:i), :content => sequence(:c), :attributes => subtree(:a)) do
+    name = {'*'=>'strong', '_'=>'em'}[i]
+    Nokogiri::XML::Element.new(name, doc) do |n|
+      a.each do |attrs|
+        attrs.each do |k,v|
+          n[k.to_s] = ((n[k.to_s] || '').split(/\s/) + [v]).join(' ')
+        end
+      end
+      n.add_child(Nokogiri::XML::NodeSet.new(doc, c))
+    end
+  end
+
   def initialize(doc)
     @doc = doc
     super()
@@ -18,15 +35,4 @@ class RedClothParslet::Transform::Inline < Parslet::Transform
     # No rule matched - element is not transformed
     return elt
   end
-  
-  rule(:s => simple(:s)) do 
-    Nokogiri::XML::Text.new(s, doc)
-  end
-  rule(:inline => simple(:i), :content => sequence(:c)) do
-    name = {'*'=>'strong', '_'=>'em'}[i]
-    Nokogiri::XML::Element.new(name, doc) do |n|
-      n.add_child(Nokogiri::XML::NodeSet.new(doc, c))
-    end
-  end
-
 end
