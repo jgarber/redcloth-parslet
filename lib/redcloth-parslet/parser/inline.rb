@@ -14,6 +14,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   end
   
   rule(:term) do
+    link.unless_excluded(:link) |
     strong.unless_excluded(:strong) |
     em.unless_excluded(:em) |
     word.as(:s)
@@ -33,11 +34,19 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   end
   rule(:end_em) { str('_') >> match("[a-zA-Z0-9]").absent? }
   
+  rule(:link) do
+    (str('"').as(:inline) >> 
+    maybe_preceded_by_attributes(inline.exclude(:link).as(:content)) >> 
+    end_link)
+  end
+  rule(:end_link) { str('":') >> uri }
+  
   rule :word do
     char = (exclude_significant_end_characters >> mchar)
     char.repeat(1)
   end
   rule :exclude_significant_end_characters do
+    end_link.absent?.if_excluded(:link) >>
     end_strong.absent?.if_excluded(:strong) >>
     end_em.absent?.if_excluded(:em)
   end
@@ -46,6 +55,8 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   rule(:inline_sp?) { inline_sp.repeat }
   rule(:inline_sp) { match('[ \t]').repeat(1) }
   
+  rule(:uri) { RedClothParslet::Parser::Attributes::Uri.new }
+
   def maybe_preceded_by_attributes(content_rule)
     attributes?.as(:attributes) >> content_rule |
     content_rule
