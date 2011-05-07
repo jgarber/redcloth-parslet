@@ -75,6 +75,12 @@ describe RedClothParslet::Transform::Inline do
       let(:tree) { {:inline=>"*", :content=>[{:s=>"inside"}], :attributes=>[{:align=>'<'},{:align=>'>'}]} }
       it { should == %{<strong style="text-align:justify">inside</strong>} }
     end
+    
+    describe "pad and align" do
+      let(:tree) { {:inline=>"*", :content=>[{:s=>"inside"}], :attributes=>[{:padding=>'('},{:align=>'<'}]} }
+      it { should == %{<strong style="text-align:left; padding-left:1em">inside</strong>} }
+    end
+    
   end
 
 end
