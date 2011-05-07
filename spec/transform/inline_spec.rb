@@ -58,6 +58,23 @@ describe RedClothParslet::Transform::Inline do
       let(:tree) { {:inline=>"*", :content=>[{:s=>"inside"}], :attributes=>[{:padding=>'('},{:padding=>')'}]} }
       it { should == %{<strong style="padding-right:1em; padding-left:1em">inside</strong>} }
     end
+    
+    describe "align left" do
+      let(:tree) { {:inline=>"*", :content=>[{:s=>"inside"}], :attributes=>[{:align=>'<'}]} }
+      it { should == %{<strong style="text-align:left">inside</strong>} }
+    end
+    describe "align right" do
+      let(:tree) { {:inline=>"*", :content=>[{:s=>"inside"}], :attributes=>[{:align=>'>'}]} }
+      it { should == %{<strong style="text-align:right">inside</strong>} }
+    end
+    describe "align center" do
+      let(:tree) { {:inline=>"*", :content=>[{:s=>"inside"}], :attributes=>[{:align=>'='}]} }
+      it { should == %{<strong style="text-align:center">inside</strong>} }
+    end
+    describe "align justify" do
+      let(:tree) { {:inline=>"*", :content=>[{:s=>"inside"}], :attributes=>[{:align=>'<'},{:align=>'>'}]} }
+      it { should == %{<strong style="text-align:justify">inside</strong>} }
+    end
   end
 
 end

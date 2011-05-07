@@ -28,7 +28,11 @@ class RedClothParslet::Transform::Inline < Parslet::Transform
           style["padding-#{l_or_r}"] ||= 0
           style["padding-#{l_or_r}"] += 1
         when :align
-          # TODO: handle alignment styling
+          style["text-align"] = if style["text-align"] == "left" && v == ">"
+            "justify" 
+          else
+            {'<'=>'left','>'=>'right','='=>'center'}[v]
+          end
         else
           node[k.to_s] = ((node[k.to_s] || '').split(/\s/) + [v]).join(' ')
         end
@@ -38,6 +42,8 @@ class RedClothParslet::Transform::Inline < Parslet::Transform
       case k
       when /padding/
         "#{k}:#{v}em"
+      when 'text-align'
+        "#{k}:#{v}"
       end
     end.join("; ") if style.any?
     
