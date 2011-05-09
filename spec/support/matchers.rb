@@ -4,7 +4,7 @@ module RedClothParslet
       
       # Comes from parslet/rig/rspec. Modifications:
       #   * Always trace on parse failure
-      #   * Compact result to condense expected output examples
+      #   * Compact expected output examples by ignoring certain empty sequences
       RSpec::Matchers.define(:parse) do |input, opts|
         match do |parser|
           begin
@@ -68,6 +68,9 @@ module RedClothParslet
             rule(:s => simple(:s)) { s }
             rule(:inline => simple(:i), :attributes => [], :content => subtree(:c)) do
               {:inline => i, :content => c}
+            end
+            rule(:inline => simple(:i), :attributes => [], :content => subtree(:c), :href => simple(:h)) do
+              {:inline => i, :content => c, :href => h}
             end
           end
           @result = join_adjacent_strings(transform.apply(@result))

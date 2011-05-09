@@ -48,5 +48,8 @@ describe RedClothParslet::Parser::Attributes::Uri do
   it { should parse("http://[::192.9.5.5]/ipng") }
   it { should parse("http://[::FFFF:129.144.52.38]:80/index.html") }
   it { should parse("http://[2010:836B:4179::836B:4179]") }
+
+  it { should_not parse("http://a_b:80/") }
+  it { should_not parse("http://a_b/") }
   
 end

@@ -35,11 +35,11 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   rule(:end_em) { str('_') >> match("[a-zA-Z0-9]").absent? }
   
   rule(:link) do
-    (str('"').as(:inline) >> 
+    (str('"') >> 
     maybe_preceded_by_attributes(inline.exclude(:link).as(:content)) >> 
     end_link)
   end
-  rule(:end_link) { str('":') >> uri }
+  rule(:end_link) { str('":').as(:inline) >> nongreedy_uri.as(:href) }
   
   rule :word do
     char = (exclude_significant_end_characters >> mchar)
@@ -55,7 +55,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   rule(:inline_sp?) { inline_sp.repeat }
   rule(:inline_sp) { match('[ \t]').repeat(1) }
   
-  rule(:uri) { RedClothParslet::Parser::Attributes::Uri.new }
+  rule(:nongreedy_uri) { RedClothParslet::Parser::Attributes::NongreedyUri.new }
 
   def maybe_preceded_by_attributes(content_rule)
     attributes?.as(:attributes) >> content_rule |
