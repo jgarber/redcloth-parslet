@@ -39,7 +39,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     maybe_preceded_by_attributes(inline.exclude(:link).as(:content)) >> 
     end_link)
   end
-  rule(:end_link) { str('":').as(:inline) >> nongreedy_uri.as(:href) }
+  rule(:end_link) { str('":') >> nongreedy_uri.as(:href) }
   
   rule :word do
     char = (exclude_significant_end_characters >> mchar)

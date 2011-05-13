@@ -33,3 +33,6 @@ class RedClothParslet::Parser::Attributes < Parslet::Parser
   rule(:mchar) { match('\S') }
   rule(:class_id_sp) { match('[ \t]') }
 end
+
+require 'redcloth-parslet/parser/attributes/uri'
+require 'redcloth-parslet/parser/attributes/nongreedy_uri'

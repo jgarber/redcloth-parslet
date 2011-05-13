@@ -12,7 +12,8 @@ module RedClothParslet
             if @block
               @block.call(@result)
             else
-              compact_result! if @as_compacted
+              @result = @transform.apply(@result) if @transform
+              @result = join_adjacent_strings(@result)
               (@as == @result || @as.nil?)
             end
           rescue Parslet::ParseFailed
@@ -51,35 +52,18 @@ module RedClothParslet
         end
 
         # # NOTE: This has a nodoc tag since the rdoc parser puts this into 
-        # # Object, a thing I would never allow. 
-        # def as(expected_output = nil, &block) # :nodoc: 
-        #   @as = expected_output
-        #   @block = block
-        #   self
-        # end
+        # # Object, a thing I would never allow.
         def as(expected_output = nil, &block) # :nodoc: 
-          @as_compacted = expected_output
+          @as = expected_output
           @block = block
           self
         end
-        def compact_result!
-          @as = @as_compacted
-          transform = Parslet::Transform.new do
-            rule(:s => simple(:s)) { s }
-            rule(:inline => simple(:i), :attributes => [], :content => subtree(:c)) do
-              {:inline => i, :content => c}
-            end
-            rule(:inline => simple(:i), :attributes => [], :content => subtree(:c), :href => simple(:h)) do
-              {:inline => i, :content => c, :href => h}
-            end
-          end
-          @result = join_adjacent_strings(transform.apply(@result))
-        end
+        
         def join_adjacent_strings(obj)
           case obj
           when Array
             obj.inject([]) do |a,b|
-              if a.last.is_a?(Parslet::Slice) && b.is_a?(Parslet::Slice)
+              if a.last.is_a?(String) && b.is_a?(String)
                 last = a.pop
                 a << last + b
               else
@@ -89,12 +73,21 @@ module RedClothParslet
           when Hash
             obj.merge(obj){|k,v| join_adjacent_strings(v) }
           else
-            obj
+            if obj.respond_to?(:contained_elements)
+              obj.contained_elements = join_adjacent_strings(obj.contained_elements)
+              obj
+            else
+              obj
+            end
           end
         end
+
+        def with(transform)
+          @transform = transform
+          self
+        end
+
       end
-      
-      
     end
   end
 end

@@ -27,11 +27,15 @@ describe "Exclusions Parslet extension" do
       ).as(:s)
     end
   end
+  class NestedBracketsTransform < Parslet::Transform
+    rule(:s => simple(:s)) { String(s) }
+  end
   
   let(:parser) { NestedBrackets.new }
+  let(:transform) { NestedBracketsTransform.new }
   
   it "should parse a complex set of nested brackets using an exclude stack" do
-    parser.should parse(")((A [B])[C (D)] [E").as(
+    parser.should parse(")((A [B])[C (D)] [E").with(transform).as(
       [")", 
       {:bracket=>"(", :c=>[
         "(A ", 

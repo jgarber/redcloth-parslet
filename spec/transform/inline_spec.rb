@@ -1,5 +1,8 @@
-describe RedClothParslet::Transform::Inline do
-  let(:transform) { described_class.new(Nokogiri::HTML::Document.new) }
+describe RedClothParslet::Transform do
+  
+  pending "Need to make this into a Formatter (from AST -> HTML)"
+  
+  let(:transform) { described_class.new }
   subject { transform.apply(tree).to_html }
     
   describe "plain text" do
