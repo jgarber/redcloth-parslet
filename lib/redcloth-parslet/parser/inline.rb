@@ -21,23 +21,23 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   end
   
   rule(:strong) do
-    str('*').as(:inline) >>
+    (str('*') >>
     maybe_preceded_by_attributes(inline.exclude(:strong).as(:content)) >> 
-    end_strong
+    end_strong).as(:strong)
   end
   rule(:end_strong) { str('*') >> match("[a-zA-Z0-9]").absent? }
   
   rule(:em) do
-    (str('_').as(:inline) >> 
+    (str('_') >> 
     maybe_preceded_by_attributes(inline.exclude(:em).as(:content)) >> 
-    end_em)
+    end_em).as(:em)
   end
   rule(:end_em) { str('_') >> match("[a-zA-Z0-9]").absent? }
   
   rule(:link) do
     (str('"') >> 
     maybe_preceded_by_attributes(inline.exclude(:link).as(:content)) >> 
-    end_link)
+    end_link).as(:link)
   end
   rule(:end_link) { str('":') >> nongreedy_uri.as(:href) }
   
