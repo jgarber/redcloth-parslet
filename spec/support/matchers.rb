@@ -73,8 +73,8 @@ module RedClothParslet
           when Hash
             obj.merge(obj){|k,v| join_adjacent_strings(v) }
           else
-            if obj.respond_to?(:contained_elements)
-              obj.contained_elements = join_adjacent_strings(obj.contained_elements)
+            if obj.respond_to?(:children)
+              obj.children = join_adjacent_strings(obj.children)
               obj
             else
               obj

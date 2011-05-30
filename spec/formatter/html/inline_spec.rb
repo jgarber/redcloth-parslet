@@ -1,84 +1,60 @@
 describe RedClothParslet::Formatter::HTML do
-  
-  let(:transform) { described_class.new }
-  subject { transform.apply(tree).to_html }
-    
-  describe "plain text" do
-    let(:tree) { {:s => "Plain text"} }
-    it { should == "Plain text" }
-  end
-  
+  subject { described_class.new().convert(element) }
+
   describe "strong" do
-    let(:tree) { {:inline=>"*", :content=>[{:s=>"inside"}], :attributes=>[]} }
+    let(:element) { RedClothParslet::Ast::Strong.new(["inside"]) }
     it { should == "<strong>inside</strong>" }
   end
 
   describe "em" do
-    let(:tree) { {:inline=>"_", :content=>[{:s=>"inside"}], :attributes=>[]} }
+    let(:element) { RedClothParslet::Ast::Em.new("inside") }
     it { should == "<em>inside</em>" }
   end
   
   describe "em inside strong" do
-    let(:tree) { {:inline=>"*", :content=>[{:inline=>"_", :content=>[{:s=>"inside"}], :attributes=>[]}], :attributes=>[]} }
+    let(:element) { RedClothParslet::Ast::Strong.new(RedClothParslet::Ast::Em.new("inside")) }
     it { should == "<strong><em>inside</em></strong>" }
   end
   
   describe "attributes" do
     describe "class" do
-      let(:tree) { {:inline=>"*", :content=>[{:s=>"inside"}], :attributes=>[{:class=>'myclass'}]} }
+      let(:element) { RedClothParslet::Ast::Strong.new("inside", :class=>'myclass') }
       it { should == %{<strong class="myclass">inside</strong>} }
     end
     
     describe "class + id" do
-      let(:tree) { {:inline=>"*", :content=>[{:s=>"inside"}], :attributes=>[{:class=>'myclass'}, {:id=>'my-id'}]} }
+      let(:element) { RedClothParslet::Ast::Strong.new("inside", {:class=>'myclass', :id=>'my-id'}) }
       it { should == %{<strong class="myclass" id="my-id">inside</strong>} }
     end
     
-    describe "(class + class) + class" do
-      let(:tree) { {:inline=>"*", :content=>[{:s=>"inside"}], :attributes=>[{:class=>'class1 class2'}, {:class=>'class3'}]} }
-      it { should == %{<strong class="class1 class2 class3">inside</strong>} }
-    end
-    
     describe "pad left" do
-      let(:tree) { {:inline=>"*", :content=>[{:s=>"inside"}], :attributes=>[{:padding=>'('}]} }
+      let(:element) { RedClothParslet::Ast::Strong.new("inside", {:style=>{'padding-left'=>1}}) }
       it { should == %{<strong style="padding-left:1em">inside</strong>} }
     end
     describe "pad right" do
-      let(:tree) { {:inline=>"*", :content=>[{:s=>"inside"}], :attributes=>[{:padding=>')'}]} }
+      let(:element) { RedClothParslet::Ast::Strong.new("inside", {:style=>{'padding-right'=>1}}) }
       it { should == %{<strong style="padding-right:1em">inside</strong>} }
-    end
-    describe "multiple pad left" do
-      let(:tree) { {:inline=>"*", :content=>[{:s=>"inside"}], :attributes=>[{:padding=>'('},{:padding=>'('}]} }
-      it { should == %{<strong style="padding-left:2em">inside</strong>} }
-    end
-    describe "multiple pad right" do
-      let(:tree) { {:inline=>"*", :content=>[{:s=>"inside"}], :attributes=>[{:padding=>')'},{:padding=>')'}]} }
-      it { should == %{<strong style="padding-right:2em">inside</strong>} }
-    end
-    describe "pad both" do
-      let(:tree) { {:inline=>"*", :content=>[{:s=>"inside"}], :attributes=>[{:padding=>'('},{:padding=>')'}]} }
-      it { should == %{<strong style="padding-right:1em; padding-left:1em">inside</strong>} }
     end
     
     describe "align left" do
-      let(:tree) { {:inline=>"*", :content=>[{:s=>"inside"}], :attributes=>[{:align=>'<'}]} }
+      let(:element) { RedClothParslet::Ast::Strong.new("inside", {:style=>{'text-align'=>'left'}}) }
       it { should == %{<strong style="text-align:left">inside</strong>} }
     end
     describe "align right" do
-      let(:tree) { {:inline=>"*", :content=>[{:s=>"inside"}], :attributes=>[{:align=>'>'}]} }
+      let(:element) { RedClothParslet::Ast::Strong.new("inside", {:style=>{'text-align'=>'right'}}) }
       it { should == %{<strong style="text-align:right">inside</strong>} }
     end
     describe "align center" do
-      let(:tree) { {:inline=>"*", :content=>[{:s=>"inside"}], :attributes=>[{:align=>'='}]} }
+      let(:element) { RedClothParslet::Ast::Strong.new("inside", {:style=>{'text-align'=>'center'}}) }
       it { should == %{<strong style="text-align:center">inside</strong>} }
     end
     describe "align justify" do
-      let(:tree) { {:inline=>"*", :content=>[{:s=>"inside"}], :attributes=>[{:align=>'<'},{:align=>'>'}]} }
+      let(:element) { RedClothParslet::Ast::Strong.new("inside", {:style=>{'text-align'=>'justify'}}) }
       it { should == %{<strong style="text-align:justify">inside</strong>} }
     end
     
     describe "pad and align" do
-      let(:tree) { {:inline=>"*", :content=>[{:s=>"inside"}], :attributes=>[{:padding=>'('},{:align=>'<'}]} }
+      let(:element) { RedClothParslet::Ast::Strong.new("inside", {:style=>{'padding-left'=>1, 'text-align'=>'left'}}) }
       it { should == %{<strong style="text-align:left; padding-left:1em">inside</strong>} }
     end
     

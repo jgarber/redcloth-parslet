@@ -2,15 +2,20 @@ describe RedClothParslet::Ast::Element do
   
   subject { described_class.new(['content'], {:class=>'myclass'}) }
   
-  it { should respond_to(:contained_elements) }
+  it { should respond_to(:children) }
   it { should respond_to(:opts) }
   
   it "should store the element's contents" do
-    subject.contained_elements.should == ['content']
+    subject.children.should == ['content']
   end
   
   it "should store the element's attributes" do
     subject.opts.should == {:class=>'myclass'}
+  end
+  
+  it "should report the element's type" do
+    class RedClothParslet::Ast::FooBar < RedClothParslet::Ast::Element; end
+    RedClothParslet::Ast::FooBar.new.type.should == :foo_bar
   end
   
   it "should be equal when its contents and attributes are equal" do
