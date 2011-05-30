@@ -9,5 +9,6 @@ module RedClothParslet
   end
 end
 
+require 'redcloth-parslet/ast/attributes'
 require 'redcloth-parslet/ast/element'
 require 'redcloth-parslet/ast/inline'

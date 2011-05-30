@@ -17,7 +17,13 @@ describe RedClothParslet::Parser::Attributes do
     it { should parse('(my-class#myid){color:red;}').
       as([{:class=>'my-class', :id => 'myid'}, {:style=>'color:red;'}])
     }
-  end  
+  end 
+  
+  context "(class + class) + class" do
+    it { should parse('(class1 class2)(class3)').
+      as([{:class=>'class1 class2'}, {:class=>'class3'}])
+    }
+  end
   
   context "class and alignment with class first" do
     it { should parse('(myclass)<').as([{:class=>'myclass'}, {:align=>'<'}]) }
