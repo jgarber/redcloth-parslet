@@ -24,7 +24,7 @@ module RedClothParslet::Formatter
       @stack.push(el)
       el.children.each do |inner_el|
         if inner_el.is_a?(String)
-          result << string(inner_el)
+          result << inner_el
         elsif inner_el.respond_to?(:type)
           result << send(inner_el.type, inner_el)
         end
@@ -33,13 +33,11 @@ module RedClothParslet::Formatter
       result
     end
     
-    def em(el)
-      "<#{el.type}#{html_attributes(el.opts)}>#{inner(el)}</#{el.type}>"
-    end
-    alias :strong :em
-    
-    def string(el)
-      el
+    ([:h1, :h2, :h3, :h4, :h5, :h6, :p, :pre, :div] +
+    [:strong, :code, :em, :i, :b, :ins, :sup, :sub, :span, :cite]).each do |m|
+      define_method(m) do |el|
+       "<#{m}#{html_attributes(el.opts)}>#{inner(el)}</#{m}>"
+      end
     end
     
     private
