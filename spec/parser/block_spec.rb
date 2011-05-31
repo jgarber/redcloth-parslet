@@ -10,6 +10,11 @@ describe RedClothParslet::Parser::Block do
   context "explicit paragraphs" do
     it { should parse("p. This is a paragraph.").with(transform).
       as([RedClothParslet::Ast::P.new(["This is a paragraph."])]) }
+    
+    context "attributes" do
+      it { should parse("p(myclass). This is a paragraph.").with(transform).
+        as([RedClothParslet::Ast::P.new(["This is a paragraph."], {:class=>'myclass'})]) }
+    end
   end
   
   context "successive paragraphs" do
@@ -18,6 +23,11 @@ describe RedClothParslet::Parser::Block do
     
     it { should parse("p. Double.\n\np. Trouble.").with(transform).
       as([RedClothParslet::Ast::P.new(["Double."]), RedClothParslet::Ast::P.new(["Trouble."])]) }
+      
+    it { should parse("Mix it up.\n\np. Just a bit.\n\nNo worries, mate.").with(transform).
+      as([RedClothParslet::Ast::P.new(["Mix it up."]), 
+          RedClothParslet::Ast::P.new(["Just a bit."]),
+          RedClothParslet::Ast::P.new(["No worries, mate."])]) }
   end
   
 end
