@@ -33,6 +33,8 @@ describe RedClothParslet::Parser::Block do
   context "notextile block" do
     it { should parse("<notextile>\nsomething\n</notextile>").with(transform).
       as([RedClothParslet::Ast::Notextile.new(["something"])]) }
+    it { should parse("notextile. something").with(transform).
+      as([RedClothParslet::Ast::Notextile.new(["something"])]) }
   end
   
 end

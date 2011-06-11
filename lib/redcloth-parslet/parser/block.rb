@@ -5,12 +5,14 @@ class RedClothParslet::Parser::Block < Parslet::Parser
   end
   
   rule(:block_element) do
+    notextile_block_tags |
     notextile_block |
     paragraph
   end
   
-  rule(:notextile_block) { (str("<notextile>\n") >> (notextile_block_end.absent? >> any).repeat.as(:s) >> notextile_block_end >> block_end).as(:notextile) }
-  rule(:notextile_block_end) { str("\n</notextile>") }
+  rule(:notextile_block) { (str("notextile. ") >> (block_end.absent? >> any).repeat.as(:s) >> block_end).as(:notextile) }
+  rule(:notextile_block_tags) { (str("<notextile>\n") >> (notextile_block_end_tag.absent? >> any).repeat.as(:s) >> notextile_block_end_tag >> block_end).as(:notextile) }
+  rule(:notextile_block_end_tag) { str("\n</notextile>") }
   
   rule(:paragraph) { (explicit_paragraph | undecorated_paragraph).as(:p) }
   rule(:explicit_paragraph) { str("p") >> attributes?.as(:attributes) >> str(". ") >> content.as(:content) >> block_end }
