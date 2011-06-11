@@ -30,4 +30,9 @@ describe RedClothParslet::Parser::Block do
           RedClothParslet::Ast::P.new(["No worries, mate."])]) }
   end
   
+  context "notextile block" do
+    it { should parse("<notextile>\nsomething\n</notextile>").with(transform).
+      as([RedClothParslet::Ast::Notextile.new(["something"])]) }
+  end
+  
 end

@@ -11,7 +11,7 @@ module RedClothParslet::Formatter
     end
     
     def textile_doc(el)
-      inner(el).chomp
+      inner(el, true).chomp
     end
     
     # Return the converted content of the children of +el+ as a string. The parameter +indent+ has
@@ -19,7 +19,7 @@ module RedClothParslet::Formatter
     #
     # Pushes +el+ onto the @stack before converting the child elements and pops it from the stack
     # afterwards.
-    def inner(el)
+    def inner(el, block = false)
       result = ''
       @stack.push(el)
       el.children.each do |inner_el|
@@ -28,21 +28,21 @@ module RedClothParslet::Formatter
         elsif inner_el.respond_to?(:type)
           result << send(inner_el.type, inner_el)
         end
+        result << "\n" if block
       end
       @stack.pop
       result
     end
     
-    [:h1, :h2, :h3, :h4, :h5, :h6, :p, :pre, :div].each do |m|
-      define_method(m) do |el|
-       "<#{m}#{html_attributes(el.opts)}>#{inner(el)}</#{m}>\n"
-      end
-    end
-
-    [:strong, :code, :em, :i, :b, :ins, :sup, :sub, :span, :cite].each do |m|
+    ([:h1, :h2, :h3, :h4, :h5, :h6, :p, :pre, :div] +
+    [:strong, :code, :em, :i, :b, :ins, :sup, :sub, :span, :cite]).each do |m|
       define_method(m) do |el|
        "<#{m}#{html_attributes(el.opts)}>#{inner(el)}</#{m}>"
       end
+    end
+    
+    def notextile(el)
+      inner(el)
     end
     
     private

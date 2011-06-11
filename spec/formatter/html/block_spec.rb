@@ -6,4 +6,8 @@ describe RedClothParslet::Formatter::HTML do
     it { should == "<p>My paragraph.</p>" }
   end
 
+  describe "notextile" do
+    let(:element) { RedClothParslet::Ast::Notextile.new(["inside"]) }
+    it { should == "inside" }
+  end
 end
