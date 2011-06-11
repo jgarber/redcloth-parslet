@@ -24,7 +24,7 @@ module RedClothParslet::Formatter
       @stack.push(el)
       el.children.each do |inner_el|
         if inner_el.is_a?(String)
-          result << inner_el
+          result << escape_html(inner_el)
         elsif inner_el.respond_to?(:type)
           result << send(inner_el.type, inner_el)
         end
