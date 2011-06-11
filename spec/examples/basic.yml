@@ -13,7 +13,7 @@ name: blocks with spaces on the blank line in between
 in: "This is line one\n \nThis is line two"
 html: "<p>This is line one</p>\n<p>This is line two</p>"
 ---
-name: blocks with tabl on the blank line in between
+name: blocks with tabs on the blank line in between
 in: "This is line one\n\t\nThis is line two"
 html: "<p>This is line one</p>\n<p>This is line two</p>"
 ---

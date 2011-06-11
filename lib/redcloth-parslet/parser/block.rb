@@ -17,5 +17,6 @@ class RedClothParslet::Parser::Block < Parslet::Parser
   rule(:attributes?) { RedClothParslet::Parser::Attributes.new.attribute.repeat }
   
   rule(:eof) { any.absent? }
-  rule(:block_end) { eof | str("\n\n") }
+  rule(:block_end) { eof | double_newline }
+  rule(:double_newline) { str("\n") >> match("[\s\t]").repeat >> str("\n") }
 end

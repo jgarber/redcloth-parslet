@@ -11,7 +11,7 @@ module RedClothParslet::Formatter
     end
     
     def textile_doc(el)
-      inner(el)
+      inner(el).chomp
     end
     
     # Return the converted content of the children of +el+ as a string. The parameter +indent+ has
@@ -33,8 +33,13 @@ module RedClothParslet::Formatter
       result
     end
     
-    ([:h1, :h2, :h3, :h4, :h5, :h6, :p, :pre, :div] +
-    [:strong, :code, :em, :i, :b, :ins, :sup, :sub, :span, :cite]).each do |m|
+    [:h1, :h2, :h3, :h4, :h5, :h6, :p, :pre, :div].each do |m|
+      define_method(m) do |el|
+       "<#{m}#{html_attributes(el.opts)}>#{inner(el)}</#{m}>\n"
+      end
+    end
+
+    [:strong, :code, :em, :i, :b, :ins, :sup, :sub, :span, :cite].each do |m|
       define_method(m) do |el|
        "<#{m}#{html_attributes(el.opts)}>#{inner(el)}</#{m}>"
       end
