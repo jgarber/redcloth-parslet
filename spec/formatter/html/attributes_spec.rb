@@ -38,8 +38,9 @@ describe RedClothParslet::Formatter::HTML do
   end
   
   describe "pad and align" do
-    let(:element) { RedClothParslet::Ast::Strong.new("", {:style=>{'padding-left'=>1, 'text-align'=>'left'}}) }
-    it { should == %{<strong style="text-align:left; padding-left:1em"></strong>} }
+    let(:element) { RedClothParslet::Ast::Strong.new("", {:style=>{"text-align"=>"left", "padding-left"=>1}}) }
+    it { should include("padding-left:1em") }
+    it { should include("text-align:left") }
   end
   
   
