@@ -7,4 +7,5 @@ module RedClothParslet::Ast
   class H4 < Element; end
   class H5 < Element; end
   class H6 < Element; end
+  class Div < Element; end
 end

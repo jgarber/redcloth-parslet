@@ -45,4 +45,9 @@ describe RedClothParslet::Parser::Block do
     end
   end
   
+  context "div" do
+    it { should parse("div. inside").with(transform).
+      as([RedClothParslet::Ast::Div.new(["inside"])]) }
+  end
+  
 end

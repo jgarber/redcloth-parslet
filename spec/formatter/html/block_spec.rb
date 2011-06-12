@@ -16,4 +16,9 @@ describe RedClothParslet::Formatter::HTML do
     let(:element) { RedClothParslet::Ast::Notextile.new(["inside"]) }
     it { should == "inside" }
   end
+
+  describe "div" do
+    let(:element) { RedClothParslet::Ast::Div.new(["I am a div"]) }
+    it { should == "<div>I am a div</div>" }
+  end
 end

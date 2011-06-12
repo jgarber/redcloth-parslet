@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 describe RedClothParslet::Parser::Inline do
   let(:parser) { described_class.new }
   let(:transform) { RedClothParslet::Transform.new }
