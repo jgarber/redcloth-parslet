@@ -37,4 +37,12 @@ describe RedClothParslet::Parser::Block do
       as([RedClothParslet::Ast::Notextile.new(["something"])]) }
   end
   
+  context "headings" do
+    (1..6).each do |num|
+      it { should parse("h#{num}. Heading #{num}").with(transform).
+        as([RedClothParslet::Ast.const_get("H#{num}").new(["Heading #{num}"])]) }
+      
+    end
+  end
+  
 end

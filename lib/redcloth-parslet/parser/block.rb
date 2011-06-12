@@ -5,10 +5,13 @@ class RedClothParslet::Parser::Block < Parslet::Parser
   end
   
   rule(:block_element) do
+    heading |
     notextile_block_tags |
     notextile_block |
     paragraph
   end
+  
+  rule(:heading) { str("h") >> match("[1-6]").as(:level) >> (attributes?.as(:attributes) >> str(". ") >> content.as(:content) >> block_end).as(:heading) }
   
   rule(:notextile_block) { (str("notextile. ") >> (block_end.absent? >> any).repeat.as(:s) >> block_end).as(:notextile) }
   rule(:notextile_block_tags) { (str("<notextile>\n") >> (notextile_block_end_tag.absent? >> any).repeat.as(:s) >> notextile_block_end_tag >> block_end).as(:notextile) }

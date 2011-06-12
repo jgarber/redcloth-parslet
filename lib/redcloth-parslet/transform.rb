@@ -6,6 +6,7 @@ class RedClothParslet::Transform < Parslet::Transform
   rule(:content => subtree(:c), :attributes => subtree(:a), :href => simple(:h)) {|dict| {:content => dict[:c], :opts => RedClothParslet::Ast::Attributes.new(dict[:a].push({:href => dict[:h]}))} }
   
   rule(:p => subtree(:a)) { RedClothParslet::Ast::P.new(a[:content], a[:opts]) }
+  rule(:heading => subtree(:a), :level=>simple(:l)) { RedClothParslet::Ast.const_get("H#{l}").new(a[:content], a[:opts]) }
   rule(:notextile => simple(:c)) { RedClothParslet::Ast::Notextile.new(c) }
   
   rule(:em => subtree(:a)) { RedClothParslet::Ast::Em.new(a[:content], a[:opts]) }
