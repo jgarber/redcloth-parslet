@@ -52,8 +52,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   end
 
   rule(:mchar) { match('\S') }
-  rule(:inline_sp?) { inline_sp.repeat }
-  rule(:inline_sp) { match('[ \t]').repeat(1) }
+  rule(:inline_sp) { match('[ \t]').repeat(1) | str("\n") }
   
   rule(:nongreedy_uri) { RedClothParslet::Parser::Attributes::NongreedyUri.new }
 

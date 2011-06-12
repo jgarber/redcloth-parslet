@@ -7,9 +7,13 @@ describe RedClothParslet::Parser::Inline do
   context "plain text" do
     it { should parse("Just plain text.").with(transform).
       as(["Just plain text."]) }
-
+    
     it { should parse("One sentence. Two.").with(transform).
       as(["One sentence. Two."]) }
+    
+    it { should parse("Roses are red\nViolets are purple...").with(transform).
+      as(["Roses are red\nViolets are purple..."]) }
+    
   end
   
   context "em inside strong" do
