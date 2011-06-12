@@ -28,4 +28,16 @@ describe RedClothParslet::Parser::Inline do
     }
   end
   
+  context "bold" do
+    it { should parse("Could not find **Textile**.").with(transform).
+      as(["Could not find ", RedClothParslet::Ast::B.new(["Textile"]), "."])
+    }
+  end
+  
+  context "italics" do
+    it { should parse("I just got the weirdest feeling of __déjà vu__.").with(transform).
+      as(["I just got the weirdest feeling of ", RedClothParslet::Ast::I.new(["déjà vu"]), "."])
+    }
+  end
+  
 end

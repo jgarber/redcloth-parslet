@@ -12,6 +12,8 @@ class RedClothParslet::Transform < Parslet::Transform
   
   rule(:em => subtree(:a)) { RedClothParslet::Ast::Em.new(a[:content], a[:opts]) }
   rule(:strong => subtree(:a)) { RedClothParslet::Ast::Strong.new(a[:content], a[:opts]) }
+  rule(:b => subtree(:a)) { RedClothParslet::Ast::B.new(a[:content], a[:opts]) }
+  rule(:i => subtree(:a)) { RedClothParslet::Ast::I.new(a[:content], a[:opts]) }
   rule(:link => subtree(:a)) { RedClothParslet::Ast::Link.new(a[:content], a[:opts]) }
   
 end

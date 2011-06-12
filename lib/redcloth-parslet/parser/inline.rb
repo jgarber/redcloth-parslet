@@ -15,10 +15,26 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   
   rule(:term) do
     link.unless_excluded(:link) |
+    bold.unless_excluded(:bold) |
+    italics.unless_excluded(:italics) |
     strong.unless_excluded(:strong) |
     em.unless_excluded(:em) |
     word.as(:s)
   end
+  
+  rule(:bold) do
+    (str('**') >>
+    maybe_preceded_by_attributes(inline.exclude(:bold).as(:content)) >> 
+    end_bold).as(:b)
+  end
+  rule(:end_bold) { str('**') >> match("[a-zA-Z0-9]").absent? }
+  
+  rule(:italics) do
+    (str('__') >>
+    maybe_preceded_by_attributes(inline.exclude(:italics).as(:content)) >> 
+    end_italics).as(:i)
+  end
+  rule(:end_italics) { str('__') >> match("[a-zA-Z0-9]").absent? }
   
   rule(:strong) do
     (str('*') >>
@@ -47,6 +63,8 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   end
   rule :exclude_significant_end_characters do
     end_link.absent?.if_excluded(:link) >>
+    end_bold.absent?.if_excluded(:bold) >>
+    end_italics.absent?.if_excluded(:italics) >>
     end_strong.absent?.if_excluded(:strong) >>
     end_em.absent?.if_excluded(:em)
   end
