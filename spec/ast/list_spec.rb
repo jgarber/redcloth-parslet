@@ -15,6 +15,14 @@ describe RedClothParslet::Ast::List do
           RedClothParslet::Ast::Ul.new(RedClothParslet::Ast::Li.new(["1.1"]))
         ])
     end
+
+    it "should build a mixed-list AST" do
+      described_class.build([{:layout => "*", :content => ["1"]},{:layout => "*#", :content => ["1.one"]}]).should == 
+        RedClothParslet::Ast::Ul.new([
+          RedClothParslet::Ast::Li.new(["1"]),
+          RedClothParslet::Ast::Ol.new(RedClothParslet::Ast::Li.new(["1.one"]))
+        ])
+    end
   end
 
 end
