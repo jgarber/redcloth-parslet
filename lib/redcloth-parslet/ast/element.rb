@@ -4,8 +4,7 @@ module RedClothParslet::Ast
     attr_accessor :opts
     
     def initialize(children=[], opts={})
-      children = [children] unless children.is_a?(Array)
-      @children = children
+      @children = children.is_a?(Array) ? children : [children]
       @opts = opts
     end
     

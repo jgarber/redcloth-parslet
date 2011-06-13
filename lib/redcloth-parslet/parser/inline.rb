@@ -1,16 +1,20 @@
 class RedClothParslet::Parser::Inline < Parslet::Parser
   root(:inline)
   rule(:inline) do
-    inline_sp.absent? >>
+    sp.absent? >>
     inline_element.repeat(1)
   end
   
   # Inline elements are terms (words) divided by spaces or spaces themselves.
   rule(:inline_element) do
-    inline_sp.as(:s) >> term.present? |
-    (inline_sp >> str('*')).as(:s) >> inline_sp.present? |
-    (inline_sp >> str('_')).as(:s) >> inline_sp.present? |
+    sp.as(:s) >> term.present? |
+    standalone_asterisk |
+    standalone_underscore |
     term
+  end
+  
+  rule(:list_contents) do
+    inline.exclude(:list_start)
   end
   
   rule(:term) do
@@ -57,11 +61,15 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   end
   rule(:end_link) { str('":') >> nongreedy_uri.as(:href) }
   
+  rule(:standalone_asterisk)   { (inline_sp >> str('*')).as(:s) >> sp.present? }
+  rule(:standalone_underscore) { (inline_sp >> str('_')).as(:s) >> sp.present? }
+  
   rule :word do
     char = (exclude_significant_end_characters >> mchar)
     char.repeat(1)
   end
   rule :exclude_significant_end_characters do
+    (match("[*#]") >> str(" ")).absent?.if_excluded(:list_start) >>
     end_link.absent?.if_excluded(:link) >>
     end_bold.absent?.if_excluded(:bold) >>
     end_italics.absent?.if_excluded(:italics) >>
@@ -70,7 +78,8 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   end
 
   rule(:mchar) { match('\S') }
-  rule(:inline_sp) { match('[ \t]').repeat(1) | str("\n") }
+  rule(:inline_sp) { match('[ \t]').repeat(1) }
+  rule(:sp) { inline_sp | str("\n") }
   
   rule(:nongreedy_uri) { RedClothParslet::Parser::Attributes::NongreedyUri.new }
 

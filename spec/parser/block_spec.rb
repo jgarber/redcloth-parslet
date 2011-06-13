@@ -30,6 +30,11 @@ describe RedClothParslet::Parser::Block do
           RedClothParslet::Ast::P.new(["No worries, mate."])]) }
   end
   
+  context "list start in a paragraph" do
+    it { should parse("Two for the price of one!\n* Offer not valid in Alaska").with(transform).
+      as([RedClothParslet::Ast::P.new(["Two for the price of one!\n* Offer not valid in Alaska"])]) }
+  end
+  
   context "notextile block" do
     it { should parse("<notextile>\nsomething\n</notextile>").with(transform).
       as([RedClothParslet::Ast::Notextile.new(["something"])]) }

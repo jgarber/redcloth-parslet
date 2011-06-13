@@ -5,6 +5,7 @@ class RedClothParslet::Parser::Block < Parslet::Parser
   end
   
   rule(:block_element) do
+    list |
     heading |
     div |
     notextile_block_tags |
@@ -32,3 +33,5 @@ class RedClothParslet::Parser::Block < Parslet::Parser
   rule(:block_end) { eof | double_newline }
   rule(:double_newline) { str("\n") >> match("[\s\t]").repeat >> str("\n") }
 end
+
+require 'redcloth-parslet/parser/block/lists'

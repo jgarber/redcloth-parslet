@@ -8,4 +8,32 @@ module RedClothParslet::Ast
   class H5 < Element; end
   class H6 < Element; end
   class Div < Element; end
+  class Ul < Element; end
+  class Ol < Element; end
+  class Li < Element; end
+
+  class List
+    def self.build(li_hashes)
+      list_nesting = []
+      list_layout = ""
+      
+      li_hashes.each do |li|
+        if li[:layout] == list_layout
+        elsif li[:layout].size < list_layout.size
+          closed_list = list_nesting.pop
+          list_nesting.last.children << closed_list
+        else
+          list_nesting << ((li[:layout].to_s[-1,1] == "*") ? Ul.new : Ol.new)
+          list_layout = li[:layout]
+        end
+        list_nesting.last.children << Li.new(li[:content])
+      end
+      until list_nesting.size == 1 do
+        closed_list = list_nesting.pop
+        list_nesting.last.children << closed_list
+      end
+      list_nesting.first
+    end
+  end
+
 end
