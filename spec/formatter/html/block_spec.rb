@@ -39,4 +39,22 @@ describe RedClothParslet::Formatter::HTML do
     END
     }
   end
+  
+  describe "ol" do
+    let(:element) { RedClothParslet::Ast::Ol.new([
+      RedClothParslet::Ast::Li.new(["one"]), 
+      RedClothParslet::Ast::Ol.new(RedClothParslet::Ast::Li.new(["one-one"])),
+      RedClothParslet::Ast::Li.new(["two"])
+    ]) }
+    it { should == <<-END.gsub(/^ +/, '').chomp
+      <ol>
+      	<li>one
+      	<ol>
+      		<li>one-one</li>
+      	</ol></li>
+      	<li>two</li>
+      </ol>
+    END
+    }
+  end
 end

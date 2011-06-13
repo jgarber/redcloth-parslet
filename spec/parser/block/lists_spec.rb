@@ -18,4 +18,20 @@ describe RedClothParslet::Parser::Block do
       ]) }
   end
   
+  describe "ol" do
+    it { should parse("# one\n# two").with(transform).
+      as([RedClothParslet::Ast::Ol.new([
+        RedClothParslet::Ast::Li.new(["one"]), 
+        RedClothParslet::Ast::Li.new(["two"])
+      ])]) }
+
+    it { should parse("# one\n## one-one").with(transform).
+      as([
+        RedClothParslet::Ast::Ol.new([
+          RedClothParslet::Ast::Li.new(["one"]), 
+          RedClothParslet::Ast::Ol.new(RedClothParslet::Ast::Li.new(["one-one"]))
+        ])
+      ]) }
+  end
+  
 end
