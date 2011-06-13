@@ -21,4 +21,22 @@ describe RedClothParslet::Formatter::HTML do
     let(:element) { RedClothParslet::Ast::Div.new(["I am a div"]) }
     it { should == "<div>I am a div</div>" }
   end
+  
+  describe "ul" do
+    let(:element) { RedClothParslet::Ast::Ul.new([
+      RedClothParslet::Ast::Li.new(["1"]), 
+      RedClothParslet::Ast::Ul.new(RedClothParslet::Ast::Li.new(["1.1"])),
+      RedClothParslet::Ast::Li.new(["2"])
+    ]) }
+    it { should == <<-END.gsub(/^ +/, '').chomp
+      <ul>
+      	<li>1
+      	<ul>
+      		<li>1.1</li>
+      	</ul></li>
+      	<li>2</li>
+      </ul>
+    END
+    }
+  end
 end

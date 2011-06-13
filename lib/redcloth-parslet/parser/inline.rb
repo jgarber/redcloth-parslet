@@ -69,6 +69,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     char.repeat(1)
   end
   rule :exclude_significant_end_characters do
+    # TODO: make this the same rule as in parser/block/lists.rb so it's DRY.
     (match("[*#]").repeat(1) >> str(" ")).absent?.if_excluded(:li_start) >>
     end_link.absent?.if_excluded(:link) >>
     end_bold.absent?.if_excluded(:bold) >>

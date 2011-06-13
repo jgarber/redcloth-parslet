@@ -14,6 +14,53 @@ module RedClothParslet::Formatter
       inner(el, true).chomp
     end
     
+    ([:h1, :h2, :h3, :h4, :h5, :h6, :p, :pre, :div] +
+    [:strong, :code, :em, :i, :b, :ins, :sup, :sub, :span, :cite]).each do |m|
+      define_method(m) do |el|
+       "<#{m}#{html_attributes(el.opts)}>#{inner(el)}</#{m}>"
+      end
+    end
+    
+    [:ul, :ol].each do |m|
+      define_method(m) do |el|
+        @list_nesting ||= 0
+        out = ""
+        out << "\n" if @list_nesting > 0
+        out << "\t" * @list_nesting
+        @list_nesting += 1
+        out << "<#{m}#{html_attributes(el.opts)}>\n"
+        out << list_items(el)
+        out << "</li>\n"
+        out << "\t" * (@list_nesting - 1)
+        @list_nesting -= 1
+        out << "</#{m}>"
+        out
+      end
+    end
+    
+    def li(el)
+      ("\t" * @list_nesting) +
+      "<li#{html_attributes(el.opts)}>#{inner(el)}"
+    end
+    
+    def notextile(el)
+      inner(el)
+    end
+    
+    private
+    
+    def list_items(el, block=false)
+      result = ''
+      @stack.push(el)
+      el.children.each_with_index do |inner_el, index|
+        result << "</li>\n" if inner_el.is_a?(RedClothParslet::Ast::Li) && index > 0
+        result << send(inner_el.type, inner_el)
+        result << "\n" if block
+      end
+      @stack.pop
+      result
+    end
+    
     # Return the converted content of the children of +el+ as a string. The parameter +indent+ has
     # to be the amount of indentation used for the element +el+.
     #
@@ -34,18 +81,6 @@ module RedClothParslet::Formatter
       result
     end
     
-    ([:h1, :h2, :h3, :h4, :h5, :h6, :p, :pre, :div] +
-    [:strong, :code, :em, :i, :b, :ins, :sup, :sub, :span, :cite]).each do |m|
-      define_method(m) do |el|
-       "<#{m}#{html_attributes(el.opts)}>#{inner(el)}</#{m}>"
-      end
-    end
-    
-    def notextile(el)
-      inner(el)
-    end
-    
-    private
     
     # Return the HTML representation of the attributes +attr+.
     def html_attributes(attr)

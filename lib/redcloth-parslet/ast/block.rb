@@ -24,8 +24,8 @@ module RedClothParslet::Ast
           list_nesting.last.children << closed_list
         else
           list_nesting << ((li[:layout].to_s[-1,1] == "*") ? Ul.new : Ol.new)
-          list_layout = li[:layout]
         end
+        list_layout = li[:layout]
         list_nesting.last.children << Li.new(li[:content])
       end
       until list_nesting.size == 1 do
