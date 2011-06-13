@@ -14,7 +14,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   end
   
   rule(:list_contents) do
-    inline.exclude(:list_start)
+    inline.exclude(:li_start)
   end
   
   rule(:term) do
@@ -69,7 +69,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     char.repeat(1)
   end
   rule :exclude_significant_end_characters do
-    (match("[*#]") >> str(" ")).absent?.if_excluded(:list_start) >>
+    (match("[*#]").repeat(1) >> str(" ")).absent?.if_excluded(:li_start) >>
     end_link.absent?.if_excluded(:link) >>
     end_bold.absent?.if_excluded(:bold) >>
     end_italics.absent?.if_excluded(:italics) >>
