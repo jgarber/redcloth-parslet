@@ -3,7 +3,7 @@ describe RedClothParslet::Formatter::HTML do
   
   describe "line breaks" do
     let(:element) { RedClothParslet::Ast::P.new(["Line one\nline two."]) }
-    it { should == "<p>Line one<br />line two.</p>" }
+    it { should == "<p>Line one<br />\nline two.</p>" }
   end
 
   

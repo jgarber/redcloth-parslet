@@ -101,7 +101,7 @@ module RedClothParslet::Formatter
       '>' => '&gt;',
       '&' => '&amp;',
       '"' => '&quot;',
-      "\n" => "<br />",
+      "\n" => "<br />\n",
       "'" => "&#39;"
     }
     ESCAPE_ALL_RE = /<|>|&|\n|"|'/
