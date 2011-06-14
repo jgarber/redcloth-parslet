@@ -40,4 +40,17 @@ describe RedClothParslet::Parser::Inline do
     }
   end
   
+  context "double-quoted phrase in link" do
+    it { should parse(%Q{""Example"":http://example.com}).with(transform).
+      as([RedClothParslet::Ast::Link.new([RedClothParslet::Ast::DoubleQuotedPhrase.new(["Example"])], {:href=>"http://example.com"})])
+    }
+  end
+
+  context "link in double-quoted phrase" do
+    it { should parse(%Q{""Example":http://example.com"}).with(transform).
+      as([RedClothParslet::Ast::DoubleQuotedPhrase.new([RedClothParslet::Ast::Link.new(["Example"], {:href=>"http://example.com"})])])
+    }
+  end
+  
+  
 end
