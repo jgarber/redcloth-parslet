@@ -4,4 +4,6 @@ module RedClothParslet::Ast
   class B < Element; end
   class I < Element; end
   class Link < Element; end
+  class DoubleQuotedPhrase < Element; end
+  
 end

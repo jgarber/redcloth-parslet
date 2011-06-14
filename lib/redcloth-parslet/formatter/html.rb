@@ -47,6 +47,10 @@ module RedClothParslet::Formatter
       inner(el)
     end
     
+    def double_quoted_phrase(el)
+      "&#8220;#{inner(el)}&#8221;"
+    end
+    
     private
     
     def list_items(el, block=false)

@@ -25,5 +25,10 @@ describe RedClothParslet::Formatter::HTML do
     let(:element) { RedClothParslet::Ast::Strong.new(RedClothParslet::Ast::Em.new("inside")) }
     it { should == "<strong><em>inside</em></strong>" }
   end
+  
+  describe "double-quoted phrase" do
+    let(:element) { RedClothParslet::Ast::DoubleQuotedPhrase.new("Hello") }
+    it { should == "&#8220;Hello&#8221;" }
+  end
 
 end

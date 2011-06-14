@@ -18,6 +18,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   end
   
   rule(:term) do
+    double_quoted_phrase.unless_excluded(:double_quoted_phrase) |
     link.unless_excluded(:link) |
     bold.unless_excluded(:bold) |
     italics.unless_excluded(:italics) |
@@ -55,11 +56,18 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   rule(:end_em) { str('_') >> match("[a-zA-Z0-9]").absent? }
   
   rule(:link) do
-    (str('"') >> 
-    maybe_preceded_by_attributes(inline.exclude(:link).as(:content)) >> 
+    (str('"') >>
+    maybe_preceded_by_attributes(inline.exclude(:link).as(:content)) >>
     end_link).as(:link)
   end
   rule(:end_link) { str('":') >> nongreedy_uri.as(:href) }
+  
+  rule(:double_quoted_phrase) do
+    (str('"') >> 
+    inline.exclude(:double_quoted_phrase).as(:content) >> 
+    end_double_quoted_phrase).as(:double_quoted_phrase)
+  end
+  rule(:end_double_quoted_phrase) { str('"') >> match("[:a-zA-Z0-9]").absent? }
   
   rule(:standalone_asterisk)   { (inline_sp >> str('*')).as(:s) >> sp.present? }
   rule(:standalone_underscore) { (inline_sp >> str('_')).as(:s) >> sp.present? }
@@ -71,6 +79,8 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   rule :exclude_significant_end_characters do
     # TODO: make this the same rule as in parser/block/lists.rb so it's DRY.
     (match("[*#]").repeat(1) >> str(" ")).absent?.if_excluded(:li_start) >>
+    str('":').absent?.if_excluded(:double_quoted_phrase) >>
+    end_double_quoted_phrase.absent?.if_excluded(:double_quoted_phrase) >>
     end_link.absent?.if_excluded(:link) >>
     end_bold.absent?.if_excluded(:bold) >>
     end_italics.absent?.if_excluded(:italics) >>
