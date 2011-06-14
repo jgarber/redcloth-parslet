@@ -19,7 +19,13 @@ class RedClothParslet::Transform < Parslet::Transform
   rule(:strong => subtree(:a)) { RedClothParslet::Ast::Strong.new(a[:content], a[:opts]) }
   rule(:b => subtree(:a)) { RedClothParslet::Ast::B.new(a[:content], a[:opts]) }
   rule(:i => subtree(:a)) { RedClothParslet::Ast::I.new(a[:content], a[:opts]) }
-  rule(:link => subtree(:a)) { RedClothParslet::Ast::Link.new(a[:content], a[:opts]) }
-  rule(:double_quoted_phrase => subtree(:a)) { RedClothParslet::Ast::DoubleQuotedPhrase.new(a[:content]) }
-  
+  # rule(:link => subtree(:a)) { RedClothParslet::Ast::Link.new(a[:content], a[:opts]) }
+  # rule(:double_quoted_phrase => subtree(:a)) { RedClothParslet::Ast::DoubleQuotedPhrase.new(a[:content]) }
+  rule(:double_quoted_phrase_or_link => subtree(:a)) do
+    if a[:opts].has_key?(:href)
+      RedClothParslet::Ast::Link.new(a[:content], a[:opts])
+    else
+      RedClothParslet::Ast::DoubleQuotedPhrase.new(a[:content])
+    end
+  end
 end

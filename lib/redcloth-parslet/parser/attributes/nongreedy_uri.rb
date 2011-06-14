@@ -17,6 +17,6 @@ class RedClothParslet::Parser::Attributes::NongreedyUri < RedClothParslet::Parse
   rule(:terminal_punctuation) { greedy_punctuation >> (str(':') | (pchar | match('[#/;]')).absent?) }
   
   # In the context of inline Textile, these may not terminate a URI
-  rule(:greedy_punctuation) { match('[!.]') }
+  rule(:greedy_punctuation) { match('[!."]') }
   
 end

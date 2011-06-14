@@ -2,13 +2,13 @@ describe RedClothParslet::Parser::Inline do
   let(:parser) { described_class.new }
   let(:transform) { RedClothParslet::Transform.new }
   
-  describe "#link" do
+  describe "#double_quoted_phrase_or_link" do
     it "should parse a basic link" do
-      parser.link.should parse('"Google":http://google.com').with(transform).as(RedClothParslet::Ast::Link.new(["Google"], {:href=>"http://google.com"}))
+      parser.double_quoted_phrase_or_link.should parse('"Google":http://google.com').with(transform).as(RedClothParslet::Ast::Link.new(["Google"], {:href=>"http://google.com"}))
     end
 
     it "should parse link with attributes" do
-      parser.link.should parse('"(appropriate)RedCloth":http://redcloth.org').with(transform).as(RedClothParslet::Ast::Link.new(["RedCloth"], {:href=>"http://redcloth.org", :class=>"appropriate"}))
+      parser.double_quoted_phrase_or_link.should parse('"(appropriate)RedCloth":http://redcloth.org').with(transform).as(RedClothParslet::Ast::Link.new(["RedCloth"], {:href=>"http://redcloth.org", :class=>"appropriate"}))
     end
   end
   
