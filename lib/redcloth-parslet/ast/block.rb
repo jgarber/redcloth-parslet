@@ -13,7 +13,7 @@ module RedClothParslet::Ast
   class Li < Element; end
 
   class List
-    def self.build(li_hashes)
+    def self.build(li_hashes, opts={})
       list_nesting = []
       list_layout = ""
       
@@ -24,9 +24,13 @@ module RedClothParslet::Ast
           list_nesting.last.children << closed_list
         else
           list_nesting << ((li[:layout].to_s[-1,1] == "*") ? Ul.new : Ol.new)
+          if opts.any?
+            list_nesting.last.opts = opts
+            opts = {}
+          end
         end
         list_layout = li[:layout]
-        list_nesting.last.children << Li.new(li[:content])
+        list_nesting.last.children << Li.new(li[:content], li[:opts])
       end
       until list_nesting.size == 1 do
         closed_list = list_nesting.pop

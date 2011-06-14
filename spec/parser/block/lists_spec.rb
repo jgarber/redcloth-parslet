@@ -34,4 +34,19 @@ describe RedClothParslet::Parser::Block do
       ]) }
   end
   
+  context "list attributes" do
+    it { should parse("(class#id)* one\n* two").with(transform).
+      as([RedClothParslet::Ast::Ul.new([
+        RedClothParslet::Ast::Li.new(["one"]), 
+        RedClothParslet::Ast::Li.new(["two"])
+      ], {:class=>'class', :id=>'id'})]) }
+  end
+  
+  context "list item attributes" do
+    it { should parse("*(class#id) one\n* two").with(transform).
+      as([RedClothParslet::Ast::Ul.new([
+        RedClothParslet::Ast::Li.new(["one"], {:class=>'class', :id=>'id'}), 
+        RedClothParslet::Ast::Li.new(["two"])
+      ])]) }
+  end
 end

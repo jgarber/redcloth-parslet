@@ -5,13 +5,15 @@ class RedClothParslet::Transform < Parslet::Transform
   rule(:content => subtree(:c), :attributes => subtree(:a)) {|dict| {:content => dict[:c], :opts => RedClothParslet::Ast::Attributes.new(dict[:a])} }
   rule(:content => subtree(:c), :attributes => subtree(:a), :href => simple(:h)) {|dict| {:content => dict[:c], :opts => RedClothParslet::Ast::Attributes.new(dict[:a].push({:href => dict[:h]}))} }
   
-  # rule(:layout => simple(:l), :content => subtree(:c)) {:layout => l, :content => c}
+  rule(:layout => simple(:l), :attributes => subtree(:a), :content => subtree(:c)) {|dict|
+    {:layout => dict[:l], :content => dict[:c], :opts => RedClothParslet::Ast::Attributes.new(dict[:a])}
+  }
   
   rule(:p => subtree(:a)) { RedClothParslet::Ast::P.new(a[:content], a[:opts]) }
   rule(:div => subtree(:a)) { RedClothParslet::Ast::Div.new(a[:content], a[:opts]) }
   rule(:heading => subtree(:a), :level=>simple(:l)) { RedClothParslet::Ast.const_get("H#{l}").new(a[:content], a[:opts]) }
   rule(:notextile => simple(:c)) { RedClothParslet::Ast::Notextile.new(c) }
-  rule(:list => subtree(:a)) { RedClothParslet::Ast::List.build(a[:content]) }
+  rule(:list => subtree(:a)) { RedClothParslet::Ast::List.build(a[:content], a[:opts]) }
   
   rule(:em => subtree(:a)) { RedClothParslet::Ast::Em.new(a[:content], a[:opts]) }
   rule(:strong => subtree(:a)) { RedClothParslet::Ast::Strong.new(a[:content], a[:opts]) }
