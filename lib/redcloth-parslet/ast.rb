@@ -10,6 +10,7 @@ module RedClothParslet
 end
 
 require 'redcloth-parslet/ast/attributes'
+require 'redcloth-parslet/ast/entity'
 require 'redcloth-parslet/ast/element'
 require 'redcloth-parslet/ast/inline'
 require 'redcloth-parslet/ast/block'

@@ -18,12 +18,17 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   end
   
   rule(:term) do
+    entity |
     double_quoted_phrase_or_link |
     bold.unless_excluded(:bold) |
     italics.unless_excluded(:italics) |
     strong.unless_excluded(:strong) |
     em.unless_excluded(:em) |
     word.as(:s)
+  end
+  
+  rule(:entity) do
+    m_dash
   end
   
   rule(:bold) do
@@ -64,6 +69,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     str('"')
   end
   
+  rule(:m_dash) { str('--').as(:entity) }
   rule(:standalone_asterisk)   { (inline_sp >> str('*')).as(:s) >> sp.present? }
   rule(:standalone_underscore) { (inline_sp >> str('_')).as(:s) >> sp.present? }
   
@@ -81,7 +87,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     end_em.absent?.if_excluded(:em)
   end
 
-  rule(:mchar) { match('\S') }
+  rule(:mchar) { entity.absent? >> match('\S') }
   rule(:inline_sp) { match('[ \t]').repeat(1) }
   rule(:sp) { inline_sp | str("\n") }
   

@@ -30,5 +30,12 @@ describe RedClothParslet::Formatter::HTML do
     let(:element) { RedClothParslet::Ast::DoubleQuotedPhrase.new("Hello") }
     it { should == "&#8220;Hello&#8221;" }
   end
-
+  
+  describe "entities" do
+    {"--"=>"&#8212;"}.each do |input,output|
+      it "should escape #{input} as #{output}" do
+        described_class.new().convert(RedClothParslet::Ast::Entity.new(input)).should == output
+      end
+    end
+  end
 end

@@ -26,4 +26,6 @@ class RedClothParslet::Transform < Parslet::Transform
       RedClothParslet::Ast::DoubleQuotedPhrase.new(a[:content])
     end
   end
+  
+  rule(:entity => simple(:e)) { RedClothParslet::Ast::Entity.new(e) }
 end

@@ -51,6 +51,10 @@ module RedClothParslet::Formatter
       "&#8220;#{inner(el)}&#8221;"
     end
     
+    def entity(el)
+      ESCAPE_MAP[el.str]
+    end
+    
     private
     
     def list_items(el, block=false)
@@ -106,7 +110,8 @@ module RedClothParslet::Formatter
       '&' => '&amp;',
       '"' => '&quot;',
       "\n" => "<br />\n",
-      "'" => "&#39;"
+      "'" => "&#39;",
+      "--" => "&#8212;"
     }
     ESCAPE_ALL_RE = /<|>|&|\n|"|'/
     ESCAPE_PRE_RE = Regexp.union(/<|>|&/)
