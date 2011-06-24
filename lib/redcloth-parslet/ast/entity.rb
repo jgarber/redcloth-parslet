@@ -3,7 +3,7 @@ module RedClothParslet::Ast
     attr_accessor :str
     
     def initialize(str)
-      @str = str
+      @str = String(str)
     end
 
     # TODO: Cache in a hash like Kramdown does? Or memoize in a class var? Or define
