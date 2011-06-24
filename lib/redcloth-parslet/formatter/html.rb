@@ -43,6 +43,10 @@ module RedClothParslet::Formatter
       "<li#{html_attributes(el.opts)}>#{inner(el)}"
     end
     
+    def link(el)
+      "<a#{html_attributes(el.opts)}>#{inner(el)}</a>"
+    end
+    
     def notextile(el)
       inner(el)
     end

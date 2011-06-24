@@ -38,4 +38,9 @@ describe RedClothParslet::Formatter::HTML do
       end
     end
   end
+  
+  describe "link" do
+    let(:element) { RedClothParslet::Ast::Link.new(["Google"], {:href=>"http://google.com"}) }
+    it { should == '<a href="http://google.com">Google</a>' }
+  end
 end
