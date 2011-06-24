@@ -12,10 +12,10 @@ module RedClothParslet::Ast
             style["padding-#{l_or_r}"] += 1
           when :align
             style = self[:style] ||= {}
-            style["text-align"] = if style["text-align"] == "left" && v == ">"
+            style["align"] = if style["align"] == "left" && v == ">"
               "justify" 
             else
-              {'<'=>'left','>'=>'right','='=>'center'}[v]
+              {'<'=>'left','>'=>'right','='=>'center'}[v.to_s]
             end
           else
             self[k] = ((self[k] || '').split(/\s/) + [v]).join(' ')

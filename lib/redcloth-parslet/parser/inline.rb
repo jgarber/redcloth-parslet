@@ -19,6 +19,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   
   rule(:term) do
     entity |
+    image |
     double_quoted_phrase_or_link |
     bold.unless_excluded(:bold) |
     italics.unless_excluded(:italics) |
@@ -69,6 +70,15 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     str('"')
   end
   
+  rule(:image) do
+    (str('!') >> 
+    maybe_preceded_by_attributes(nongreedy_uri.as(:src)) >> 
+    image_alt.maybe >>
+    end_image).as(:image)
+  end
+  rule(:image_alt) { str("(") >> (str(")").absent? >> any).repeat(1).as(:alt) >> str(")") }
+  rule(:end_image) { str('!') >> match("[a-zA-Z0-9]").absent? }
+  
   rule(:m_dash) { str('--').as(:entity) }
   rule(:standalone_asterisk)   { (inline_sp >> str('*')).as(:s) >> sp.present? }
   rule(:standalone_underscore) { (inline_sp >> str('_')).as(:s) >> sp.present? }
@@ -90,6 +100,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   rule(:mchar) { entity.absent? >> match('\S') }
   rule(:inline_sp) { match('[ \t]').repeat(1) }
   rule(:sp) { inline_sp | str("\n") }
+  # rule(:mtext) { mchar.repeat(1) >> (inline_sp >> mchar.repeat(1)) }
   
   rule(:nongreedy_uri) { RedClothParslet::Parser::Attributes::NongreedyUri.new }
 

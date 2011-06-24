@@ -3,6 +3,7 @@ module RedClothParslet::Ast
     attr_accessor :children
     attr_accessor :opts
     
+    # TODO: Make +children+ argument optional so things like Img can just pass opts as first argument.
     def initialize(children=[], opts={})
       @children = children.is_a?(Array) ? children : [children]
       @opts = opts

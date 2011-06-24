@@ -21,26 +21,26 @@ describe RedClothParslet::Formatter::HTML do
   end
   
   describe "align left" do
-    let(:element) { RedClothParslet::Ast::Strong.new("", {:style=>{'text-align'=>'left'}}) }
+    let(:element) { RedClothParslet::Ast::Strong.new("", {:style=>{'align'=>'left'}}) }
     it { should == %{<strong style="text-align:left"></strong>} }
   end
   describe "align right" do
-    let(:element) { RedClothParslet::Ast::Strong.new("", {:style=>{'text-align'=>'right'}}) }
+    let(:element) { RedClothParslet::Ast::Strong.new("", {:style=>{'align'=>'right'}}) }
     it { should == %{<strong style="text-align:right"></strong>} }
   end
   describe "align center" do
-    let(:element) { RedClothParslet::Ast::Strong.new("", {:style=>{'text-align'=>'center'}}) }
+    let(:element) { RedClothParslet::Ast::Strong.new("", {:style=>{'align'=>'center'}}) }
     it { should == %{<strong style="text-align:center"></strong>} }
   end
   describe "align justify" do
-    let(:element) { RedClothParslet::Ast::Strong.new("", {:style=>{'text-align'=>'justify'}}) }
+    let(:element) { RedClothParslet::Ast::Strong.new("", {:style=>{'align'=>'justify'}}) }
     it { should == %{<strong style="text-align:justify"></strong>} }
   end
   
   describe "pad and align" do
-    let(:element) { RedClothParslet::Ast::Strong.new("", {:style=>{"text-align"=>"left", "padding-left"=>1}}) }
+    let(:element) { RedClothParslet::Ast::Strong.new("", {:style=>{"align"=>"left", "padding-left"=>1}}) }
     it { should include("padding-left:1em") }
-    it { should include("text-align:left") }
+    it { should include("align:left") }
   end
   
   

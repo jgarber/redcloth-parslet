@@ -43,4 +43,21 @@ describe RedClothParslet::Formatter::HTML do
     let(:element) { RedClothParslet::Ast::Link.new(["Google"], {:href=>"http://google.com"}) }
     it { should == '<a href="http://google.com">Google</a>' }
   end
+  
+  describe "image" do
+    let(:element) { RedClothParslet::Ast::Img.new([], {:src=>"mac.png"}) }
+    it { should == '<img src="mac.png" alt="" />' }
+  end
+  
+  describe "image with alt" do
+    let(:element) { RedClothParslet::Ast::Img.new([], {:src=>"mac.png", :alt=>"Mac"}) }
+    it "should also populate title" do
+      subject.should == '<img src="mac.png" title="Mac" alt="Mac" />'
+    end
+  end
+  
+  describe "image with alignment" do
+    let(:element) { RedClothParslet::Ast::Img.new([], {:src=>"mac.png", :align=>"left"}) }
+    it { should == '<img src="mac.png" align="left" alt="" />' }
+  end
 end

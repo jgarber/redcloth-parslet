@@ -5,5 +5,6 @@ module RedClothParslet::Ast
   class I < Element; end
   class Link < Element; end
   class DoubleQuotedPhrase < Element; end
+  class Img < Element; end
   
 end

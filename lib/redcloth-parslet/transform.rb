@@ -4,6 +4,8 @@ class RedClothParslet::Transform < Parslet::Transform
   rule(:content => subtree(:c)) {|dict| {:content => dict[:c], :opts => {}} }
   rule(:content => subtree(:c), :attributes => subtree(:a)) {|dict| {:content => dict[:c], :opts => RedClothParslet::Ast::Attributes.new(dict[:a])} }
   rule(:content => subtree(:c), :attributes => subtree(:a), :href => simple(:h)) {|dict| {:content => dict[:c], :opts => RedClothParslet::Ast::Attributes.new(dict[:a].push({:href => dict[:h]}))} }
+  rule(:attributes => subtree(:a), :src => simple(:s)) {|dict| {:opts => RedClothParslet::Ast::Attributes.new(dict[:a].push({:src => dict[:s]}))} }
+  rule(:attributes => subtree(:a), :src => simple(:s), :alt => simple(:alt)) {|dict| {:opts => RedClothParslet::Ast::Attributes.new(dict[:a].push({:src => dict[:s], :alt => dict[:alt]}))} }
   
   rule(:layout => simple(:l), :attributes => subtree(:a), :content => subtree(:c)) {|dict|
     {:layout => dict[:l], :content => dict[:c], :opts => RedClothParslet::Ast::Attributes.new(dict[:a])}
@@ -26,6 +28,8 @@ class RedClothParslet::Transform < Parslet::Transform
       RedClothParslet::Ast::DoubleQuotedPhrase.new(a[:content])
     end
   end
+  rule(:image => subtree(:a)) { RedClothParslet::Ast::Img.new([], a[:opts]) }
+  
   
   rule(:entity => simple(:e)) { RedClothParslet::Ast::Entity.new(e) }
 end

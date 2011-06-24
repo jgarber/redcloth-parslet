@@ -18,16 +18,16 @@ describe RedClothParslet::Ast::Attributes do
   end
   
   it "should align left" do
-    described_class.new([:align=>'<']).should == {:style=>{'text-align'=>'left'}}
+    described_class.new([:align=>'<']).should == {:style=>{'align'=>'left'}}
   end
   it "should align right" do
-    described_class.new([:align=>'>']).should == {:style=>{'text-align'=>'right'}}
+    described_class.new([:align=>'>']).should == {:style=>{'align'=>'right'}}
   end
   it "should align center" do
-    described_class.new([:align=>'=']).should == {:style=>{'text-align'=>'center'}}
+    described_class.new([:align=>'=']).should == {:style=>{'align'=>'center'}}
   end
   it "should justify" do
-    described_class.new([{:align=>'<'}, {:align=>'>'}]).should == {:style=>{'text-align'=>'justify'}}
+    described_class.new([{:align=>'<'}, {:align=>'>'}]).should == {:style=>{'align'=>'justify'}}
   end
   
 end

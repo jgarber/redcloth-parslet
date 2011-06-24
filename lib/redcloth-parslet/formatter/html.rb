@@ -47,6 +47,11 @@ module RedClothParslet::Formatter
       "<a#{html_attributes(el.opts)}>#{inner(el)}</a>"
     end
     
+    def img(el)
+      el.opts[:title] = el.opts.delete(:alt) if el.opts[:alt]
+      %Q{<img#{html_attributes(el.opts, :image)} alt="#{el.opts[:title]}" />}
+    end
+    
     def notextile(el)
       inner(el)
     end
@@ -95,13 +100,13 @@ module RedClothParslet::Formatter
     
     
     # Return the HTML representation of the attributes +attr+.
-    def html_attributes(attr)
+    def html_attributes(attr, type=:text)
       attr[:style] = attr[:style].map do |k,v|
         case k
         when /padding/
           "#{k}:#{v}em"
-        when 'text-align'
-          "#{k}:#{v}"
+        when 'align'
+          type == :text ? "text-align:#{v}" : "align:#{v}"
         end
       end.join("; ") if attr[:style]
       attr.map {|k,v| v.nil? ? '' : " #{k}=\"#{escape_html(v.to_s, :attribute)}\"" }.join('')
