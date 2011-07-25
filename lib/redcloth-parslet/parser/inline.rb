@@ -77,7 +77,9 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     end_image).as(:image)
   end
   rule(:image_alt) { str("(") >> (str(")").absent? >> any).repeat(1).as(:alt) >> str(")") }
-  rule(:end_image) { str('!') >> match("[a-zA-Z0-9]").absent? }
+  rule(:end_image) { 
+    str('!:') >> nongreedy_uri.as(:href) |
+    (str('!') >> match("[a-zA-Z0-9]").absent?) }
   
   rule(:m_dash) { str('--').as(:entity) }
   rule(:standalone_asterisk)   { (inline_sp >> str('*')).as(:s) >> sp.present? }

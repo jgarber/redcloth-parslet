@@ -28,4 +28,10 @@ describe RedClothParslet::Parser::Inline do
     }
   end
   
+  context "image link" do
+    it { should parse(%{!openwindow1.gif!:http://hobix.com/}).with(transform).
+      as([RedClothParslet::Ast::Link.new(RedClothParslet::Ast::Img.new([], {:src=>"openwindow1.gif", :alt => ""}), {:href => "http://hobix.com/"})])
+    }
+  end
+  
 end
