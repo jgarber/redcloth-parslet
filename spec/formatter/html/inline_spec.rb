@@ -60,4 +60,9 @@ describe RedClothParslet::Formatter::HTML do
     let(:element) { RedClothParslet::Ast::Img.new([], {:src=>"mac.png", :align=>"left"}) }
     it { should == '<img src="mac.png" align="left" alt="" />' }
   end
+  
+  describe "acronym" do
+    let(:element) { RedClothParslet::Ast::Acronym.new("CSS", {:title => "Cascading Style Sheets"}) }
+    it { should == '<acronym title="Cascading Style Sheets">CSS</acronym>' }
+  end
 end

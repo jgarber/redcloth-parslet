@@ -25,6 +25,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     italics.unless_excluded(:italics) |
     strong.unless_excluded(:strong) |
     em.unless_excluded(:em) |
+    acronym |
     word.as(:s)
   end
   
@@ -77,9 +78,20 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     end_image).as(:image)
   end
   rule(:image_alt) { str("(") >> (str(")").absent? >> any).repeat(1).as(:alt) >> str(")") }
-  rule(:end_image) { 
+  rule(:end_image) do
     str('!:') >> nongreedy_uri.as(:href) |
-    (str('!') >> match("[a-zA-Z0-9]").absent?) }
+    (str('!') >> match("[a-zA-Z0-9]").absent?)
+  end
+  
+  rule(:acronym) do
+    (
+      match("[A-Z]").as(:s).repeat(1).as(:content) >> 
+      (str('(') >>  
+        (str(')').absent? >> any).repeat(1).as(:title) >> 
+        str(')')
+      ).as(:attributes)
+    ).as(:acronym)
+  end
   
   rule(:m_dash) { str('--').as(:entity) }
   rule(:standalone_asterisk)   { (inline_sp >> str('*')).as(:s) >> sp.present? }

@@ -6,5 +6,6 @@ module RedClothParslet::Ast
   class Link < Element; end
   class DoubleQuotedPhrase < Element; end
   class Img < Element; end
+  class Acronym < Element; end
   
 end

@@ -36,7 +36,7 @@ class RedClothParslet::Transform < Parslet::Transform
       RedClothParslet::Ast::Img.new([], a[:opts])
     end
   end
-  
+  rule(:acronym => subtree(:a)) { RedClothParslet::Ast::Acronym.new(a[:content], a[:opts]) }
   
   rule(:entity => simple(:e)) { RedClothParslet::Ast::Entity.new(e) }
 end
