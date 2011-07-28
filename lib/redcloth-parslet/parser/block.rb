@@ -6,6 +6,7 @@ class RedClothParslet::Parser::Block < Parslet::Parser
   
   rule(:block_element) do
     list |
+    table |
     heading |
     div |
     notextile_block_tags |
@@ -35,3 +36,4 @@ class RedClothParslet::Parser::Block < Parslet::Parser
 end
 
 require 'redcloth-parslet/parser/block/lists'
+require 'redcloth-parslet/parser/block/tables'
