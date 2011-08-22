@@ -58,6 +58,9 @@ module RedClothParslet::Formatter
     def table_data(el)
       "<td#{html_attributes(el.opts)}>#{inner(el)}</td>"
     end
+    def table_header(el)
+      "<th#{html_attributes(el.opts)}>#{inner(el)}</th>"
+    end
     
     def notextile(el)
       inner(el)

@@ -15,7 +15,7 @@ module RedClothParslet::Ast
   class Table < Element; end
   class TableRow < Element; end
   class TableData < Element; end
-
+  class TableHeader < Element; end
 
   class List
     def self.build(li_hashes, opts={})

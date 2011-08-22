@@ -61,12 +61,17 @@ describe RedClothParslet::Formatter::HTML do
   describe "table" do
     let(:element) { RedClothParslet::Ast::Table.new([
       RedClothParslet::Ast::TableRow.new([
-        RedClothParslet::Ast::TableData.new(["one"]),
-        RedClothParslet::Ast::TableData.new(["two"]),
-        RedClothParslet::Ast::TableData.new(["three"])
+        RedClothParslet::Ast::TableHeader.new(["one"]),
+        RedClothParslet::Ast::TableHeader.new(["two"]),
+        RedClothParslet::Ast::TableHeader.new(["three"])
+      ]),
+      RedClothParslet::Ast::TableRow.new([
+        RedClothParslet::Ast::TableData.new(["1"]),
+        RedClothParslet::Ast::TableData.new(["2"]),
+        RedClothParslet::Ast::TableData.new(["3"])
       ])
     ]) }
     
-    it { should == "<table><tr><td>one</td><td>two</td><td>three</td></tr></table>" }
+    it { should == "<table><tr><th>one</th><th>two</th><th>three</th></tr><tr><td>1</td><td>2</td><td>3</td></tr></table>" }
   end
 end

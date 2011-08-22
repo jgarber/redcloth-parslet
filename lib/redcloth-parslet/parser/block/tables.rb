@@ -9,10 +9,13 @@ class RedClothParslet::Parser::Block < Parslet::Parser
   end
   
   rule(:table_row) do
-    ( table_data.repeat(1).as(:content) >> end_table_row ).as(:table_row)
+    ( (table_header | table_data).repeat(1).as(:content) >> end_table_row ).as(:table_row)
   end
   rule(:end_table_row) { str("|") >> (block_end.present? | (str("\n") >> table_row.present?)) }
   
+  rule(:table_header) do
+    (str("|_. ") >> table_content.as(:content)).as(:table_header)
+  end
   rule(:table_data) do
     (str("|") >> table_content.as(:content)).as(:table_data)
   end
