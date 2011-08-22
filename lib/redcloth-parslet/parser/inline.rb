@@ -17,6 +17,10 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     inline.exclude(:li_start)
   end
   
+  rule(:table_contents) do
+    inline.exclude(:table_cell_start)
+  end
+  
   rule(:term) do
     entity |
     image |
@@ -104,6 +108,8 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   rule :exclude_significant_end_characters do
     # TODO: make this the same rule as in parser/block/lists.rb so it's DRY.
     (match("[*#]").repeat(1) >> str(" ")).absent?.if_excluded(:li_start) >>
+    # TODO: make this the same rule as in parser/block/tables.rb so it's DRY.
+    str("|").absent?.if_excluded(:table_cell_start) >>
     match('[":]').absent?.if_excluded(:double_quoted_phrase_or_link) >>
     end_bold.absent?.if_excluded(:bold) >>
     end_italics.absent?.if_excluded(:italics) >>

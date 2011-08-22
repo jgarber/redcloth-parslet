@@ -17,6 +17,9 @@ class RedClothParslet::Transform < Parslet::Transform
   rule(:heading => subtree(:a), :level=>simple(:l)) { RedClothParslet::Ast.const_get("H#{l}").new(a[:content], a[:opts]) }
   rule(:notextile => simple(:c)) { RedClothParslet::Ast::Notextile.new(c) }
   rule(:list => subtree(:a)) { RedClothParslet::Ast::List.build(a[:content], a[:opts]) }
+  rule(:table => subtree(:a)) { RedClothParslet::Ast::Table.new(a[:content], a[:opts]) }
+  rule(:table_row => subtree(:a)) { RedClothParslet::Ast::TableRow.new(a[:content], a[:opts]) }
+  rule(:table_data => subtree(:a)) { RedClothParslet::Ast::TableData.new(a[:content], a[:opts]) }
   
   rule(:em => subtree(:a)) { RedClothParslet::Ast::Em.new(a[:content], a[:opts]) }
   rule(:strong => subtree(:a)) { RedClothParslet::Ast::Strong.new(a[:content], a[:opts]) }

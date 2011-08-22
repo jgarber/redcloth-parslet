@@ -14,7 +14,7 @@ module RedClothParslet::Formatter
       inner(el, true).chomp
     end
     
-    ([:h1, :h2, :h3, :h4, :h5, :h6, :p, :pre, :div] +
+    ([:h1, :h2, :h3, :h4, :h5, :h6, :p, :pre, :div, :table] +
     [:strong, :code, :em, :i, :b, :ins, :sup, :sub, :span, :cite, :acronym]).each do |m|
       define_method(m) do |el|
        "<#{m}#{html_attributes(el.opts)}>#{inner(el)}</#{m}>"
@@ -50,6 +50,13 @@ module RedClothParslet::Formatter
     def img(el)
       el.opts[:title] = el.opts.delete(:alt) if el.opts[:alt]
       %Q{<img#{html_attributes(el.opts, :image)} alt="#{el.opts[:title]}" />}
+    end
+    
+    def table_row(el)
+      "<tr#{html_attributes(el.opts)}>#{inner(el)}</tr>"
+    end
+    def table_data(el)
+      "<td#{html_attributes(el.opts)}>#{inner(el)}</td>"
     end
     
     def notextile(el)
