@@ -5,6 +5,10 @@ describe RedClothParslet::Parser::Attributes do
     it { should parse("{color:red;}").
       as([{:style=>"color:red;"}])
     }
+    
+    it { should parse("{border:1px solid black}").
+      as([{:style=>"border:1px solid black"}])
+    }
   end
   
   context "style + class" do

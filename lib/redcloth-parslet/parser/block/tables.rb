@@ -2,7 +2,7 @@ class RedClothParslet::Parser::Block < Parslet::Parser
   
   rule(:table) do
     (
-      # attributes?.as(:attributes) >> 
+      (str("table") >> attributes?.as(:attributes) >> str(".\n")).maybe >>
       table_row.repeat(1).as(:content) >> 
       block_end
     ).as(:table)

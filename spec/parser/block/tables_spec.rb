@@ -34,6 +34,16 @@ describe RedClothParslet::Parser::Block do
           RedClothParslet::Ast::TableHeader.new(["Mar"])
         ])
       ])]) }
+      
+    it { should parse("table{border:1px solid black}.\n|This|is|a|row|").with(transform).
+      as([RedClothParslet::Ast::Table.new([
+        RedClothParslet::Ast::TableRow.new([
+          RedClothParslet::Ast::TableData.new(["This"]),
+          RedClothParslet::Ast::TableData.new(["is"]),
+          RedClothParslet::Ast::TableData.new(["a"]),
+          RedClothParslet::Ast::TableData.new(["row"])
+        ])
+      ], {:style => "border:1px solid black"})]) }
   end
   
 end

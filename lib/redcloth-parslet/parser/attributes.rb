@@ -23,7 +23,7 @@ class RedClothParslet::Parser::Attributes < Parslet::Parser
   rule(:class_id_char) { match('[^\s<>()#]') }
   
   rule(:style) do
-    str('{') >> (str('}').absent? >> mchar).repeat(1).as(:style) >> str('}')
+    str('{') >> (str('}').absent? >> (str(" ") | mchar)).repeat(1).as(:style) >> str('}')
   end
   
   rule(:align) { match('[<>=]').as(:align) }
