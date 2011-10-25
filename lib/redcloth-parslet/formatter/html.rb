@@ -142,7 +142,8 @@ module RedClothParslet::Formatter
       '"' => '&quot;',
       "\n" => "<br />\n",
       "'" => "&#39;",
-      "--" => "&#8212;"
+      "--" => "&#8212;",
+      " -" => " &#8211;"
     }
     ESCAPE_ALL_RE = /<|>|&|\n|"|'/
     ESCAPE_PRE_RE = Regexp.union(/<|>|&/)

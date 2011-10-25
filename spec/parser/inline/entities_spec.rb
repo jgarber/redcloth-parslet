@@ -11,4 +11,13 @@ describe RedClothParslet::Parser::Inline do
     }
   end
   
+  describe "single hyphens" do
+    it { should parse("Twenty-five persimmons!").with(transform).
+      as(["Twenty-five persimmons!"])
+    }
+    it { should parse("Observe - tiny and brief!").with(transform).
+      as(["Observe", RedClothParslet::Ast::Entity.new(" -"), " tiny and brief!"])
+    }
+  end
+  
 end

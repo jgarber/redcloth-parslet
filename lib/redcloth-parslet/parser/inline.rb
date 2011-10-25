@@ -7,6 +7,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   
   # Inline elements are terms (words) divided by spaces or spaces themselves.
   rule(:inline_element) do
+    standalone_en_dash |
     sp.as(:s) >> term.present? |
     standalone_asterisk |
     standalone_underscore |
@@ -100,6 +101,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   rule(:m_dash) { str('--').as(:entity) }
   rule(:standalone_asterisk)   { (inline_sp >> str('*')).as(:s) >> sp.present? }
   rule(:standalone_underscore) { (inline_sp >> str('_')).as(:s) >> sp.present? }
+  rule(:standalone_en_dash) { (inline_sp >> str('-')).as(:entity) >> sp.present? }
   
   rule :word do
     char = (exclude_significant_end_characters >> mchar)
