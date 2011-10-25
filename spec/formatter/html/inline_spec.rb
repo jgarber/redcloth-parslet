@@ -1,5 +1,5 @@
 describe RedClothParslet::Formatter::HTML do
-  subject { described_class.new().convert(element) }
+  subject { described_class.new(:order_attributes => true).convert(element) }
 
   describe "strong" do
     let(:element) { RedClothParslet::Ast::Strong.new(["inside"]) }
@@ -46,19 +46,19 @@ describe RedClothParslet::Formatter::HTML do
   
   describe "image" do
     let(:element) { RedClothParslet::Ast::Img.new([], {:src=>"mac.png"}) }
-    it { should == '<img src="mac.png" alt="" />' }
+    it { should == '<img alt="" src="mac.png" />' }
   end
   
   describe "image with alt" do
     let(:element) { RedClothParslet::Ast::Img.new([], {:src=>"mac.png", :alt=>"Mac"}) }
     it "should also populate title" do
-      subject.should == '<img src="mac.png" title="Mac" alt="Mac" />'
+      subject.should == '<img alt="Mac" src="mac.png" title="Mac" />'
     end
   end
   
   describe "image with alignment" do
     let(:element) { RedClothParslet::Ast::Img.new([], {:src=>"mac.png", :align=>"left"}) }
-    it { should == '<img src="mac.png" align="left" alt="" />' }
+    it { should == '<img align="left" alt="" src="mac.png" />' }
   end
   
   describe "acronym" do

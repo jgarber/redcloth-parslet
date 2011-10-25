@@ -48,8 +48,12 @@ module RedClothParslet::Formatter
     end
     
     def img(el)
-      el.opts[:title] = el.opts.delete(:alt) if el.opts[:alt]
-      %Q{<img#{html_attributes(el.opts, :image)} alt="#{el.opts[:title]}" />}
+      if el.opts[:alt]
+        el.opts[:title] = el.opts[:alt]
+      else
+        el.opts[:alt] = ""
+      end
+      %Q{<img#{html_attributes(el.opts, :image)} />}
     end
     
     def table_row(el)
@@ -119,7 +123,15 @@ module RedClothParslet::Formatter
           type == :text ? "text-align:#{v}" : "align:#{v}"
         end
       end.join("; ") if attr[:style]
-      attr.map {|k,v| v.nil? ? '' : " #{k}=\"#{escape_html(v.to_s, :attribute)}\"" }.join('')
+      order_attributes(attr).map {|k,v| v.nil? ? '' : " #{k}=\"#{escape_html(v.to_s, :attribute)}\"" }.join('')
+    end
+    
+    def order_attributes(attributes)
+      return attributes unless @options[:order_attributes]
+      attributes.inject({}) do |attrs, (key, value)|
+        attrs[key.to_s] = value
+        attrs
+      end.sort
     end
     
     # :stopdoc:
