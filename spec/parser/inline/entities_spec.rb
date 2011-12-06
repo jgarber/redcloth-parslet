@@ -19,5 +19,11 @@ describe RedClothParslet::Parser::Inline do
       as(["Observe", RedClothParslet::Ast::Entity.new(" -"), " tiny and brief!"])
     }
   end
+
+  describe "ellipses" do
+    it { should parse("She trailed off...").with(transform).
+      as(["She trailed off", RedClothParslet::Ast::Entity.new("...")])
+    }
+  end
   
 end

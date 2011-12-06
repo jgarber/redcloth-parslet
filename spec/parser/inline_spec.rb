@@ -11,8 +11,8 @@ describe RedClothParslet::Parser::Inline do
     it { should parse("One sentence. Two.").with(transform).
       as(["One sentence. Two."]) }
     
-    it { should parse("Roses are red\nViolets are purple...").with(transform).
-      as(["Roses are red\nViolets are purple..."]) }
+    it { should parse("Roses are red\nViolets are purple").with(transform).
+      as(["Roses are red\nViolets are purple"]) }
     
   end
   

@@ -35,7 +35,8 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   end
   
   rule(:entity) do
-    m_dash
+    m_dash |
+    ellipsis
   end
   
   rule(:bold) do
@@ -99,6 +100,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   end
   
   rule(:m_dash) { str('--').as(:entity) }
+  rule(:ellipsis) { str('...').as(:entity) }
   rule(:standalone_asterisk)   { (inline_sp >> str('*')).as(:s) >> sp.present? }
   rule(:standalone_underscore) { (inline_sp >> str('_')).as(:s) >> sp.present? }
   rule(:standalone_en_dash) { (inline_sp >> str('-')).as(:entity) >> sp.present? }
