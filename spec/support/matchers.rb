@@ -62,7 +62,7 @@ module RedClothParslet
         def join_adjacent_strings(obj)
           case obj
           when Array
-            obj.inject([]) do |a,b|
+            obj.flatten.inject([]) do |a,b|
               if a.last.is_a?(String) && b.is_a?(String)
                 last = a.pop
                 a << last + b

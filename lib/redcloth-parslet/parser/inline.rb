@@ -31,6 +31,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     strong.unless_excluded(:strong) |
     em.unless_excluded(:em) |
     acronym |
+    dimensions |
     word.as(:s)
   end
   
@@ -99,6 +100,18 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     ).as(:acronym)
   end
   
+  rule(:dimensions) do
+    (dimension | factor.as(:s)).as(:left) >> 
+    inline_sp?.as(:left_space) >>
+    str('x').as(:entity) >> 
+    inline_sp?.as(:right_space) >> 
+    ((dimensions | dimension | factor.as(:s))).as(:right)
+  end
+  rule(:dimension) do
+    ( factor >> match(%q{['"]}) ).repeat(1).as(:dimension)
+  end
+  rule(:factor) { digits >> (match('[.,/ -]') >> digits).repeat }
+  
   rule(:m_dash) { str('--').as(:entity) }
   rule(:ellipsis) { str('...').as(:entity) }
   rule(:standalone_asterisk)   { (inline_sp >> str('*')).as(:s) >> sp.present? }
@@ -123,7 +136,9 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
 
   rule(:mchar) { entity.absent? >> match('\S') }
   rule(:inline_sp) { match('[ \t]').repeat(1) }
+  rule(:inline_sp?) { inline_sp.maybe }
   rule(:sp) { inline_sp | str("\n") }
+  rule(:digits) { match('[0-9]').repeat(1) }
   # rule(:mtext) { mchar.repeat(1) >> (inline_sp >> mchar.repeat(1)) }
   
   rule(:nongreedy_uri) { RedClothParslet::Parser::Attributes::NongreedyUri.new }

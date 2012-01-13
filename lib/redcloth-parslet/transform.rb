@@ -42,5 +42,9 @@ class RedClothParslet::Transform < Parslet::Transform
   end
   rule(:acronym => subtree(:a)) { RedClothParslet::Ast::Acronym.new(a[:content], a[:opts]) }
   
+  rule(:dimension => simple(:d)) { RedClothParslet::Ast::Dimension.new(d) }
   rule(:entity => simple(:e)) { RedClothParslet::Ast::Entity.new(e) }
+  rule(:entity => simple(:e), :left => subtree(:l), :left_space => simple(:l_sp), :right => subtree(:r), :right_space => simple(:r_sp)) do
+    [l, String(l_sp), RedClothParslet::Ast::Entity.new(e), String(r_sp), r]
+  end
 end

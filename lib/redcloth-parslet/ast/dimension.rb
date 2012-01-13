@@ -1,4 +1,4 @@
 module RedClothParslet::Ast
-  class Entity < Base
+  class Dimension < Base
   end
 end

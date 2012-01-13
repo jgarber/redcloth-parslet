@@ -74,8 +74,12 @@ module RedClothParslet::Formatter
       "&#8220;#{inner(el)}&#8221;"
     end
     
+    def dimension(el)
+      el.to_s.gsub(/['"]/) {|m| {"\"" => '&#8243;', "'" => '&#8242;'}[m] }
+    end
+    
     def entity(el)
-      ESCAPE_MAP[el.str]
+      ESCAPE_MAP[el.to_s]
     end
     
     private
@@ -100,7 +104,7 @@ module RedClothParslet::Formatter
     def inner(el, block = false)
       result = ''
       @stack.push(el)
-      el.children.each do |inner_el|
+      el.children.flatten.each do |inner_el|
         if inner_el.is_a?(String)
           result << escape_html(inner_el)
         elsif inner_el.respond_to?(:type)
@@ -144,6 +148,7 @@ module RedClothParslet::Formatter
       "'" => "&#39;",
       "--" => "&#8212;",
       " -" => " &#8211;",
+      "x" => "&#215;",
       "..." => "&#8230;"
     }
     ESCAPE_ALL_RE = /<|>|&|\n|"|'/
