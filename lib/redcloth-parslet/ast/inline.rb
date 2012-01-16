@@ -3,6 +3,7 @@ module RedClothParslet::Ast
   class Em < Element; end
   class B < Element; end
   class I < Element; end
+  class Span < Element; end
   class Link < Element; end
   class DoubleQuotedPhrase < Element; end
   class Img < Element; end

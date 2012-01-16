@@ -11,6 +11,11 @@ describe RedClothParslet::Formatter::HTML do
     it { should == "<em>inside</em>" }
   end
   
+  describe "span" do
+    let(:element) { RedClothParslet::Ast::Span.new("inside", {:class=>'myclass'}) }
+    it { should == "<span class=\"myclass\">inside</span>" }
+  end
+
   describe "b" do
     let(:element) { RedClothParslet::Ast::B.new(["inside"]) }
     it { should == "<b>inside</b>" }

@@ -11,6 +11,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     sp.as(:s) >> term.present? |
     standalone_asterisk |
     standalone_underscore |
+    standalone_percent |
     term
   end
   
@@ -30,6 +31,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     italics.unless_excluded(:italics) |
     strong.unless_excluded(:strong) |
     em.unless_excluded(:em) |
+    span.unless_excluded(:span) |
     acronym |
     dimensions |
     word.as(:s)
@@ -67,7 +69,14 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     end_em).as(:em)
   end
   rule(:end_em) { str('_') >> match("[a-zA-Z0-9]").absent? }
-  
+
+  rule(:span) do
+    (str('%') >> 
+    maybe_preceded_by_attributes(inline.exclude(:span).as(:content)) >> 
+    end_span).as(:span)
+  end
+  rule(:end_span) { str('%') >> match("[a-zA-Z0-9]").absent? }
+
   rule(:double_quoted_phrase_or_link) do
       (str('"') >>
       maybe_preceded_by_attributes(inline.exclude(:double_quoted_phrase_or_link).as(:content)) >>
@@ -116,6 +125,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   rule(:ellipsis) { str('...').as(:entity) }
   rule(:standalone_asterisk)   { (inline_sp >> str('*')).as(:s) >> sp.present? }
   rule(:standalone_underscore) { (inline_sp >> str('_')).as(:s) >> sp.present? }
+  rule(:standalone_percent) { (inline_sp >> str('%')).as(:s) >> sp.present? }
   rule(:standalone_en_dash) { (inline_sp >> str('-')).as(:entity) >> sp.present? }
   
   rule :word do
@@ -131,7 +141,8 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     end_bold.absent?.if_excluded(:bold) >>
     end_italics.absent?.if_excluded(:italics) >>
     end_strong.absent?.if_excluded(:strong) >>
-    end_em.absent?.if_excluded(:em)
+    end_em.absent?.if_excluded(:em) >>
+    end_span.absent?.if_excluded(:span)
   end
 
   rule(:mchar) { entity.absent? >> match('\S') }
