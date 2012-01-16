@@ -12,6 +12,8 @@ module RedClothParslet::Ast
   class Ol < Element; end
   class Li < Element; end
 
+  class Blockquote < Element; end
+
   class Table < Element; end
   class TableRow < Element; end
   class TableData < Element; end

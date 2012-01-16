@@ -34,6 +34,16 @@ describe RedClothParslet::Parser::Block do
     it { should parse("Two for the price of one!\n* Offer not valid in Alaska").with(transform).
       as([RedClothParslet::Ast::P.new(["Two for the price of one!\n* Offer not valid in Alaska"])]) }
   end
+
+  context "Block quote" do
+    it { should parse("bq. Injustice anywhere is a threat to justice everywhere.").with(transform).
+      as([RedClothParslet::Ast::Blockquote.new([RedClothParslet::Ast::P.new(["Injustice anywhere is a threat to justice everywhere."])])]) }
+
+    context "attributes" do
+      it { should parse("bq(myclass). This is a blockquote.").with(transform).
+        as([RedClothParslet::Ast::Blockquote.new([RedClothParslet::Ast::P.new(["This is a blockquote."])], {:class=>'myclass'})]) }
+    end
+  end
   
   context "notextile block" do
     it { should parse("<notextile>\nsomething\n</notextile>").with(transform).

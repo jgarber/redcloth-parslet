@@ -12,6 +12,11 @@ describe RedClothParslet::Formatter::HTML do
     it { should == "<p>My paragraph.</p>" }
   end
 
+  describe "bq" do
+    let(:element) { RedClothParslet::Ast::Blockquote.new([ RedClothParslet::Ast::P.new(["My paragraph."]) ]) }
+    it { should == "<blockquote>\n<p>My paragraph.</p>\n</blockquote>" }
+  end
+
   describe "notextile" do
     let(:element) { RedClothParslet::Ast::Notextile.new(["inside"]) }
     it { should == "inside" }

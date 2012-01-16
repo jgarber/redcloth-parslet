@@ -16,6 +16,7 @@ class RedClothParslet::Transform < Parslet::Transform
   rule(:div => subtree(:a)) { RedClothParslet::Ast::Div.new(a[:content], a[:opts]) }
   rule(:heading => subtree(:a), :level=>simple(:l)) { RedClothParslet::Ast.const_get("H#{l}").new(a[:content], a[:opts]) }
   rule(:notextile => simple(:c)) { RedClothParslet::Ast::Notextile.new(c) }
+  rule(:bq => subtree(:a)) { RedClothParslet::Ast::Blockquote.new([RedClothParslet::Ast::P.new(a[:content])], a[:opts]) }
   rule(:list => subtree(:a)) { RedClothParslet::Ast::List.build(a[:content], a[:opts]) }
   rule(:table => subtree(:a)) { RedClothParslet::Ast::Table.new(a[:content], a[:opts]) }
   rule(:table_row => subtree(:a)) { RedClothParslet::Ast::TableRow.new(a[:content], a[:opts]) }
