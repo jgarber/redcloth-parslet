@@ -78,4 +78,19 @@ describe RedClothParslet::Parser::Inline do
   describe "ins" do
     it_should_behave_like 'a simple inline element', 'ins', '+', RedClothParslet::Ast::Ins
   end
+
+  describe "del" do
+    it { should parse("-del phrase-").with(transform).
+      as([RedClothParslet::Ast::Del.new(["del phrase"])]) }
+    
+    it "should allow a del phrase at the end of a sentence before punctuation" do
+      subject.should parse("Is she a Schwarzenegger -still-?").with(transform).
+        as(["Is she a Schwarzenegger ", RedClothParslet::Ast::Del.new(["still"]),  "?"])
+    end
+
+    it "should parse a deleted phrase containing hyphenated words" do
+      subject.should parse("The -widow-maker- is a time-honored tradition.").with(transform).
+        as(["The ", RedClothParslet::Ast::Del.new(["widow-maker"]), " is a time-honored tradition."])
+    end
+  end
 end

@@ -15,7 +15,7 @@ module RedClothParslet::Formatter
     end
     
     ([:h1, :h2, :h3, :h4, :h5, :h6, :p, :pre, :div, :table] +
-    [:strong, :code, :em, :i, :b, :ins, :sup, :sub, :span, :cite, :acronym]).each do |m|
+    [:strong, :em, :i, :b, :ins, :del, :sup, :sub, :span, :cite, :acronym, :code]).each do |m|
       define_method(m) do |el|
        "<#{m}#{html_attributes(el.opts)}>#{inner(el)}</#{m}>"
       end

@@ -1,4 +1,5 @@
 shared_examples 'a simple inline element' do |rule_name, mark, ast_class|
+  # These were conceived as examples for strong (*) but apply to all simple inlines
   describe "specific parser rule" do
     it "should consume a #{rule_name} word" do
       parser.send(rule_name).should parse("#{mark}hey#{mark}")

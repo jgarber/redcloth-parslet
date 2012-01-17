@@ -8,6 +8,14 @@ module RedClothParslet::Ast
       @children = children.is_a?(Array) ? children : [children]
       @opts = opts
     end
+
+    def to_s
+      children.reduce(:to_s)
+    end
+
+    def inspect
+      "#{type}:(#{children.reduce(:inspect)})"
+    end
     
     def ==(other)
       other.class == self.class &&
