@@ -1,41 +1,13 @@
 describe RedClothParslet::Formatter::HTML do
   subject { described_class.new(:order_attributes => true).convert(element) }
 
-  describe "strong" do
-    let(:element) { RedClothParslet::Ast::Strong.new(["inside"]) }
-    it { should == "<strong>inside</strong>" }
-  end
-
-  describe "em" do
-    let(:element) { RedClothParslet::Ast::Em.new("inside") }
-    it { should == "<em>inside</em>" }
+  %w(strong em span b i ins del).each do |tag|
+    describe tag do
+      let(:element) { RedClothParslet::Ast.const_get(tag.capitalize).new(["inside"], {:class => 'myclass'}) }
+      it { should == "<#{tag} class=\"myclass\">inside</#{tag}>" }
+    end
   end
   
-  describe "span" do
-    let(:element) { RedClothParslet::Ast::Span.new("inside", {:class=>'myclass'}) }
-    it { should == "<span class=\"myclass\">inside</span>" }
-  end
-
-  describe "b" do
-    let(:element) { RedClothParslet::Ast::B.new(["inside"]) }
-    it { should == "<b>inside</b>" }
-  end
-
-  describe "i" do
-    let(:element) { RedClothParslet::Ast::I.new("inside") }
-    it { should == "<i>inside</i>" }
-  end
-  
-  describe "ins" do
-    let(:element) { RedClothParslet::Ast::Ins.new("inside") }
-    it { should == "<ins>inside</ins>" }
-  end
-  
-  describe "del" do
-    let(:element) { RedClothParslet::Ast::Del.new("inside") }
-    it { should == "<del>inside</del>" }
-  end
-   
   describe "em inside strong" do
     let(:element) { RedClothParslet::Ast::Strong.new(RedClothParslet::Ast::Em.new("inside")) }
     it { should == "<strong><em>inside</em></strong>" }
