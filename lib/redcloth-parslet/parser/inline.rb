@@ -70,6 +70,8 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     end
     rule(end_rule_name) { str(signature) >> match("[a-zA-Z0-9]").absent? }
   end
+  rule(:end_strong) { str('*') >> match("[a-zA-Z0-9*]").absent? }
+  rule(:end_em) { str('_') >> match("[a-zA-Z0-9_]").absent? }
 
   rule(:double_quoted_phrase_or_link) do
       (str('"') >>
