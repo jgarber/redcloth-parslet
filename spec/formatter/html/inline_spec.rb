@@ -26,6 +26,11 @@ describe RedClothParslet::Formatter::HTML do
     it { should == "<i>inside</i>" }
   end
   
+  describe "ins" do
+    let(:element) { RedClothParslet::Ast::Ins.new("inside") }
+    it { should == "<ins>inside</ins>" }
+  end
+  
   describe "em inside strong" do
     let(:element) { RedClothParslet::Ast::Strong.new(RedClothParslet::Ast::Em.new("inside")) }
     it { should == "<strong><em>inside</em></strong>" }
