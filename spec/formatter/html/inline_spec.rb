@@ -63,4 +63,9 @@ describe RedClothParslet::Formatter::HTML do
     let(:element) { RedClothParslet::Ast::Acronym.new("CSS", {:title => "Cascading Style Sheets"}) }
     it { should == '<acronym title="Cascading Style Sheets">CSS</acronym>' }
   end
+
+  describe "caps" do
+    let(:element) { RedClothParslet::Ast::Caps.new("CSS") }
+    it { should == '<span class="caps">CSS</span>' }
+  end
 end

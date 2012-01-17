@@ -83,6 +83,11 @@ module RedClothParslet::Formatter
     def dimension(el)
       el.to_s.gsub(/['"]/) {|m| {"\"" => '&#8243;', "'" => '&#8242;'}[m] }
     end
+
+    def caps(el)
+      el.opts.merge!({:class => 'caps'})
+      span(el)
+    end
     
     def entity(el)
       ESCAPE_MAP[el.to_s]

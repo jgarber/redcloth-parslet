@@ -41,6 +41,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     double_quoted_phrase_or_link |
     simple_inline_term |
     acronym |
+    all_caps_word |
     dimensions |
     word.as(:s)
   end
@@ -105,6 +106,8 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
       ).as(:attributes)
     ).as(:acronym)
   end
+
+  rule(:all_caps_word) { match("[A-Z]").repeat(3).as(:caps) }
   
   rule(:dimensions) do
     (dimension | factor.as(:s)).as(:left) >> 

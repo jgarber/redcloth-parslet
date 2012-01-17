@@ -11,4 +11,5 @@ module RedClothParslet::Ast
   class Img < Element; end
   class Acronym < Element; end
   
+  class Caps < Span; end
 end

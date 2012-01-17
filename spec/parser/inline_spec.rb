@@ -93,4 +93,10 @@ describe RedClothParslet::Parser::Inline do
         as(["The ", RedClothParslet::Ast::Del.new(["widow-maker"]), " is a time-honored tradition."])
     end
   end
+
+  describe "caps" do
+    it { should parse("I got a PDQ job with NASA in the US.").with(transform).
+      as(["I got a ", RedClothParslet::Ast::Caps.new(["PDQ"]), " job with ", RedClothParslet::Ast::Caps.new(["NASA"]), " in the US."])
+    }
+  end
 end
