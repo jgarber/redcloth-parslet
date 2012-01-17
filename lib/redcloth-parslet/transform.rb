@@ -25,8 +25,8 @@ class RedClothParslet::Transform < Parslet::Transform
   
   rule(:em => subtree(:a)) { RedClothParslet::Ast::Em.new(a[:content], a[:opts]) }
   rule(:strong => subtree(:a)) { RedClothParslet::Ast::Strong.new(a[:content], a[:opts]) }
-  rule(:b => subtree(:a)) { RedClothParslet::Ast::B.new(a[:content], a[:opts]) }
-  rule(:i => subtree(:a)) { RedClothParslet::Ast::I.new(a[:content], a[:opts]) }
+  rule(:bold => subtree(:a)) { RedClothParslet::Ast::B.new(a[:content], a[:opts]) }
+  rule(:italics => subtree(:a)) { RedClothParslet::Ast::I.new(a[:content], a[:opts]) }
   rule(:ins => subtree(:a)) { RedClothParslet::Ast::Ins.new(a[:content], a[:opts]) }
   rule(:span => subtree(:a)) { RedClothParslet::Ast::Span.new(a[:content], a[:opts]) }
   rule(:double_quoted_phrase_or_link => subtree(:a)) do

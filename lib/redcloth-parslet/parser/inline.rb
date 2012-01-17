@@ -4,15 +4,21 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     sp.absent? >>
     inline_element.repeat(1)
   end
+
+  SIMPLE_INLINE_ELEMENTS = [
+    [:bold, '**'],
+    [:italics, '__'],
+    [:strong, '*'],
+    [:em, '_'],
+    [:span, '%'],
+    [:ins, '+']
+  ]
   
   # Inline elements are terms (words) divided by spaces or spaces themselves.
   rule(:inline_element) do
     standalone_en_dash |
     sp.as(:s) >> term.present? |
-    standalone_asterisk |
-    standalone_underscore |
-    standalone_percent |
-    standalone_plus |
+    standalone_symbol_from_simple_inline_element |
     term
   end
   
@@ -28,63 +34,40 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     entity |
     image |
     double_quoted_phrase_or_link |
-    bold.unless_excluded(:bold) |
-    italics.unless_excluded(:italics) |
-    strong.unless_excluded(:strong) |
-    em.unless_excluded(:em) |
-    span.unless_excluded(:span) |
-    ins.unless_excluded(:ins) |
+    simple_inline_term |
     acronym |
     dimensions |
     word.as(:s)
+  end
+
+  rule(:simple_inline_term) do
+    SIMPLE_INLINE_ELEMENTS.map {|el,v| send(el).unless_excluded(el) }.reduce(:|)
+  end
+
+  rule(:simple_inline_term_end_exclusion) do
+    SIMPLE_INLINE_ELEMENTS.map {|el,v| send("end_#{el}").absent?.if_excluded(el) }.reduce(:>>)
+  end
+
+  rule(:standalone_symbol_from_simple_inline_element) do
+    Hash[SIMPLE_INLINE_ELEMENTS].values.join.split('').uniq.map do |char|
+      (inline_sp >> str(char)).as(:s) >> sp.present?
+    end.reduce(:|)
   end
   
   rule(:entity) do
     m_dash |
     ellipsis
   end
-  
-  rule(:bold) do
-    (str('**') >>
-    maybe_preceded_by_attributes(inline.exclude(:bold).as(:content)) >> 
-    end_bold).as(:b)
+   
+  SIMPLE_INLINE_ELEMENTS.each do |element_name, signature|
+    end_rule_name = "end_#{element_name}".to_sym
+    rule(element_name) do
+      (str(signature) >>
+      maybe_preceded_by_attributes(inline.exclude(element_name).as(:content)) >> 
+      send(end_rule_name)).as(element_name)
+    end
+    rule(end_rule_name) { str(signature) >> match("[a-zA-Z0-9]").absent? }
   end
-  rule(:end_bold) { str('**') >> match("[a-zA-Z0-9]").absent? }
-  
-  rule(:italics) do
-    (str('__') >>
-    maybe_preceded_by_attributes(inline.exclude(:italics).as(:content)) >> 
-    end_italics).as(:i)
-  end
-  rule(:end_italics) { str('__') >> match("[a-zA-Z0-9]").absent? }
-  
-  rule(:strong) do
-    (str('*') >>
-    maybe_preceded_by_attributes(inline.exclude(:strong).as(:content)) >> 
-    end_strong).as(:strong)
-  end
-  rule(:end_strong) { str('*') >> match("[a-zA-Z0-9]").absent? }
-  
-  rule(:em) do
-    (str('_') >> 
-    maybe_preceded_by_attributes(inline.exclude(:em).as(:content)) >> 
-    end_em).as(:em)
-  end
-  rule(:end_em) { str('_') >> match("[a-zA-Z0-9]").absent? }
-
-  rule(:span) do
-    (str('%') >> 
-    maybe_preceded_by_attributes(inline.exclude(:span).as(:content)) >> 
-    end_span).as(:span)
-  end
-  rule(:end_span) { str('%') >> match("[a-zA-Z0-9]").absent? }
-
-  rule(:ins) do
-    (str('+') >> 
-    maybe_preceded_by_attributes(inline.exclude(:ins).as(:content)) >> 
-    end_ins).as(:ins)
-  end
-  rule(:end_ins) { str('+') >> match("[a-zA-Z0-9]").absent? }
 
   rule(:double_quoted_phrase_or_link) do
       (str('"') >>
@@ -132,10 +115,6 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   
   rule(:m_dash) { str('--').as(:entity) }
   rule(:ellipsis) { str('...').as(:entity) }
-  rule(:standalone_asterisk)   { (inline_sp >> str('*')).as(:s) >> sp.present? }
-  rule(:standalone_underscore) { (inline_sp >> str('_')).as(:s) >> sp.present? }
-  rule(:standalone_plus) { (inline_sp >> str('+')).as(:s) >> sp.present? }
-  rule(:standalone_percent) { (inline_sp >> str('%')).as(:s) >> sp.present? }
   rule(:standalone_en_dash) { (inline_sp >> str('-')).as(:entity) >> sp.present? }
   
   rule :word do
@@ -148,12 +127,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     # TODO: make this the same rule as in parser/block/tables.rb so it's DRY.
     str("|").absent?.if_excluded(:table_cell_start) >>
     match('[":]').absent?.if_excluded(:double_quoted_phrase_or_link) >>
-    end_bold.absent?.if_excluded(:bold) >>
-    end_italics.absent?.if_excluded(:italics) >>
-    end_strong.absent?.if_excluded(:strong) >>
-    end_em.absent?.if_excluded(:em) >>
-    end_ins.absent?.if_excluded(:ins) >>
-    end_span.absent?.if_excluded(:span)
+    simple_inline_term_end_exclusion
   end
 
   rule(:mchar) { entity.absent? >> match('\S') }
