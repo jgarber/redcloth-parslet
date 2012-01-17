@@ -17,9 +17,13 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   # Inline elements are terms (words) divided by spaces or spaces themselves.
   rule(:inline_element) do
     standalone_en_dash |
-    sp.as(:s) >> term.present? |
     standalone_symbol_from_simple_inline_element |
+    space_between_terms |
     term
+  end
+
+  rule(:space_between_terms) do
+    sp.as(:s) >> term.present?
   end
   
   rule(:list_contents) do
@@ -41,17 +45,15 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   end
 
   rule(:simple_inline_term) do
-    SIMPLE_INLINE_ELEMENTS.map {|el,v| send(el).unless_excluded(el) }.reduce(:|)
+    SIMPLE_INLINE_ELEMENTS.map {|el,mark| send(el).unless_excluded(el) }.reduce(:|)
   end
 
   rule(:simple_inline_term_end_exclusion) do
-    SIMPLE_INLINE_ELEMENTS.map {|el,v| send("end_#{el}").absent?.if_excluded(el) }.reduce(:>>)
+    SIMPLE_INLINE_ELEMENTS.map {|el,mark| send("end_#{el}").absent?.if_excluded(el) }.reduce(:>>)
   end
 
   rule(:standalone_symbol_from_simple_inline_element) do
-    Hash[SIMPLE_INLINE_ELEMENTS].values.join.split('').uniq.map do |char|
-      (inline_sp >> str(char)).as(:s) >> sp.present?
-    end.reduce(:|)
+    SIMPLE_INLINE_ELEMENTS.map {|el,mark| (inline_sp >> str(mark)).as(:s) >> sp.present? }.reduce(:|)
   end
   
   rule(:entity) do
