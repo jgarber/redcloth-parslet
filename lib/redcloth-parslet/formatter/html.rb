@@ -15,7 +15,7 @@ module RedClothParslet::Formatter
     end
     
     ([:h1, :h2, :h3, :h4, :h5, :h6, :p, :pre, :div, :table] +
-    [:strong, :em, :i, :b, :ins, :del, :sup, :sub, :span, :cite, :acronym, :code]).each do |m|
+    [:strong, :em, :i, :b, :ins, :del, :sup, :sub, :span, :cite, :acronym]).each do |m|
       define_method(m) do |el|
        "<#{m}#{html_attributes(el.opts)}>#{inner(el)}</#{m}>"
       end
@@ -88,6 +88,10 @@ module RedClothParslet::Formatter
       el.opts.merge!({:class => 'caps'})
       span(el)
     end
+
+    def code(el)
+      "<code#{html_attributes(el.opts)}>#{escape_html(el.to_s, :pre)}</code>"
+    end
     
     def entity(el)
       ESCAPE_MAP[el.to_s]
@@ -149,33 +153,27 @@ module RedClothParslet::Formatter
       end.sort
     end
     
-    # :stopdoc:
     ESCAPE_MAP = {
       '<' => '&lt;',
       '>' => '&gt;',
       '&' => '&amp;',
       '"' => '&quot;',
       "\n" => "<br />\n",
-      "'" => "&#8217;",
+      "'" => "&#39;",
       "--" => "&#8212;",
       " -" => " &#8211;",
       "x" => "&#215;",
       "..." => "&#8230;"
     }
     ESCAPE_ALL_RE = /<|>|&|\n|"|'/
-    ESCAPE_PRE_RE = Regexp.union(/<|>|&/)
+    ESCAPE_PRE_RE = Regexp.union(/<|>|&|'/)
     ESCAPE_ATTRIBUTE_RE = Regexp.union(/<|>|&|"/)
     ESCAPE_RE_FROM_TYPE = {
       :all => ESCAPE_ALL_RE,
       :pre => ESCAPE_PRE_RE,
       :attribute => ESCAPE_ATTRIBUTE_RE
     }
-    # :startdoc:
 
-    # Escape the special HTML characters in the string +str+. The parameter +type+ specifies what
-    # is escaped: :all - all special HTML characters as well as entities, :pre - all special HTML
-    # characters except breaks and quotes and :attribute - all special HTML
-    # characters including the quotation mark but with no curly single quote.
     def escape_html(str, type = :all)
       str.gsub(ESCAPE_RE_FROM_TYPE[type]) {|m| ESCAPE_MAP[m] || m}
     end

@@ -1,5 +1,5 @@
 # encoding: UTF-8
-require File.join(__FILE__, '../inline/shared_examples_for_simple_inline_elements')
+require File.join(File.dirname(__FILE__), 'inline/shared_examples_for_simple_inline_elements')
 
 describe RedClothParslet::Parser::Inline do
   let(:parser) { described_class.new }

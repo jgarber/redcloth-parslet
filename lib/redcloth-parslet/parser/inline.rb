@@ -12,7 +12,8 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     [:em, '_'],
     [:span, '%'],
     [:ins, '+'],
-    [:del, '-']
+    [:del, '-'],
+    [:code, '@']
   ]
   
   # Inline elements are terms (words) divided by spaces or spaces themselves.
@@ -36,7 +37,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   end
   
   rule(:term) do
-    entity |
+    typographic_entity |
     image |
     double_quoted_phrase_or_link |
     simple_inline_term |
@@ -57,12 +58,8 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   rule(:standalone_symbol_from_simple_inline_element) do
     SIMPLE_INLINE_ELEMENTS.map {|el,mark| (inline_sp >> str(mark)).as(:s) >> sp.present? }.reduce(:|)
   end
-  
-  rule(:entity) do
-    m_dash |
-    ellipsis
-  end
-   
+
+  # general pattern for inline elements
   SIMPLE_INLINE_ELEMENTS.each do |element_name, signature|
     end_rule_name = "end_#{element_name}".to_sym
     rule(element_name) do
@@ -72,11 +69,17 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     end
     rule(end_rule_name) { str(signature) >> match("[a-zA-Z0-9]").absent? }
   end
+  # exceptions to above pattern
+  rule(:code) do
+    (str('@') >> 
+        maybe_preceded_by_attributes(code_words.as(:content)) >>
+        end_code).as(:code)
+  end
   rule(:end_strong) { str('*') >> match("[a-zA-Z0-9*]").absent? }
   rule(:end_em) { str('_') >> match("[a-zA-Z0-9_]").absent? }
 
   rule(:double_quoted_phrase_or_link) do
-      (str('"') >>
+    (str('"') >>
       maybe_preceded_by_attributes(inline.exclude(:double_quoted_phrase_or_link).as(:content)) >>
       end_double_quoted_phrase_or_link).as(:double_quoted_phrase_or_link)
   end
@@ -121,6 +124,11 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   end
   rule(:factor) { digits >> (match('[.,/ -]') >> digits).repeat }
   
+  rule(:typographic_entity) do
+    m_dash |
+    ellipsis
+  end
+
   rule(:m_dash) { str('--').as(:entity) }
   rule(:ellipsis) { str('...').as(:entity) }
   rule(:standalone_en_dash) { (inline_sp >> str('-')).as(:entity) >> sp.present? }
@@ -138,7 +146,15 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     simple_inline_term_end_exclusion
   end
 
-  rule(:mchar) { entity.absent? >> match('\S') }
+  rule(:code_words) do
+    (code_chars >> 
+      (match('\s+') >> 
+        (code_chars)
+      ).repeat
+    ).as(:s)
+  end
+  rule(:code_chars) { (end_code.absent? >> match('\S')).repeat(1) | (str('@') >> match('\s').present?) }
+  rule(:mchar) { typographic_entity.absent? >> match('\S') }
   rule(:inline_sp) { match('[ \t]').repeat(1) }
   rule(:inline_sp?) { inline_sp.maybe }
   rule(:sp) { inline_sp | str("\n") }

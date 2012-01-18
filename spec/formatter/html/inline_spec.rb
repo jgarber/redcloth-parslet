@@ -68,4 +68,9 @@ describe RedClothParslet::Formatter::HTML do
     let(:element) { RedClothParslet::Ast::Caps.new("CSS") }
     it { should == '<span class="caps">CSS</span>' }
   end
+
+  describe "code" do
+    let(:element) { RedClothParslet::Ast::Code.new("puts 'hello world'") }
+    it { should == "<code>puts &#39;hello world&#39;</code>" }
+  end
 end
