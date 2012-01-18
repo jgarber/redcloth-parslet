@@ -30,6 +30,8 @@ class RedClothParslet::Transform < Parslet::Transform
   rule(:italics => subtree(:a)) { RedClothParslet::Ast::I.new(a[:content], a[:opts]) }
   rule(:ins => subtree(:a)) { RedClothParslet::Ast::Ins.new(a[:content], a[:opts]) }
   rule(:del => subtree(:a)) { RedClothParslet::Ast::Del.new(a[:content], a[:opts]) }
+  rule(:sup => subtree(:a)) { RedClothParslet::Ast::Sup.new(a[:content], a[:opts]) }
+  rule(:sub => subtree(:a)) { RedClothParslet::Ast::Sub.new(a[:content], a[:opts]) }
   rule(:span => subtree(:a)) { RedClothParslet::Ast::Span.new(a[:content], a[:opts]) }
   rule(:code => subtree(:a)) { RedClothParslet::Ast::Code.new(a[:content], a[:opts]) }
   rule(:double_quoted_phrase_or_link => subtree(:a)) do

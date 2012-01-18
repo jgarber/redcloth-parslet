@@ -99,4 +99,12 @@ describe RedClothParslet::Parser::Inline do
       as(["I got a ", RedClothParslet::Ast::Caps.new(["PDQ"]), " job with ", RedClothParslet::Ast::Caps.new(["NASA"]), " in the US."])
     }
   end
+
+  describe 'subscript' do
+    it_should_behave_like 'a simple inline element', 'sub', '~', RedClothParslet::Ast::Sub
+  end
+
+  describe 'superscript' do
+    it_should_behave_like 'a simple inline element', 'sup', '^', RedClothParslet::Ast::Sup
+  end
 end

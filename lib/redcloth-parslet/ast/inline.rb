@@ -3,6 +3,8 @@ module RedClothParslet::Ast
   class Em < Element; end
   class B < Element; end
   class I < Element; end
+  class Sup < Element; end
+  class Sub < Element; end
   class Span < Element; end
   class Code < Element; end
   class Ins < Element; end

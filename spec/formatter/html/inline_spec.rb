@@ -73,4 +73,14 @@ describe RedClothParslet::Formatter::HTML do
     let(:element) { RedClothParslet::Ast::Code.new("puts 'hello world'") }
     it { should == "<code>puts &#39;hello world&#39;</code>" }
   end
+  
+  describe "sup" do
+    let(:element) { RedClothParslet::Ast::Sup.new("2") }
+    it { should == "<sup>2</sup>" }
+  end
+
+  describe "sub" do
+    let(:element) { RedClothParslet::Ast::Sub.new("2") }
+    it { should == "<sub>2</sub>" }
+  end
 end
