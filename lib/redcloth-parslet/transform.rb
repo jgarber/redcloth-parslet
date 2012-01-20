@@ -16,7 +16,7 @@ class RedClothParslet::Transform < Parslet::Transform
   rule(:extended => subtree(:ext)) { ext[:successive].unshift(ext[:first]) }
   RedClothParslet::Parser::Block::SIMPLE_BLOCK_ELEMENTS.each do |block_type|
     rule(block_type => subtree(:a)) do
-      RedClothParslet::Ast::const_get(block_type.capitalize).new(a[:content], a[:opts])
+      RedClothParslet::Ast::const_get(block_type.to_s.capitalize).new(a[:content], a[:opts])
     end
   end
   rule(:notextile => simple(:c)) { RedClothParslet::Ast::Notextile.new(c) }
