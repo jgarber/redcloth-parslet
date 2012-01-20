@@ -11,6 +11,7 @@ class RedClothParslet::Parser::Block < Parslet::Parser
     div |
     notextile_block_tags |
     notextile_block |
+    extended_blockquote |
     blockquote |
     paragraph
   end
@@ -23,7 +24,8 @@ class RedClothParslet::Parser::Block < Parslet::Parser
   rule(:notextile_block_tags) { (str("<notextile>\n") >> (notextile_block_end_tag.absent? >> any).repeat.as(:s) >> notextile_block_end_tag >> block_end).as(:notextile) }
   rule(:notextile_block_end_tag) { str("\n</notextile>") }
   
-  rule(:blockquote) { (str("bq") >> attributes?.as(:attributes) >> str(". ") >> content.as(:content) >> block_end).as(:bq) }
+  rule(:blockquote) { (str("bq") >> attributes?.as(:attributes) >> str(". ") >> (undecorated_paragraph.as(:p)).as(:content)).as(:bq) }
+  rule(:extended_blockquote) { (str("bq") >> attributes?.as(:attributes) >> str(".. ") >> (undecorated_paragraph.as(:p).repeat(1)).as(:content) >> extended_block_end).as(:bq) }
 
   rule(:paragraph) { (explicit_paragraph | undecorated_paragraph).as(:p) }
   rule(:explicit_paragraph) { str("p") >> attributes?.as(:attributes) >> str(". ") >> content.as(:content) >> block_end }
@@ -35,6 +37,8 @@ class RedClothParslet::Parser::Block < Parslet::Parser
   
   rule(:eof) { any.absent? }
   rule(:block_end) { eof | double_newline }
+  rule(:extended_block_end) { (eof | block_start).present? }
+  rule(:block_start) { str("p. ") } # FIXME: this is just a placeholder
   rule(:double_newline) { str("\n") >> match("[\s\t]").repeat >> str("\n") }
 end
 

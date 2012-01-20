@@ -2,22 +2,22 @@ describe RedClothParslet::Parser::Block do
   let(:parser) { described_class.new }
   let(:transform) { RedClothParslet::Transform.new }
   
-  context "undecorated paragraphs" do
+  describe "undecorated paragraphs" do
     it { should parse("Just plain text.").with(transform).
       as([RedClothParslet::Ast::P.new(["Just plain text."])]) }
   end
 
-  context "explicit paragraphs" do
+  describe "explicit paragraphs" do
     it { should parse("p. This is a paragraph.").with(transform).
       as([RedClothParslet::Ast::P.new(["This is a paragraph."])]) }
     
-    context "attributes" do
+    context "with attributes" do
       it { should parse("p(myclass). This is a paragraph.").with(transform).
         as([RedClothParslet::Ast::P.new(["This is a paragraph."], {:class=>'myclass'})]) }
     end
   end
   
-  context "successive paragraphs" do
+  describe "successive paragraphs" do
     it { should parse("One paragraph.\n\nTwo.").with(transform).
       as([RedClothParslet::Ast::P.new(["One paragraph."]), RedClothParslet::Ast::P.new(["Two."])]) }
     
@@ -29,30 +29,40 @@ describe RedClothParslet::Parser::Block do
           RedClothParslet::Ast::P.new(["Just a bit."]),
           RedClothParslet::Ast::P.new(["No worries, mate."])]) }
   end
+
+  describe "extended blocks" do
+    # it { should parse("p.. This is a paragraph.\n\nAnd so is this.").#with(transform).
+    #   as([RedClothParslet::Ast::P.new(["This is a paragraph."]), RedClothParslet::Ast::P.new(["And so is this."])]) }
+    it { should parse("bq.. This is a paragraph in a blockquote.\n\nAnd so is this.").with(transform).
+      as([RedClothParslet::Ast::Blockquote.new(
+          RedClothParslet::Ast::P.new("This is a paragraph in a blockquote."), 
+          RedClothParslet::Ast::P.new("And so is this.")
+        )]) }
+  end
   
-  context "list start in a paragraph" do
+  describe "list start in a paragraph" do
     it { should parse("Two for the price of one!\n* Offer not valid in Alaska").with(transform).
       as([RedClothParslet::Ast::P.new(["Two for the price of one!\n* Offer not valid in Alaska"])]) }
   end
 
-  context "Block quote" do
+  describe "Block quote" do
     it { should parse("bq. Injustice anywhere is a threat to justice everywhere.").with(transform).
       as([RedClothParslet::Ast::Blockquote.new([RedClothParslet::Ast::P.new(["Injustice anywhere is a threat to justice everywhere."])])]) }
 
-    context "attributes" do
+    context "with attributes" do
       it { should parse("bq(myclass). This is a blockquote.").with(transform).
         as([RedClothParslet::Ast::Blockquote.new([RedClothParslet::Ast::P.new(["This is a blockquote."])], {:class=>'myclass'})]) }
     end
   end
   
-  context "notextile block" do
+  describe "notextile block" do
     it { should parse("<notextile>\nsomething\n</notextile>").with(transform).
       as([RedClothParslet::Ast::Notextile.new(["something"])]) }
     it { should parse("notextile. something").with(transform).
       as([RedClothParslet::Ast::Notextile.new(["something"])]) }
   end
   
-  context "headings" do
+  describe "headings" do
     (1..6).each do |num|
       it { should parse("h#{num}. Heading #{num}").with(transform).
         as([RedClothParslet::Ast.const_get("H#{num}").new(["Heading #{num}"])]) }
@@ -60,7 +70,7 @@ describe RedClothParslet::Parser::Block do
     end
   end
   
-  context "div" do
+  describe "div" do
     it { should parse("div. inside").with(transform).
       as([RedClothParslet::Ast::Div.new(["inside"])]) }
   end

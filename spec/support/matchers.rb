@@ -51,8 +51,6 @@ module RedClothParslet
           end
         end
 
-        # # NOTE: This has a nodoc tag since the rdoc parser puts this into 
-        # # Object, a thing I would never allow.
         def as(expected_output = nil, &block) # :nodoc: 
           @as = expected_output
           @block = block
