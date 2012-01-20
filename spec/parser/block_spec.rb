@@ -42,6 +42,10 @@ describe RedClothParslet::Parser::Block do
           RedClothParslet::Ast::P.new("This is a paragraph in a blockquote."), 
           RedClothParslet::Ast::P.new("And so is this.")
         )]) }
+    %w(div notextile pre p).each do |block_type|
+      its(:next_block_start) { should parse("#{block_type}. ") }
+      its(:next_block_start) { should parse("#{block_type}.. ") }
+    end
   end
   
   describe "list start in a paragraph" do

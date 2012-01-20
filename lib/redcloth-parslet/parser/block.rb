@@ -45,8 +45,8 @@ class RedClothParslet::Parser::Block < Parslet::Parser
   
   rule(:eof) { any.absent? }
   rule(:block_end) { eof | double_newline }
-  rule(:extended_block_end) { (eof | block_start).present? }
-  rule(:block_start) { str("p. ") } # FIXME: this is just a placeholder
+  rule(:extended_block_end) { (eof | next_block_start).present? }
+  rule(:next_block_start) { match("[a-z]").repeat(1) >> attributes? >> (str('. ') | str('.. ')) }
   rule(:double_newline) { str("\n") >> match("[\s\t]").repeat >> str("\n") }
 end
 
