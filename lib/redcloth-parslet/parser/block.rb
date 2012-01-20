@@ -7,18 +7,27 @@ class RedClothParslet::Parser::Block < Parslet::Parser
   rule(:block_element) do
     list |
     table |
-    heading |
-    extended_divs |
-    div |
+    simple_block_elements |
     notextile_block_tags |
     notextile_block |
     extended_blockquote |
     blockquote |
-    extended_paragraphs |
-    paragraph
+    undecorated_paragraph
   end
   
-  rule(:heading) { str("h") >> match("[1-6]").as(:level) >> (attributes?.as(:attributes) >> str(". ") >> content.as(:content) >> block_end).as(:heading) }
+  SIMPLE_BLOCK_ELEMENTS = [:div, :p] + 
+    1.upto(6).map {|n| :"h#{n}" } # Heading levels 1-6
+  
+  rule(:simple_block_elements) do
+    SIMPLE_BLOCK_ELEMENTS.map do |block_type|
+      [send(block_type), send("extended_#{block_type}s")]
+    end.flatten.reduce(:|)
+  end
+  
+  SIMPLE_BLOCK_ELEMENTS.each do |block_type|
+    rule("extended_#{block_type}s") { (((str(block_type) >> attributes?.as(:attributes) >> str(".. ") >> content.as(:content) >> block_end).as(block_type)).as(:first) >> ((extended_block_end.absent? >> undecorated_block.as(block_type)).repeat(1)).as(:successive) >> extended_block_end).as(:extended) }
+    rule(block_type) { (str(block_type) >> attributes?.as(:attributes) >> str(". ") >> content.as(:content) >> block_end).as(block_type) }
+  end
   
   rule(:notextile_block) { (str("notextile. ") >> (block_end.absent? >> any).repeat.as(:s) >> block_end).as(:notextile) }
   rule(:notextile_block_tags) { (str("<notextile>\n") >> (notextile_block_end_tag.absent? >> any).repeat.as(:s) >> notextile_block_end_tag >> block_end).as(:notextile) }
@@ -27,16 +36,8 @@ class RedClothParslet::Parser::Block < Parslet::Parser
   rule(:blockquote) { (str("bq") >> attributes?.as(:attributes) >> str(". ") >> (undecorated_paragraph).as(:content)).as(:bq) }
   rule(:extended_blockquote) { (str("bq") >> attributes?.as(:attributes) >> str(".. ") >> (undecorated_paragraph.repeat(1)).as(:content) >> extended_block_end).as(:bq) }
 
-
-  rule(:extended_divs) { (((str("div") >> attributes?.as(:attributes) >> str(".. ") >> content.as(:content) >> block_end).as(:div)).as(:first) >> ((extended_block_end.absent? >> undecorated_block.as(:div)).repeat(1)).as(:successive) >> extended_block_end).as(:extended) }
-  rule(:div) { (str("div") >> attributes?.as(:attributes) >> str(". ") >> content.as(:content) >> block_end).as(:div) }
-
-  rule(:extended_paragraphs) { (((str("p") >> attributes?.as(:attributes) >> str(".. ") >> content.as(:content) >> block_end).as(:p)).as(:first) >> ((extended_block_end.absent? >> undecorated_block.as(:p)).repeat(1)).as(:successive) >> extended_block_end).as(:extended) }
-  rule(:paragraph) { explicit_paragraph | undecorated_paragraph }
-  rule(:explicit_paragraph) { (str("p") >> attributes?.as(:attributes) >> str(". ") >> content.as(:content) >> block_end).as(:p) }
-  rule(:undecorated_paragraph) { undecorated_block.as(:p) }
-  
   rule(:undecorated_block) { content.as(:content) >> block_end }
+  rule(:undecorated_paragraph) { undecorated_block.as(:p) }
   
   rule(:content) { RedClothParslet::Parser::Inline.new }
   

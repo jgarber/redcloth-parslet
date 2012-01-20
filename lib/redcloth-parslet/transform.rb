@@ -14,9 +14,11 @@ class RedClothParslet::Transform < Parslet::Transform
   }
   
   rule(:extended => subtree(:ext)) { ext[:successive].unshift(ext[:first]) }
-  rule(:p => subtree(:a)) { RedClothParslet::Ast::P.new(a[:content], a[:opts]) }
-  rule(:div => subtree(:a)) { RedClothParslet::Ast::Div.new(a[:content], a[:opts]) }
-  rule(:heading => subtree(:a), :level=>simple(:l)) { RedClothParslet::Ast.const_get("H#{l}").new(a[:content], a[:opts]) }
+  RedClothParslet::Parser::Block::SIMPLE_BLOCK_ELEMENTS.each do |block_type|
+    rule(block_type => subtree(:a)) do
+      RedClothParslet::Ast::const_get(block_type.capitalize).new(a[:content], a[:opts])
+    end
+  end
   rule(:notextile => simple(:c)) { RedClothParslet::Ast::Notextile.new(c) }
   rule(:bq => subtree(:a)) { RedClothParslet::Ast::Blockquote.new(a[:content], a[:opts]) }
   rule(:list => subtree(:a)) { RedClothParslet::Ast::List.build(a[:content], a[:opts]) }
