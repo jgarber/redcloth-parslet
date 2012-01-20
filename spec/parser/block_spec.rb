@@ -31,8 +31,12 @@ describe RedClothParslet::Parser::Block do
   end
 
   describe "extended blocks" do
-    # it { should parse("p.. This is a paragraph.\n\nAnd so is this.").#with(transform).
-    #   as([RedClothParslet::Ast::P.new(["This is a paragraph."]), RedClothParslet::Ast::P.new(["And so is this."])]) }
+    it { should parse("p.. This is a paragraph.\n\nAnd so is this.").with(transform).
+      as([RedClothParslet::Ast::P.new("This is a paragraph."), RedClothParslet::Ast::P.new("And so is this.")]) }
+    
+    it { should parse("div.. This is a div.\n\nAnd so is this.\n\np. Return to paragraph.").with(transform).
+      as([RedClothParslet::Ast::Div.new("This is a div."), RedClothParslet::Ast::Div.new("And so is this."), RedClothParslet::Ast::P.new("Return to paragraph.")]) }
+      
     it { should parse("bq.. This is a paragraph in a blockquote.\n\nAnd so is this.").with(transform).
       as([RedClothParslet::Ast::Blockquote.new(
           RedClothParslet::Ast::P.new("This is a paragraph in a blockquote."), 

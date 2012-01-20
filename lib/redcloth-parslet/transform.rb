@@ -13,6 +13,7 @@ class RedClothParslet::Transform < Parslet::Transform
     {:layout => dict[:l], :content => dict[:c], :opts => RedClothParslet::Ast::Attributes.new(dict[:a])}
   }
   
+  rule(:extended => subtree(:ext)) { ext[:successive].unshift(ext[:first]) }
   rule(:p => subtree(:a)) { RedClothParslet::Ast::P.new(a[:content], a[:opts]) }
   rule(:div => subtree(:a)) { RedClothParslet::Ast::Div.new(a[:content], a[:opts]) }
   rule(:heading => subtree(:a), :level=>simple(:l)) { RedClothParslet::Ast.const_get("H#{l}").new(a[:content], a[:opts]) }
