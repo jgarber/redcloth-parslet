@@ -1,12 +1,21 @@
 module RedClothParslet::Ast
   class Element < Base
     attr_accessor :children
+    #FIXME: rename opts -> attrs
     attr_accessor :opts
     
     # TODO: Make +children+ argument optional so things like Img can just pass opts as first argument.
-    def initialize(children=[], opts={})
-      @children = children.is_a?(Array) ? children : [children]
-      @opts = opts
+    def initialize(*args)
+      @opts = initialize_attributes(args)
+      @children = args.flatten
+    end
+    
+    def initialize_attributes(args)
+      if args.last.is_a?(Hash)
+        args.pop
+      else
+        {}
+      end
     end
 
     def to_s
@@ -14,7 +23,9 @@ module RedClothParslet::Ast
     end
 
     def inspect
-      "#{type}:(#{children.reduce(:inspect)})"
+      opts_inspection = " opts:#{opts.inspect}"
+      children_inspection = " children:#{children.inspect}"
+      "#<#{self.class}#{opts_inspection if opts.any?}#{children_inspection if children.any?}>"
     end
     
     def ==(other)
