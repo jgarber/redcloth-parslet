@@ -51,6 +51,9 @@ describe RedClothParslet::Parser::Block do
       its(:next_block_start) { should parse("#{block_type}. ") }
       its(:next_block_start) { should parse("#{block_type}.. ") }
     end
+    
+    it { should parse("notextile.. Don't touch this!\n\nOr this!").with(transform).
+      as([RedClothParslet::Ast::Notextile.new("Don't touch this!\n\nOr this!")]) }
   end
   
   describe "list start in a paragraph" do
@@ -70,9 +73,9 @@ describe RedClothParslet::Parser::Block do
   
   describe "notextile block" do
     it { should parse("<notextile>\nsomething\n</notextile>").with(transform).
-      as([RedClothParslet::Ast::Notextile.new(["something"])]) }
+      as([RedClothParslet::Ast::Notextile.new("something")]) }
     it { should parse("notextile. something").with(transform).
-      as([RedClothParslet::Ast::Notextile.new(["something"])]) }
+      as([RedClothParslet::Ast::Notextile.new("something")]) }
   end
   
   describe "headings" do

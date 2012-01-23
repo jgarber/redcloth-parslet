@@ -10,6 +10,7 @@ class RedClothParslet::Parser::Block < Parslet::Parser
     table |
     simple_block_elements |
     notextile_block_tags |
+    extended_notextile_block |
     notextile_block |
     extended_blockquote |
     blockquote |
@@ -30,9 +31,11 @@ class RedClothParslet::Parser::Block < Parslet::Parser
     rule(block_type) { (str(block_type) >> attributes?.as(:attributes) >> str(". ") >> content.as(:content) >> block_end).as(block_type) }
   end
 
-  rule(:notextile_block) { (str("notextile. ") >> (block_end.absent? >> any).repeat.as(:s) >> block_end).as(:notextile) }
   rule(:notextile_block_tags) { (str("<notextile>\n") >> (notextile_block_end_tag.absent? >> any).repeat.as(:s) >> notextile_block_end_tag >> block_end).as(:notextile) }
   rule(:notextile_block_end_tag) { str("\n</notextile>") }
+
+  rule(:notextile_block) { (str("notextile. ") >> (block_end.absent? >> any).repeat.as(:s) >> block_end).as(:notextile) }
+  rule(:extended_notextile_block) { (str("notextile.. ") >> ((str("\n") >> extended_block_end).absent? >> any).repeat.as(:s) >> extended_block_end).as(:notextile) }
 
   rule(:blockquote) { (str("bq") >> attributes?.as(:attributes) >> str(". ") >> (undecorated_paragraph).as(:content)).as(:bq) }
   rule(:extended_blockquote) { (str("bq") >> attributes?.as(:attributes) >> str(".. ") >> (undecorated_paragraph.repeat(1)).as(:content) >> extended_block_end).as(:bq) }
