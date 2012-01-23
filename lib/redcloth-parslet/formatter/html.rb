@@ -72,10 +72,6 @@ module RedClothParslet::Formatter
       "<th#{html_attributes(el.opts)}>#{inner(el)}</th>"
     end
     
-    def notextile(el)
-      inner(el)
-    end
-    
     def double_quoted_phrase(el)
       "&#8220;#{inner(el)}&#8221;"
     end
@@ -91,6 +87,10 @@ module RedClothParslet::Formatter
 
     def code(el)
       "<code#{html_attributes(el.opts)}>#{escape_html(el.to_s, :pre)}</code>"
+    end
+    
+    def notextile(el)
+      el.children.join
     end
     
     def html_tag(el)
