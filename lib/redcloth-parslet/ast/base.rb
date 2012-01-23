@@ -21,15 +21,5 @@ module RedClothParslet::Ast
     def ==(other)
       self.to_s == other.to_s
     end
-    
-    # FIXME: are these necessary on any Ast classes? I don't think it's used anymore.
-    # TODO: abstract this into RedClothParslet::Formatter::HTML
-    # Convert the element to HTML
-    # 
-    def to_html(opts={})
-      type = self.class.downcase
-      contents = children.map {|el| el.to_html(opts) unless el.is_a?(String) }.join
-      "<#{type}>contents</#{type}>"
-    end
   end
 end
