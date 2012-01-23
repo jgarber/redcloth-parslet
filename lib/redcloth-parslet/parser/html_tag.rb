@@ -33,12 +33,20 @@ module RedClothParslet::Parser
   end
   
   class BlockHtmlTag < HtmlTag
-    rule(:tag_name) do
-      inline_tag_name.absent? >> any_tag_name
-    end
+    rule(:tag_name) { inline_tag_name.absent? >> any_tag_name }
     
     rule(:inline_tag_name) do
-      %w(pre notextile a applet basefont bdo br font iframe img map object param embed q script span sub sup abbr acronym cite code del dfn em ins kbd samp strong var b big i s small strike tt u).map {|name| str(name) }.reduce(:|)
+      %w(a applet basefont bdo br font iframe img map object param embed q script span sub sup abbr acronym cite code del dfn em ins kbd samp strong var b big i s small strike tt u).map {|name| str(name) }.reduce(:|)
+    end
+  end
+  
+  class PreTag < HtmlTag
+    rule(:tag_name) { str("pre") }
+    
+    rule(:tag) do
+      (open_tag.as(:open_tag) >>
+      ((close_tag).absent? >> any).repeat.as(:content) >>
+      close_tag.as(:close_tag)).as(:pre_tag)
     end
   end
 end
