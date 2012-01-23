@@ -23,7 +23,7 @@ module RedClothParslet::Formatter
     
     [:blockquote].each do |m|
       define_method(m) do |el|
-       "<#{m}#{html_attributes(el.opts)}>\n#{inner(el)}\n</#{m}>"
+       "<#{m}#{html_attributes(el.opts)}>\n#{inner(el, true)}</#{m}>"
       end
     end
     
