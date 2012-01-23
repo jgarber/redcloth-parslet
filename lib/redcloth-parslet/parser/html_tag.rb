@@ -13,9 +13,8 @@ module RedClothParslet::Parser
     rule(:open_tag) { str("<") >> tag_name >> attributes? >> str(">") }
     rule(:close_tag) { str("</") >> tag_name >> str(">") }
 
-    rule(:tag_name) do
-      match("[A-Za-z_:]") >> name_char.repeat
-    end
+    rule(:tag_name) { any_tag_name }
+    rule(:any_tag_name) { match("[A-Za-z_:]") >> name_char.repeat }
 
     rule(:attributes?) do
       attribute.repeat
@@ -35,7 +34,7 @@ module RedClothParslet::Parser
   
   class BlockHtmlTag < HtmlTag
     rule(:tag_name) do
-      inline_tag_name.absent? >> match("[A-Za-z_:]") >> name_char.repeat #FIXME: how can we integrate `super`?
+      inline_tag_name.absent? >> any_tag_name
     end
     
     rule(:inline_tag_name) do
