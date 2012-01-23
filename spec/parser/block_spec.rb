@@ -5,6 +5,11 @@ describe RedClothParslet::Parser::Block do
   describe "undecorated paragraphs" do
     it { should parse("Just plain text.").with(transform).
       as([RedClothParslet::Ast::P.new(["Just plain text."])]) }
+      
+    context "containing inline HTML tag" do
+      it { should parse('<img src="test.jpg" alt="test" />').with(transform).
+        as([RedClothParslet::Ast::P.new(RedClothParslet::Ast::HtmlTag.new('<img src="test.jpg" alt="test" />'))]) }
+    end
   end
 
   describe "explicit paragraphs" do

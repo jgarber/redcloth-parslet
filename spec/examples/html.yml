@@ -77,15 +77,6 @@ html: |-
   </div>
   <p>Another paragraph.</p>
 ---
-name: mixing of textile and XHTML
-in: |-
-  <img src="test.jpg" alt="test" />
-
-  Regular *paragraph*.
-html: |-
-  <p><img src="test.jpg" alt="test" /></p>
-  <p>Regular <strong>paragraph</strong>.</p>
----
 name: wraps inline HTML in paragraphs
 in: '<em>asd</em> blabla "google":http://google.com'
 html: '<p><em>asd</em> blabla <a href="http://google.com">google</a></p>'

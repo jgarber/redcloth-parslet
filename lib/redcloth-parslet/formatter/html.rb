@@ -94,7 +94,7 @@ module RedClothParslet::Formatter
     end
     
     def html_tag(el)
-      inner(el)
+      el.children.join
     end
     
     def entity(el)

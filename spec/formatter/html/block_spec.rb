@@ -5,11 +5,15 @@ describe RedClothParslet::Formatter::HTML do
     let(:element) { RedClothParslet::Ast::P.new(["Line one\nline two."]) }
     it { should == "<p>Line one<br />\nline two.</p>" }
   end
-
   
   describe "p" do
     let(:element) { RedClothParslet::Ast::P.new(["My paragraph."]) }
     it { should == "<p>My paragraph.</p>" }
+    
+    context "containing inline HTML" do
+      let(:element) { RedClothParslet::Ast::P.new(RedClothParslet::Ast::HtmlTag.new('<img src="test.jpg" alt="test" />')) }
+      it { should == '<p><img src="test.jpg" alt="test" /></p>' }
+    end
   end
 
   describe "bq" do

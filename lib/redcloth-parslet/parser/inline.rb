@@ -46,6 +46,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     acronym |
     all_caps_word |
     dimensions |
+    html_tag |
     word.as(:s)
   end
 
@@ -164,6 +165,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   # rule(:mtext) { mchar.repeat(1) >> (inline_sp >> mchar.repeat(1)) }
   
   rule(:nongreedy_uri) { RedClothParslet::Parser::Attributes::NongreedyUri.new }
+  rule(:html_tag) { RedClothParslet::Parser::HtmlTag.new }
 
   def maybe_preceded_by_attributes(content_rule)
     attributes?.as(:attributes) >> content_rule |

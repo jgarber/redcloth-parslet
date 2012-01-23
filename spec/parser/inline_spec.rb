@@ -107,4 +107,9 @@ describe RedClothParslet::Parser::Inline do
   describe 'superscript' do
     it_should_behave_like 'a simple inline element', 'sup', '^', RedClothParslet::Ast::Sup
   end
+  
+  describe "inline HTML" do
+    it { should parse("Fluffy <img src='bunnies' />.").with(transform).
+      as(["Fluffy ", RedClothParslet::Ast::HtmlTag.new("<img src='bunnies' />"), "."]) }
+  end
 end
