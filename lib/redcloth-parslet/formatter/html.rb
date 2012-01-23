@@ -93,6 +93,10 @@ module RedClothParslet::Formatter
       "<code#{html_attributes(el.opts)}>#{escape_html(el.to_s, :pre)}</code>"
     end
     
+    def html_tag(el)
+      inner(el)
+    end
+    
     def entity(el)
       ESCAPE_MAP[el.to_s]
     end

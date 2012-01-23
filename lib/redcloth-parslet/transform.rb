@@ -20,6 +20,7 @@ class RedClothParslet::Transform < Parslet::Transform
     end
   end
   rule(:notextile => simple(:c)) { RedClothParslet::Ast::Notextile.new(c) }
+  rule(:html_tag => simple(:c)) { RedClothParslet::Ast::HtmlTag.new(c) }
   rule(:bq => subtree(:a)) { RedClothParslet::Ast::Blockquote.new(a[:content], a[:opts]) }
   rule(:list => subtree(:a)) { RedClothParslet::Ast::List.build(a[:content], a[:opts]) }
   rule(:table => subtree(:a)) { RedClothParslet::Ast::Table.new(a[:content], a[:opts]) }
