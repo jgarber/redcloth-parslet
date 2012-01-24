@@ -32,16 +32,11 @@ class RedClothParslet::Transform < Parslet::Transform
   rule(:table_data => subtree(:a)) { RedClothParslet::Ast::TableData.new(a[:content], a[:opts]) }
   rule(:table_header => subtree(:a)) { RedClothParslet::Ast::TableHeader.new(a[:content], a[:opts]) }
   
-  rule(:em => subtree(:a)) { RedClothParslet::Ast::Em.new(a[:content], a[:opts]) }
-  rule(:strong => subtree(:a)) { RedClothParslet::Ast::Strong.new(a[:content], a[:opts]) }
-  rule(:bold => subtree(:a)) { RedClothParslet::Ast::B.new(a[:content], a[:opts]) }
-  rule(:italics => subtree(:a)) { RedClothParslet::Ast::I.new(a[:content], a[:opts]) }
-  rule(:ins => subtree(:a)) { RedClothParslet::Ast::Ins.new(a[:content], a[:opts]) }
-  rule(:del => subtree(:a)) { RedClothParslet::Ast::Del.new(a[:content], a[:opts]) }
-  rule(:sup => subtree(:a)) { RedClothParslet::Ast::Sup.new(a[:content], a[:opts]) }
-  rule(:sub => subtree(:a)) { RedClothParslet::Ast::Sub.new(a[:content], a[:opts]) }
-  rule(:span => subtree(:a)) { RedClothParslet::Ast::Span.new(a[:content], a[:opts]) }
-  rule(:code => subtree(:a)) { RedClothParslet::Ast::Code.new(a[:content], a[:opts]) }
+  RedClothParslet::Parser::Inline::SIMPLE_INLINE_ELEMENTS.each do |block_type, symbol|
+    rule(block_type => subtree(:a)) do
+      RedClothParslet::Ast::const_get(block_type.to_s.capitalize).new(a[:content], a[:opts])
+    end
+  end
   rule(:double_quoted_phrase_or_link => subtree(:a)) do
     if a[:opts].has_key?(:href)
       RedClothParslet::Ast::Link.new(a[:content], a[:opts])

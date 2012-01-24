@@ -6,8 +6,8 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   end
 
   SIMPLE_INLINE_ELEMENTS = [
-    [:bold, '**'],
-    [:italics, '__'],
+    [:b, '**'],
+    [:i, '__'],
     [:strong, '*'],
     [:em, '_'],
     [:span, '%'],
@@ -15,7 +15,8 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     [:del, '-'],
     [:code, '@'],
     [:sup, '^'],
-    [:sub, '~']
+    [:sub, '~'],
+    [:cite, '??']
   ]
   
   # Inline elements are terms (words) divided by spaces or spaces themselves.

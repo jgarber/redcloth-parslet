@@ -1,7 +1,7 @@
 describe RedClothParslet::Formatter::HTML do
   subject { described_class.new(:order_attributes => true).convert(element) }
 
-  %w(strong em span b i ins del).each do |tag|
+  %w(strong em span b i ins del cite).each do |tag|
     describe tag do
       let(:element) { RedClothParslet::Ast.const_get(tag.capitalize).new(["inside"], {:class => 'myclass'}) }
       it { should == "<#{tag} class=\"myclass\">inside</#{tag}>" }

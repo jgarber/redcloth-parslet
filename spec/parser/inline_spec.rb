@@ -48,7 +48,7 @@ describe RedClothParslet::Parser::Inline do
       as(["Could not find ", RedClothParslet::Ast::B.new(["Textile"]), "."])
     }
 
-    it_should_behave_like 'a simple inline element', 'bold', '**', RedClothParslet::Ast::B
+    it_should_behave_like 'a simple inline element', 'b', '**', RedClothParslet::Ast::B
   end
   
   describe "italics" do
@@ -56,7 +56,7 @@ describe RedClothParslet::Parser::Inline do
       as(["I just got the weirdest feeling of ", RedClothParslet::Ast::I.new(["déjà vu"]), "."])
     }
 
-    it_should_behave_like 'a simple inline element', 'italics', '__', RedClothParslet::Ast::I
+    it_should_behave_like 'a simple inline element', 'i', '__', RedClothParslet::Ast::I
   end
   
   context "double-quoted phrase in link" do
@@ -92,6 +92,11 @@ describe RedClothParslet::Parser::Inline do
       subject.should parse("The -widow-maker- is a time-honored tradition.").with(transform).
         as(["The ", RedClothParslet::Ast::Del.new(["widow-maker"]), " is a time-honored tradition."])
     end
+  end
+  
+  describe "cite" do
+    it { should parse("??A Tale of Two Cities??").with(transform).
+      as([RedClothParslet::Ast::Cite.new(["A Tale of Two Cities"])]) }
   end
 
   describe "caps" do

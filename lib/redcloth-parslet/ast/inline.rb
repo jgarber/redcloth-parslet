@@ -9,6 +9,7 @@ module RedClothParslet::Ast
   class Code < Element; end
   class Ins < Element; end
   class Del < Element; end
+  class Cite < Element; end
   class Link < Element; end
   class DoubleQuotedPhrase < Element; end
   class Img < Element; end
