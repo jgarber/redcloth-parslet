@@ -17,6 +17,7 @@ class RedClothParslet::Parser::Block < Parslet::Parser
     pre_block |
     pre_tag_block |
     block_html_tag |
+    hr |
     undecorated_paragraph
   end
 
@@ -46,6 +47,8 @@ class RedClothParslet::Parser::Block < Parslet::Parser
 
   rule(:blockquote) { (str("bq") >> attributes?.as(:attributes) >> str(". ") >> (undecorated_paragraph).as(:content)).as(:bq) }
   rule(:extended_blockquote) { (str("bq") >> attributes?.as(:attributes) >> str(".. ") >> (undecorated_paragraph.repeat(1)).as(:content) >> extended_block_end).as(:bq) }
+  
+  rule(:hr) { (str("*").repeat(3) | str("-").repeat(3) | str("_").repeat(3)).as(:hr) >> block_end }
 
   rule(:undecorated_block) { content.as(:content) >> block_end }
   rule(:undecorated_paragraph) { undecorated_block.as(:p) }

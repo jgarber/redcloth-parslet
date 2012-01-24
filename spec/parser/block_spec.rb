@@ -101,4 +101,13 @@ describe RedClothParslet::Parser::Block do
     end
   end
   
+  describe "horizontal rules" do
+    it { should parse("***").with(transform).
+      as([RedClothParslet::Ast::Hr.new()]) }
+    it { should parse("---").with(transform).
+      as([RedClothParslet::Ast::Hr.new()]) }
+    it { should parse("___").with(transform).
+      as([RedClothParslet::Ast::Hr.new()]) }    
+  end
+  
 end

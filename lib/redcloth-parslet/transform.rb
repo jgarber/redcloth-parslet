@@ -31,6 +31,7 @@ class RedClothParslet::Transform < Parslet::Transform
   rule(:table_row => subtree(:a)) { RedClothParslet::Ast::TableRow.new(a[:content], a[:opts]) }
   rule(:table_data => subtree(:a)) { RedClothParslet::Ast::TableData.new(a[:content], a[:opts]) }
   rule(:table_header => subtree(:a)) { RedClothParslet::Ast::TableHeader.new(a[:content], a[:opts]) }
+  rule(:hr => subtree(:a)) { RedClothParslet::Ast::Hr.new() }
   
   RedClothParslet::Parser::Inline::SIMPLE_INLINE_ELEMENTS.each do |block_type, symbol|
     rule(block_type => subtree(:a)) do

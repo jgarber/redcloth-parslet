@@ -60,7 +60,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   end
 
   rule(:standalone_symbol_from_simple_inline_element) do
-    SIMPLE_INLINE_ELEMENTS.map {|el,mark| (inline_sp >> str(mark)).as(:s) >> sp.present? }.reduce(:|)
+    SIMPLE_INLINE_ELEMENTS.map {|el,mark| (inline_sp >> (typographic_entity >> sp).absent? >> str(mark).repeat(1)).as(:s) >> sp.present? }.reduce(:|)
   end
 
   # general pattern for inline elements

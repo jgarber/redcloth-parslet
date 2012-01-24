@@ -85,6 +85,10 @@ module RedClothParslet::Formatter
       span(el)
     end
     
+    def hr(el)
+      "<hr />"
+    end
+    
     def pre(el)
       (el.opts.delete(:open_tag) || "<pre#{html_attributes(el.opts)}>") +
         escape_html(el.to_s, :pre) + "</pre>"

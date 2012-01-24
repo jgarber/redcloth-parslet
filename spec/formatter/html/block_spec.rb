@@ -41,6 +41,11 @@ describe RedClothParslet::Formatter::HTML do
     it { should == "<pre>\nThe bold tag is &lt;b&gt;\n</pre>" }
   end
   
+  describe "horizontal rule" do
+    let(:element) { RedClothParslet::Ast::Hr.new() }
+    it { should == "<hr />" }
+  end
+  
   describe "ul" do
     let(:element) { RedClothParslet::Ast::Ul.new([
       RedClothParslet::Ast::Li.new(["1"]), 
