@@ -111,5 +111,7 @@ describe RedClothParslet::Parser::Inline do
   describe "inline HTML" do
     it { should parse("Fluffy <img src='bunnies' />.").with(transform).
       as(["Fluffy ", RedClothParslet::Ast::HtmlTag.new("<img src='bunnies' />"), "."]) }
+    it { should parse("I am <b>very</b> serious.").with(transform).
+      as(["I am ", RedClothParslet::Ast::HtmlTag.new("<b>"), "very", RedClothParslet::Ast::HtmlTag.new("</b>"), " serious."]) }
   end
 end
