@@ -17,7 +17,7 @@ describe RedClothParslet::Formatter::HTML do
   end
   describe "style + padding" do
     let(:element) { RedClothParslet::Ast::Strong.new("", {:style=>{'color'=>'red','padding-left'=>1}}) }
-    it { should == %{<strong style="color:red; padding-left:1em;"></strong>} }
+    it { should == %{<strong style="color:red;padding-left:1em;"></strong>} }
   end
   
   describe "pad left" do

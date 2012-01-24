@@ -156,7 +156,7 @@ module RedClothParslet::Formatter
         else
           [k,v].join(':')
         end
-      end.join("; ") + ";" if attr[:style]
+      end.join(";") + ";" if attr[:style]
       order_attributes(attr).map {|k,v| v.nil? ? '' : " #{k}=\"#{escape_html(v.to_s, :attribute)}\"" }.join('')
     end
     
