@@ -97,6 +97,8 @@ describe RedClothParslet::Parser::Inline do
   describe "cite" do
     it { should parse("??A Tale of Two Cities??").with(transform).
       as([RedClothParslet::Ast::Cite.new(["A Tale of Two Cities"])]) }
+    it { should parse("??What's up???").with(transform).
+      as([RedClothParslet::Ast::Cite.new(["What's up?"])]) }
   end
 
   describe "caps" do
