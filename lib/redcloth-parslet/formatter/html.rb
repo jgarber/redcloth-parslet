@@ -149,8 +149,10 @@ module RedClothParslet::Formatter
           "#{k}:#{v}em"
         when 'align'
           type == :text ? "text-align:#{v}" : "align:#{v}"
+        else
+          [k,v].join(':')
         end
-      end.join("; ") if attr[:style]
+      end.join("; ") + ";" if attr[:style]
       order_attributes(attr).map {|k,v| v.nil? ? '' : " #{k}=\"#{escape_html(v.to_s, :attribute)}\"" }.join('')
     end
     

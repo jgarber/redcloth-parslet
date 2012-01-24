@@ -43,7 +43,7 @@ describe RedClothParslet::Parser::Block do
           RedClothParslet::Ast::TableData.new(["a"]),
           RedClothParslet::Ast::TableData.new(["row"])
         ])
-      ], {:style => "border:1px solid black"})]) }
+      ], {:style => {"border"=>"1px solid black"}})]) }
   end
   
 end

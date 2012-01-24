@@ -6,25 +6,35 @@ module RedClothParslet::Ast
         attrs.each do |k,v|
           case k
           when :padding
-            style = self[:style] ||= {}
             l_or_r = v == '(' ? 'left' : 'right'
             style["padding-#{l_or_r}"] ||= 0
             style["padding-#{l_or_r}"] += 1
           when :align
-            style = self[:style] ||= {}
             style["align"] = if style["align"] == "left" && v == ">"
               "justify" 
             else
-              {'<'=>'left','>'=>'right','='=>'center'}[v.to_s]
+              {'<'=>'left','>'=>'right','='=>'center'}[String(v)]
+            end
+          when :class
+            self[k] = ((self[k] || '').split(/\s/) + [String(v)]).join(' ')
+          when :style
+            String(v).split(';').each do |declaration|
+              property_name, value = declaration.split(':')
+              style[property_name] = value
             end
           else
-            self[k] = ((self[k] || '').split(/\s/) + [v]).join(' ')
+            self[k] = String(v)
           end
         end
       end
       self
     end
     
-    
+    def style
+      self[:style] ||= {}
+      self[:style]
+    end
   end
+  
+  
 end

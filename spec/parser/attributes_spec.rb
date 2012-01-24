@@ -29,6 +29,10 @@ describe RedClothParslet::Parser::Attributes do
     }
   end
   
+  context "style + alignment" do
+    it { should parse('{color:red;margin:1em}<').as([{:style=>'color:red;margin:1em'}, {:align=>'<'}]) }
+  end
+  
   context "class and alignment with class first" do
     it { should parse('(myclass)<').as([{:class=>'myclass'}, {:align=>'<'}]) }
     it { should parse('(myclass)<>').as([{:class=>'myclass'}, {:align=>'<'}, {:align=>'>'}]) }

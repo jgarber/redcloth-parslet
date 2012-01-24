@@ -30,4 +30,20 @@ describe RedClothParslet::Ast::Attributes do
     described_class.new([{:align=>'<'}, {:align=>'>'}]).should == {:style=>{'align'=>'justify'}}
   end
   
+  it "should pass through other styles" do
+    described_class.new([{:style=>'color:red'}]).should == {:style=>{'color'=>'red'}}
+  end
+  it "should combine passed-through style and padding" do
+    described_class.new([{:padding=>'('}, {:style=>'color:red'}]).should == {:style=>{'padding-left'=>1, 'color'=>'red'}}
+  end
+  it "should combine multiple styles" do
+    described_class.new([{:style=>'color:red'},{:style=>'margin:1px'}]).should == {:style=>{'color'=>'red', 'margin'=>'1px'}}
+  end
+  it "should combine multiple styles in one declaration" do
+    described_class.new([{:style=>'color:red;margin:1px'}]).should == {:style=>{'color'=>'red', 'margin'=>'1px'}}
+  end
+  it "should overwrite duplicate styles" do
+    described_class.new([{:style=>'color:red'},{:style=>'color:blue;'}]).should == {:style=>{'color'=>'blue'}}
+  end
+  
 end
