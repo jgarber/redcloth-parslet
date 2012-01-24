@@ -101,6 +101,10 @@ module RedClothParslet::Formatter
       el.children.join
     end
     
+    def escaped_html(el)
+      escape_html(el.to_s, :pre)
+    end
+    
     def entity(el)
       ESCAPE_MAP[el.to_s]
     end
