@@ -74,4 +74,16 @@ describe RedClothParslet::Parser::Inline do
     }
   end
   
+  describe "intellectual property marks" do
+    it { should parse("(TM)").with(transform).
+      as([RedClothParslet::Ast::Entity.new("(TM)")])
+    }
+    it { should parse("(R)").with(transform).
+      as([RedClothParslet::Ast::Entity.new("(R)")])
+    }
+    it { should parse("(C)").with(transform).
+      as([RedClothParslet::Ast::Entity.new("(C)")])
+    }    
+  end
+  
 end

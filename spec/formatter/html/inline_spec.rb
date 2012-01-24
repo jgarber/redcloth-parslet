@@ -19,7 +19,7 @@ describe RedClothParslet::Formatter::HTML do
   end
   
   describe "entities" do
-    {"--"=>"&#8212;", " -"=>" &#8211;", "..."=>"&#8230;", "x"=>"&#215;"}.each do |input,output|
+    {"--"=>"&#8212;", " -"=>" &#8211;", "..."=>"&#8230;", "x"=>"&#215;", "(TM)"=>"&#8482;", "(C)"=>"&#169;", "(R)"=>"&#174;"}.each do |input,output|
       it "should escape #{input} as #{output}" do
         described_class.new().convert(RedClothParslet::Ast::Entity.new(input)).should == output
       end

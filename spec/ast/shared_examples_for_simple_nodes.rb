@@ -3,6 +3,5 @@ shared_examples "a simple node" do
   
   its(:to_s) { should == string }
   it { should == described_class.new(string) }
-  it { should == string }
   
 end

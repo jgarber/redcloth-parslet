@@ -17,8 +17,13 @@ module RedClothParslet::Ast
     def to_s
       @str
     end
+
+    def inspect
+      %Q{#<#{self.class} "#{@str}">}
+    end
     
     def ==(other)
+      other.class == self.class &&
       self.to_s == other.to_s
     end
   end

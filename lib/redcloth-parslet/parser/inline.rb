@@ -129,9 +129,11 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   
   rule(:typographic_entity) do
     m_dash |
+    ip_mark |
     ellipsis
   end
 
+  rule(:ip_mark) { (str("(") >> (str("TM") | str("C") | str("R")) >> str(")")).as(:entity) }
   rule(:m_dash) { str('--').as(:entity) }
   rule(:ellipsis) { str('...').as(:entity) }
   rule(:standalone_en_dash) { (inline_sp >> str('-')).as(:entity) >> sp.present? }
