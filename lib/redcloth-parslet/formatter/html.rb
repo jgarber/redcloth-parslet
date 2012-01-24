@@ -183,17 +183,16 @@ module RedClothParslet::Formatter
       "(C)"=>"&#169;",
       "(R)"=>"&#174;"
     }
-    ESCAPE_ALL_RE = /<|>|&|\n|"|'/
-    ESCAPE_PRE_RE = Regexp.union(/<|>|&|'|"/)
-    ESCAPE_ATTRIBUTE_RE = Regexp.union(/<|>|&|"/)
-    ESCAPE_RE_FROM_TYPE = {
-      :all => ESCAPE_ALL_RE,
-      :pre => ESCAPE_PRE_RE,
-      :attribute => ESCAPE_ATTRIBUTE_RE
+    TYPOGRAPHIC_ESCAPE_MAP = ESCAPE_MAP.merge("'" => "&#8217;")
+    CHARS_TO_BE_ESCAPED = {
+      :all => /<|>|&|\n|"|'/,
+      :pre => Regexp.union(/<|>|&|'|"/),
+      :attribute => Regexp.union(/<|>|&|"/)
     }
 
     def escape_html(str, type = :all)
-      str.gsub(ESCAPE_RE_FROM_TYPE[type]) {|m| ESCAPE_MAP[m] || m}
+      escape_map = type == :pre ? ESCAPE_MAP : TYPOGRAPHIC_ESCAPE_MAP
+      str.gsub(CHARS_TO_BE_ESCAPED[type]) {|m| escape_map[m] || m }
     end
     
   end

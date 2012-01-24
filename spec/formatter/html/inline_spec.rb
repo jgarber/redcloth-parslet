@@ -26,6 +26,11 @@ describe RedClothParslet::Formatter::HTML do
     end
   end
   
+  describe "apostrophe" do
+    let(:element) { RedClothParslet::Ast::P.new("What's up?") }
+    it { should == "<p>What&#8217;s up?</p>" }
+  end
+  
   describe "dimension" do
     context "feet" do
       let(:element) { RedClothParslet::Ast::Dimension.new("500'") }
