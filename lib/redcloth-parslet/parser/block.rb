@@ -13,6 +13,8 @@ class RedClothParslet::Parser::Block < Parslet::Parser
     notextile_block |
     extended_blockquote |
     blockquote |
+    extended_pre_block |
+    pre_block |
     pre_tag_block |
     block_html_tag |
     undecorated_paragraph
@@ -38,6 +40,8 @@ class RedClothParslet::Parser::Block < Parslet::Parser
   rule(:notextile_block) { (str("notextile. ") >> (block_end.absent? >> any).repeat.as(:s) >> block_end).as(:notextile) }
   rule(:extended_notextile_block) { (str("notextile.. ") >> ((str("\n") >> extended_block_end).absent? >> any).repeat.as(:s) >> extended_block_end).as(:notextile) }
   
+  rule(:pre_block) { (str("pre. ") >> (block_end.absent? >> any).repeat.as(:s) >> block_end).as(:pre) }
+  rule(:extended_pre_block) { (str("pre.. ") >> ((str("\n") >> extended_block_end).absent? >> any).repeat.as(:s) >> extended_block_end).as(:pre) }
   rule(:pre_tag_block) { RedClothParslet::Parser::PreTag.new >> (str("\n").repeat(1) | eof) }
 
   rule(:blockquote) { (str("bq") >> attributes?.as(:attributes) >> str(". ") >> (undecorated_paragraph).as(:content)).as(:bq) }

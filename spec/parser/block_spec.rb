@@ -91,4 +91,14 @@ describe RedClothParslet::Parser::Block do
       as([RedClothParslet::Ast::Div.new(["inside"])]) }
   end
   
+  describe "pre" do
+    it { should parse("pre. Preformatted").with(transform).
+      as([RedClothParslet::Ast::Pre.new(["Preformatted"])]) }
+      
+    context "when extended" do
+      it { should parse("pre.. Preformatted\n\nStill preformatted").with(transform).
+        as([RedClothParslet::Ast::Pre.new(["Preformatted\n\nStill preformatted"])]) }
+    end
+  end
+  
 end

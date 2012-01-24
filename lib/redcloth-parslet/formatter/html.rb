@@ -14,7 +14,7 @@ module RedClothParslet::Formatter
       inner(el, true).chomp
     end
     
-    ([:h1, :h2, :h3, :h4, :h5, :h6, :p, :pre, :div, :table] +
+    ([:h1, :h2, :h3, :h4, :h5, :h6, :p, :div, :table] +
     [:strong, :em, :i, :b, :ins, :del, :sup, :sub, :span, :cite, :acronym]).each do |m|
       define_method(m) do |el|
        "<#{m}#{html_attributes(el.opts)}>#{inner(el)}</#{m}>"
@@ -83,6 +83,10 @@ module RedClothParslet::Formatter
     def caps(el)
       el.opts.merge!({:class => 'caps'})
       span(el)
+    end
+    
+    def pre(el)
+     "<pre#{html_attributes(el.opts)}>#{escape_html(el.to_s, :pre)}</pre>"
     end
 
     def code(el)
@@ -170,7 +174,7 @@ module RedClothParslet::Formatter
       "..." => "&#8230;"
     }
     ESCAPE_ALL_RE = /<|>|&|\n|"|'/
-    ESCAPE_PRE_RE = Regexp.union(/<|>|&|'/)
+    ESCAPE_PRE_RE = Regexp.union(/<|>|&|'|"/)
     ESCAPE_ATTRIBUTE_RE = Regexp.union(/<|>|&|"/)
     ESCAPE_RE_FROM_TYPE = {
       :all => ESCAPE_ALL_RE,

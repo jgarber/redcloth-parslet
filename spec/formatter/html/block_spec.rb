@@ -31,6 +31,11 @@ describe RedClothParslet::Formatter::HTML do
     it { should == "<div>I am a div</div>" }
   end
   
+  describe "pre" do
+    let(:element) { RedClothParslet::Ast::Pre.new(["Preformatted -> nice!\n\nTwice as nice!"]) }
+    it { should == "<pre>Preformatted -&gt; nice!\n\nTwice as nice!</pre>" }
+  end
+  
   describe "ul" do
     let(:element) { RedClothParslet::Ast::Ul.new([
       RedClothParslet::Ast::Li.new(["1"]), 

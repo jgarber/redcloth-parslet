@@ -87,6 +87,15 @@ html: |-
   When the elephant comes to take a p. you...
 valid_html: false
 --- 
+name: pre block followed by another block
+in: |-
+  pre. Write "Textile"...
+
+  p. Prosper
+html: |-
+  <pre>Write &quot;Textile&quot;...</pre>
+  <p>Prosper</p>
+--- 
 name: pre block containing block start
 in: |-
   pre. I saw a ship. It ate my elephant.
@@ -99,8 +108,9 @@ in: |-
 
   When the elephant comes to take a p. you...
 html: |-
-  <pre>I saw a ship. It ate my elephant.</pre>
-  <pre>When the elephant comes to take a p. you...</pre>
+  <pre>I saw a ship. It ate my elephant.
+
+  When the elephant comes to take a p. you...</pre>
 --- 
 name: html tags
 desc: You can certainly use HTML tags inside your Textile documents.  HTML will only be escaped if it&#8217;s found in a <code>pre</code> or <code>code</code> block.

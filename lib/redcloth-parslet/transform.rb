@@ -21,6 +21,7 @@ class RedClothParslet::Transform < Parslet::Transform
   end
   rule(:notextile => simple(:c)) { RedClothParslet::Ast::Notextile.new(c) }
   rule(:html_tag => simple(:c)) { RedClothParslet::Ast::HtmlTag.new(c) }
+  rule(:pre => simple(:c)) { RedClothParslet::Ast::Pre.new(c) }
   rule(:pre_tag => subtree(:a)) do
     [ RedClothParslet::Ast::HtmlTag.new(String(a[:open_tag])), 
       RedClothParslet::Ast::EscapedHtml.new(String(a[:content])), 
