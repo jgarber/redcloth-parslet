@@ -36,6 +36,11 @@ describe RedClothParslet::Formatter::HTML do
     it { should == "<pre>Preformatted -&gt; nice!\n\nTwice as nice!</pre>" }
   end
   
+  describe "pre_tag" do
+    let(:element) { RedClothParslet::Ast::Pre.new("\nThe bold tag is <b>\n", :open_tag => '<pre>') }
+    it { should == "<pre>\nThe bold tag is &lt;b&gt;\n</pre>" }
+  end
+  
   describe "ul" do
     let(:element) { RedClothParslet::Ast::Ul.new([
       RedClothParslet::Ast::Li.new(["1"]), 

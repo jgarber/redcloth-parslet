@@ -86,7 +86,8 @@ module RedClothParslet::Formatter
     end
     
     def pre(el)
-     "<pre#{html_attributes(el.opts)}>#{escape_html(el.to_s, :pre)}</pre>"
+      (el.opts.delete(:open_tag) || "<pre#{html_attributes(el.opts)}>") +
+        escape_html(el.to_s, :pre) + "</pre>"
     end
 
     def code(el)
@@ -99,10 +100,6 @@ module RedClothParslet::Formatter
     
     def html_tag(el)
       el.children.join
-    end
-    
-    def escaped_html(el)
-      escape_html(el.to_s, :pre)
     end
     
     def entity(el)

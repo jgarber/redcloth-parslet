@@ -13,17 +13,9 @@ describe RedClothParslet::Parser::Block do
     
     describe "pre" do
       it { should parse("<pre>\nThe bold tag is <b>\n</pre>").with(transform).
-        as([
-          RedClothParslet::Ast::HtmlTag.new("<pre>"),
-          RedClothParslet::Ast::EscapedHtml.new("\nThe bold tag is <b>\n"),
-          RedClothParslet::Ast::HtmlTag.new("</pre>")
-        ]) }
+        as([RedClothParslet::Ast::Pre.new("\nThe bold tag is <b>\n", :open_tag => '<pre>')]) }
       it { should parse("<pre>No breaks</pre>").with(transform).
-        as([
-          RedClothParslet::Ast::HtmlTag.new("<pre>"),
-          RedClothParslet::Ast::EscapedHtml.new("No breaks"),
-          RedClothParslet::Ast::HtmlTag.new("</pre>")
-        ]) }
+        as([RedClothParslet::Ast::Pre.new("No breaks", :open_tag => "<pre>")]) }
     end
   end
 end
