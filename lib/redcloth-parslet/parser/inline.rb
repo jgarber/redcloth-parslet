@@ -136,7 +136,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   end
 
   rule(:ip_mark) { (str("(") >> (str("TM") | str("C") | str("R")) >> str(")")).as(:entity) }
-  rule(:m_dash) { str('--').as(:entity) }
+  rule(:m_dash) { str('--').as(:entity) >> str('-').repeat }
   rule(:ellipsis) { str('...').as(:entity) }
   rule(:standalone_en_dash) { (inline_sp >> str('-')).as(:entity) >> sp.present? }
   
