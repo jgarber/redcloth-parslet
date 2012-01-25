@@ -937,7 +937,7 @@ in: |-
   
   Some more text.
 html: |-
-  <p>Just some <strong>*</strong> text</p>
+  <p>Just some *** text</p>
   <hr />
   <p>Some more text.</p>
 ---
