@@ -51,7 +51,8 @@ class RedClothParslet::Parser::Block < Parslet::Parser
   rule(:hr) { (str("*").repeat(3) | str("-").repeat(3) | str("_").repeat(3)).as(:hr) >> block_end }
 
   rule(:undecorated_block) { content.as(:content) >> block_end }
-  rule(:undecorated_paragraph) { undecorated_block.as(:p) }
+  rule(:undecorated_paragraph) { unfinished_quote_paragraph | undecorated_block.as(:p) }
+  rule(:unfinished_quote_paragraph) { (str('"').present? >> undecorated_block).as(:p_open_quote) }
 
   rule(:content) { RedClothParslet::Parser::Inline.new }
   rule(:block_html_tag) { RedClothParslet::Parser::BlockHtmlTag.new >> (str("\n").repeat(1) | eof) }

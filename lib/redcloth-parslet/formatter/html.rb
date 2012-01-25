@@ -10,15 +10,46 @@ module RedClothParslet::Formatter
       send(root.type, root)
     end
     
+    ESCAPE_MAP = {
+      '<' => '&lt;',
+      '>' => '&gt;',
+      '&' => '&amp;',
+      '"' => '&quot;',
+      "\n" => "<br />\n",
+      "'" => "&#39;",
+      "--" => "&#8212;",
+      " -" => " &#8211;",
+      "x" => "&#215;",
+      "..." => "&#8230;",
+      "(TM)"=>"&#8482;",
+      "(C)"=>"&#169;",
+      "(R)"=>"&#174;"
+    }
+    TYPOGRAPHIC_ESCAPE_MAP = ESCAPE_MAP.merge("'" => "&#8217;")
+    CHARS_TO_BE_ESCAPED = {
+      :all => /<|>|&|\n|"|'/,
+      :pre => /<|>|&|'|"/,
+      :attribute => /<|>|&|"/
+    }
+    
     def textile_doc(el)
       inner(el, true).chomp
     end
     
-    ([:h1, :h2, :h3, :h4, :h5, :h6, :p, :div, :table] +
+    ([:h1, :h2, :h3, :h4, :h5, :h6, :div, :table] +
     [:strong, :em, :i, :b, :ins, :del, :sup, :sub, :span, :cite, :acronym]).each do |m|
       define_method(m) do |el|
        "<#{m}#{html_attributes(el.opts)}>#{inner(el)}</#{m}>"
       end
+    end
+    
+    def p(el)
+      inner = inner(el)
+      # Curlify multi-paragraph quote (one that doesn't have a closing quotation mark)
+      if el.opts.delete(:possible_unfinished_quote_paragraph)
+        inner.sub!(/\A#{ESCAPE_MAP['"']}/, "&#8220;")
+      end
+      "<p#{html_attributes(el.opts)}>#{inner}</p>"
     end
     
     [:blockquote].each do |m|
@@ -167,28 +198,6 @@ module RedClothParslet::Formatter
         attrs
       end.sort
     end
-    
-    ESCAPE_MAP = {
-      '<' => '&lt;',
-      '>' => '&gt;',
-      '&' => '&amp;',
-      '"' => '&quot;',
-      "\n" => "<br />\n",
-      "'" => "&#39;",
-      "--" => "&#8212;",
-      " -" => " &#8211;",
-      "x" => "&#215;",
-      "..." => "&#8230;",
-      "(TM)"=>"&#8482;",
-      "(C)"=>"&#169;",
-      "(R)"=>"&#174;"
-    }
-    TYPOGRAPHIC_ESCAPE_MAP = ESCAPE_MAP.merge("'" => "&#8217;")
-    CHARS_TO_BE_ESCAPED = {
-      :all => /<|>|&|\n|"|'/,
-      :pre => Regexp.union(/<|>|&|'|"/),
-      :attribute => Regexp.union(/<|>|&|"/)
-    }
 
     def escape_html(str, type = :all)
       escape_map = type == :pre ? ESCAPE_MAP : TYPOGRAPHIC_ESCAPE_MAP

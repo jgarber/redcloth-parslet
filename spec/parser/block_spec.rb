@@ -34,6 +34,12 @@ describe RedClothParslet::Parser::Block do
           RedClothParslet::Ast::P.new(["Just a bit."]),
           RedClothParslet::Ast::P.new(["No worries, mate."])]) }
   end
+  
+  describe "extended quote" do
+    it { should parse(%Q{"This is part of a multi-paragraph quote}).with(transform).
+      as([RedClothParslet::Ast::P.new(%Q{"This is part of a multi-paragraph quote}, :possible_unfinished_quote_paragraph => true)])
+    }
+  end
 
   describe "extended blocks" do
     it { should parse("p.. This is a paragraph.\n\nAnd so is this.").with(transform).

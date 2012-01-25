@@ -19,6 +19,7 @@ class RedClothParslet::Transform < Parslet::Transform
       RedClothParslet::Ast::const_get(block_type.to_s.capitalize).new(a[:content], a[:opts])
     end
   end
+  rule(:p_open_quote => subtree(:a)) { RedClothParslet::Ast::P.new(a[:content], a[:opts].merge(:possible_unfinished_quote_paragraph => true)) }
   rule(:notextile => simple(:c)) { RedClothParslet::Ast::Notextile.new(c) }
   rule(:html_tag => simple(:c)) { RedClothParslet::Ast::HtmlTag.new(c) }
   rule(:pre => simple(:c)) { RedClothParslet::Ast::Pre.new(c) }

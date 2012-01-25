@@ -20,6 +20,11 @@ describe RedClothParslet::Formatter::HTML do
     let(:element) { RedClothParslet::Ast::Blockquote.new([ RedClothParslet::Ast::P.new(["My paragraph."]) ]) }
     it { should == "<blockquote>\n<p>My paragraph.</p>\n</blockquote>" }
   end
+  
+  describe "unfinished quote paragraph" do
+    let(:element) { RedClothParslet::Ast::P.new(%Q{"This is part of a multi-paragraph quote}, :possible_unfinished_quote_paragraph => true) }
+    it { should == "<p>&#8220;This is part of a multi-paragraph quote</p>" }
+  end
 
   describe "notextile" do
     let(:element) { RedClothParslet::Ast::Notextile.new(["inside"]) }
