@@ -96,14 +96,14 @@ describe RedClothParslet::Parser::Inline do
   
   describe "cite" do
     it { should parse("??A Tale of Two Cities??").with(transform).
-      as([RedClothParslet::Ast::Cite.new(["A Tale of Two Cities"])]) }
+      as([RedClothParslet::Ast::Cite.new("A Tale of Two Cities")]) }
     it { should parse("??What's up???").with(transform).
-      as([RedClothParslet::Ast::Cite.new(["What's up?"])]) }
+      as([RedClothParslet::Ast::Cite.new("What's up?")]) }
   end
 
   describe "caps" do
     it { should parse("I got a PDQ job with NASA in the US.").with(transform).
-      as(["I got a ", RedClothParslet::Ast::Caps.new(["PDQ"]), " job with ", RedClothParslet::Ast::Caps.new(["NASA"]), " in the US."])
+      as(["I got a ", RedClothParslet::Ast::Caps.new("PDQ"), " job with ", RedClothParslet::Ast::Caps.new("NASA"), " in the US."])
     }
   end
 
@@ -113,6 +113,11 @@ describe RedClothParslet::Parser::Inline do
 
   describe 'superscript' do
     it_should_behave_like 'a simple inline element', 'sup', '^', RedClothParslet::Ast::Sup
+  end
+  
+  describe "footnote reference" do
+    it { should parse("I refer you to the footnote[1]").with(transform).
+      as(["I refer you to the footnote", RedClothParslet::Ast::FootnoteReference.new("1")]) }
   end
   
   describe "inline HTML" do

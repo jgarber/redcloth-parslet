@@ -14,6 +14,7 @@ module RedClothParslet::Ast
   class DoubleQuotedPhrase < Element; end
   class Img < Element; end
   class Acronym < Element; end
+  class FootnoteReference < Element; end
   
   class Caps < Span; end
 end

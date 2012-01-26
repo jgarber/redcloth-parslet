@@ -1,6 +1,7 @@
 class RedClothParslet::Transform < Parslet::Transform
   
   rule(:s => simple(:s)) { String(s) }
+  rule(:s => simple(:s), :footnote_reference => simple(:footnote_reference)) { [String(s), RedClothParslet::Ast::FootnoteReference.new(String(footnote_reference))] }
   rule(:caps => simple(:s)) { RedClothParslet::Ast::Caps.new(String(s)) }
   rule(:content => subtree(:c)) {|dict| {:content => dict[:c], :opts => {}} }
   rule(:content => subtree(:c), :attributes => subtree(:a)) {|dict| {:content => dict[:c], :opts => RedClothParslet::Ast::Attributes.new(dict[:a])} }

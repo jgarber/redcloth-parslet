@@ -3,13 +3,13 @@ module RedClothParslet::Formatter
     def initialize(options={})
       @options = options
     end
-    
+
     def convert(root)
       @output = ""
       @stack = []
       send(root.type, root)
     end
-    
+
     ESCAPE_MAP = {
       '<' => '&lt;',
       '>' => '&gt;',
@@ -31,18 +31,18 @@ module RedClothParslet::Formatter
       :pre => /<|>|&|'|"/,
       :attribute => /<|>|&|"/
     }
-    
+
     def textile_doc(el)
       inner(el, true).chomp
     end
-    
+
     ([:h1, :h2, :h3, :h4, :h5, :h6, :div, :table] +
     [:strong, :em, :i, :b, :ins, :del, :sup, :sub, :span, :cite, :acronym]).each do |m|
       define_method(m) do |el|
        "<#{m}#{html_attributes(el.opts)}>#{inner(el)}</#{m}>"
       end
     end
-    
+
     def p(el)
       inner = inner(el)
       # Curlify multi-paragraph quote (one that doesn't have a closing quotation mark)
@@ -51,13 +51,13 @@ module RedClothParslet::Formatter
       end
       "<p#{html_attributes(el.opts)}>#{inner}</p>"
     end
-    
+
     [:blockquote].each do |m|
       define_method(m) do |el|
        "<#{m}#{html_attributes(el.opts)}>\n#{inner(el, true)}</#{m}>"
       end
     end
-    
+
     [:ul, :ol].each do |m|
       define_method(m) do |el|
         @list_nesting ||= 0
@@ -74,16 +74,16 @@ module RedClothParslet::Formatter
         out
       end
     end
-    
+
     def li(el)
       ("\t" * @list_nesting) +
       "<li#{html_attributes(el.opts)}>#{inner(el)}"
     end
-    
+
     def link(el)
       "<a#{html_attributes(el.opts)}>#{inner(el)}</a>"
     end
-    
+
     def img(el)
       if el.opts[:alt]
         el.opts[:title] = el.opts[:alt]
@@ -92,7 +92,7 @@ module RedClothParslet::Formatter
       end
       %Q{<img#{html_attributes(el.opts, :image)} />}
     end
-    
+
     def table_row(el)
       "<tr#{html_attributes(el.opts)}>#{inner(el)}</tr>"
     end
@@ -102,11 +102,11 @@ module RedClothParslet::Formatter
     def table_header(el)
       "<th#{html_attributes(el.opts)}>#{inner(el)}</th>"
     end
-    
+
     def double_quoted_phrase(el)
       "&#8220;#{inner(el)}&#8221;"
     end
-    
+
     def dimension(el)
       el.to_s.gsub(/['"]/) {|m| {"\"" => '&#8243;', "'" => '&#8242;'}[m] }
     end
@@ -115,11 +115,15 @@ module RedClothParslet::Formatter
       el.opts.merge!({:class => 'caps'})
       span(el)
     end
-    
+
+    def footnote_reference(el)
+      %Q{<sup class="footnote" id="fnr#{el.to_s}"><a href="#fn#{el.to_s}">1</a></sup>}
+    end
+
     def hr(el)
       "<hr />"
     end
-    
+
     def pre(el)
       (el.opts.delete(:open_tag) || "<pre#{html_attributes(el.opts)}>") +
         escape_html(el.to_s, :pre) + "</pre>"
@@ -128,21 +132,21 @@ module RedClothParslet::Formatter
     def code(el)
       "<code#{html_attributes(el.opts)}>#{escape_html(el.to_s, :pre)}</code>"
     end
-    
+
     def notextile(el)
       el.children.join
     end
-    
+
     def html_tag(el)
       el.children.join
     end
-    
+
     def entity(el)
       ESCAPE_MAP[el.to_s]
     end
-    
+
     private
-    
+
     def list_items(el, block=false)
       result = ''
       @stack.push(el)
@@ -154,7 +158,7 @@ module RedClothParslet::Formatter
       @stack.pop
       result
     end
-    
+
     # Return the converted content of the children of +el+ as a string. The parameter +indent+ has
     # to be the amount of indentation used for the element +el+.
     #
@@ -174,8 +178,8 @@ module RedClothParslet::Formatter
       @stack.pop
       result
     end
-    
-    
+
+
     # Return the HTML representation of the attributes +attr+.
     def html_attributes(attr, type=:text)
       attr[:style] = attr[:style].map do |k,v|
@@ -190,7 +194,7 @@ module RedClothParslet::Formatter
       end.join(";") + ";" if attr[:style]
       order_attributes(attr).map {|k,v| v.nil? ? '' : " #{k}=\"#{escape_html(v.to_s, :attribute)}\"" }.join('')
     end
-    
+
     def order_attributes(attributes)
       return attributes unless @options[:order_attributes]
       attributes.inject({}) do |attrs, (key, value)|
@@ -203,6 +207,6 @@ module RedClothParslet::Formatter
       escape_map = type == :pre ? ESCAPE_MAP : TYPOGRAPHIC_ESCAPE_MAP
       str.gsub(CHARS_TO_BE_ESCAPED[type]) {|m| escape_map[m] || m }
     end
-    
+
   end
 end

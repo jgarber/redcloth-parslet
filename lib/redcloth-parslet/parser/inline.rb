@@ -48,7 +48,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     all_caps_word |
     dimensions |
     html_tag |
-    word.as(:s)
+    word
   end
 
   rule(:simple_inline_term) do
@@ -142,16 +142,21 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   
   rule :word do
     char = (exclude_significant_end_characters >> mchar)
-    char.repeat(1)
+    char.repeat(1).as(:s) >> footnote_reference.maybe
   end
   rule :exclude_significant_end_characters do
     html_tag.absent? >>
+    footnote_reference.absent? >>
     # TODO: make this the same rule as in parser/block/lists.rb so it's DRY.
     (match("[*#]").repeat(1) >> str(" ")).absent?.if_excluded(:li_start) >>
     # TODO: make this the same rule as in parser/block/tables.rb so it's DRY.
     str("|").absent?.if_excluded(:table_cell_start) >>
     match('[":]').absent?.if_excluded(:double_quoted_phrase_or_link) >>
     simple_inline_term_end_exclusion
+  end
+  
+  rule :footnote_reference do
+    str("[") >> digits.as(:footnote_reference) >> str("]")
   end
 
   rule(:code_words) do
