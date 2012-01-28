@@ -120,6 +120,13 @@ module RedClothParslet::Formatter
       %Q{<sup class="footnote" id="fnr#{el.to_s}"><a href="#fn#{el.to_s}">1</a></sup>}
     end
 
+    def footnote(el)
+      num = el.opts.delete(:number)
+      el.opts[:class] = [el.opts[:class], 'footnote'].compact.join(" ")
+      el.opts[:id] = "fn" + num
+      %Q{<p#{html_attributes(el.opts)}><a href="#fnr#{num}"><sup>#{num}</sup></a> #{inner(el)}</p>}
+    end
+
     def hr(el)
       "<hr />"
     end

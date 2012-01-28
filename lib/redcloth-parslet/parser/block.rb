@@ -13,6 +13,7 @@ class RedClothParslet::Parser::Block < Parslet::Parser
     notextile_block |
     extended_blockquote |
     blockquote |
+    footnote |
     extended_pre_block |
     pre_block |
     pre_tag_block |
@@ -35,19 +36,23 @@ class RedClothParslet::Parser::Block < Parslet::Parser
     rule(block_type) { (str(block_type) >> attributes?.as(:attributes) >> str(". ") >> content.as(:content) >> block_end).as(block_type) }
   end
 
+  rule(:footnote) do
+    (str("fn") >> (match("[0-9]").repeat(1).as(:number) >> attributes?).as(:attributes) >> str(". ") >> content.as(:content) >> block_end).as(:footnote)
+  end
+
   rule(:notextile_block_tags) { (str("<notextile>\n") >> (notextile_block_end_tag.absent? >> any).repeat.as(:s) >> notextile_block_end_tag >> block_end).as(:notextile) }
   rule(:notextile_block_end_tag) { str("\n</notextile>") }
 
   rule(:notextile_block) { (str("notextile. ") >> (block_end.absent? >> any).repeat.as(:s) >> block_end).as(:notextile) }
   rule(:extended_notextile_block) { (str("notextile.. ") >> ((str("\n") >> extended_block_end).absent? >> any).repeat.as(:s) >> extended_block_end).as(:notextile) }
-  
+
   rule(:pre_block) { (str("pre. ") >> (block_end.absent? >> any).repeat.as(:s) >> block_end).as(:pre) }
   rule(:extended_pre_block) { (str("pre.. ") >> ((str("\n") >> extended_block_end).absent? >> any).repeat.as(:s) >> extended_block_end).as(:pre) }
   rule(:pre_tag_block) { RedClothParslet::Parser::PreTag.new >> (str("\n").repeat(1) | eof) }
 
   rule(:blockquote) { (str("bq") >> attributes?.as(:attributes) >> str(". ") >> (undecorated_paragraph).as(:content)).as(:bq) }
   rule(:extended_blockquote) { (str("bq") >> attributes?.as(:attributes) >> str(".. ") >> (undecorated_paragraph.repeat(1)).as(:content) >> extended_block_end).as(:bq) }
-  
+
   rule(:hr) { (str("*").repeat(3) | str("-").repeat(3) | str("_").repeat(3)).as(:hr) >> block_end }
 
   rule(:undecorated_block) { content.as(:content) >> block_end }

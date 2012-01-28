@@ -23,11 +23,13 @@ module RedClothParslet::Ast
   class TableData < Element; end
   class TableHeader < Element; end
 
+  class Footnote < Element; end
+
   class List
     def self.build(li_hashes, opts={})
       list_nesting = []
       list_layout = ""
-      
+
       li_hashes.each do |li|
         if li[:layout] == list_layout
         elsif li[:layout].size < list_layout.size

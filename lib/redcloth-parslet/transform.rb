@@ -1,5 +1,5 @@
 class RedClothParslet::Transform < Parslet::Transform
-  
+
   rule(:s => simple(:s)) { String(s) }
   rule(:s => simple(:s), :footnote_reference => simple(:footnote_reference)) { [String(s), RedClothParslet::Ast::FootnoteReference.new(String(footnote_reference))] }
   rule(:caps => simple(:s)) { RedClothParslet::Ast::Caps.new(String(s)) }
@@ -9,11 +9,11 @@ class RedClothParslet::Transform < Parslet::Transform
   rule(:attributes => subtree(:a), :src => simple(:s)) {|dict| {:opts => RedClothParslet::Ast::Attributes.new(dict[:a].push({:src => dict[:s]}))} }
   rule(:attributes => subtree(:a), :src => simple(:s), :alt => simple(:alt)) {|dict| {:opts => RedClothParslet::Ast::Attributes.new(dict[:a].push({:src => dict[:s], :alt => dict[:alt]}))} }
   rule(:attributes => subtree(:a), :src => subtree(:s), :href => simple(:h)) {|dict| {:opts => RedClothParslet::Ast::Attributes.new(dict[:a].push({:src => dict[:s], :alt => dict[:alt], :href => dict[:h]}))} }
-  
+
   rule(:layout => simple(:l), :attributes => subtree(:a), :content => subtree(:c)) {|dict|
     {:layout => dict[:l], :content => dict[:c], :opts => RedClothParslet::Ast::Attributes.new(dict[:a])}
   }
-  
+
   rule(:extended => subtree(:ext)) { ext[:successive].unshift(ext[:first]) }
   RedClothParslet::Parser::Block::SIMPLE_BLOCK_ELEMENTS.each do |block_type|
     rule(block_type => subtree(:a)) do
@@ -29,12 +29,13 @@ class RedClothParslet::Transform < Parslet::Transform
   end
   rule(:bq => subtree(:a)) { RedClothParslet::Ast::Blockquote.new(a[:content], a[:opts]) }
   rule(:list => subtree(:a)) { RedClothParslet::Ast::List.build(a[:content], a[:opts]) }
+  rule(:footnote => subtree(:a)) { RedClothParslet::Ast::Footnote.new(a[:content], a[:opts]) }
   rule(:table => subtree(:a)) { RedClothParslet::Ast::Table.new(a[:content], a[:opts]) }
   rule(:table_row => subtree(:a)) { RedClothParslet::Ast::TableRow.new(a[:content], a[:opts]) }
   rule(:table_data => subtree(:a)) { RedClothParslet::Ast::TableData.new(a[:content], a[:opts]) }
   rule(:table_header => subtree(:a)) { RedClothParslet::Ast::TableHeader.new(a[:content], a[:opts]) }
   rule(:hr => subtree(:a)) { RedClothParslet::Ast::Hr.new() }
-  
+
   RedClothParslet::Parser::Inline::SIMPLE_INLINE_ELEMENTS.each do |block_type, symbol|
     rule(block_type => subtree(:a)) do
       RedClothParslet::Ast::const_get(block_type.to_s.capitalize).new(a[:content], a[:opts])
@@ -55,7 +56,7 @@ class RedClothParslet::Transform < Parslet::Transform
     end
   end
   rule(:acronym => subtree(:a)) { RedClothParslet::Ast::Acronym.new(a[:content], a[:opts]) }
-  
+
   rule(:dimension => simple(:d)) { RedClothParslet::Ast::Dimension.new(d) }
   rule(:entity => simple(:e)) { RedClothParslet::Ast::Entity.new(e) }
   rule(:entity => simple(:e), :left => subtree(:l), :left_space => simple(:l_sp), :right => subtree(:r), :right_space => simple(:r_sp)) do
