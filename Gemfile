@@ -1,7 +1,5 @@
 source "http://rubygems.org"
-gemspec
-
-gem 'rake'
+gemspec :development_group => :test
 
 group :development do
   gem 'ruby-debug', :platforms => :ruby_18
