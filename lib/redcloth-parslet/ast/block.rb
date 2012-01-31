@@ -17,6 +17,7 @@ module RedClothParslet::Ast
   class Hr < Element; end
 
   class Blockquote < Element; end
+  class Blockcode < Element; end
 
   class Table < Element; end
   class TableRow < Element; end

@@ -28,6 +28,7 @@ class RedClothParslet::Transform < Parslet::Transform
     RedClothParslet::Ast::Pre.new(String(a[:content]), {:open_tag => String(a[:open_tag])})
   end
   rule(:bq => subtree(:a)) { RedClothParslet::Ast::Blockquote.new(a[:content], a[:opts]) }
+  rule(:bc => simple(:c)) { RedClothParslet::Ast::Blockcode.new(c) }
   rule(:list => subtree(:a)) { RedClothParslet::Ast::List.build(a[:content], a[:opts]) }
   rule(:footnote => subtree(:a)) { RedClothParslet::Ast::Footnote.new(a[:content], a[:opts]) }
   rule(:table => subtree(:a)) { RedClothParslet::Ast::Table.new(a[:content], a[:opts]) }

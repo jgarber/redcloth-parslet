@@ -13,6 +13,7 @@ class RedClothParslet::Parser::Block < Parslet::Parser
     notextile_block |
     extended_blockquote |
     blockquote |
+    blockcode |
     footnote |
     extended_pre_block |
     pre_block |
@@ -52,6 +53,9 @@ class RedClothParslet::Parser::Block < Parslet::Parser
 
   rule(:blockquote) { (str("bq") >> attributes?.as(:attributes) >> str(". ") >> (undecorated_paragraph).as(:content)).as(:bq) }
   rule(:extended_blockquote) { (str("bq") >> attributes?.as(:attributes) >> str(".. ") >> (undecorated_paragraph.repeat(1)).as(:content) >> extended_block_end).as(:bq) }
+
+  rule(:blockcode) { (str("bc. ") >> (block_end.absent? >> any).repeat.as(:s) >> block_end).as(:bc) }
+  rule(:extended_blockcode) { (str("bc.. ") >> ((str("\n") >> extended_block_end).absent? >> any).repeat.as(:s) >> extended_block_end).as(:bc) }
 
   rule(:hr) { (str("*").repeat(3) | str("-").repeat(3) | str("_").repeat(3)).as(:hr) >> block_end }
 

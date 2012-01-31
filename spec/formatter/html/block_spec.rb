@@ -46,6 +46,11 @@ describe RedClothParslet::Formatter::HTML do
     it { should == "<pre>\nThe bold tag is &lt;b&gt;\n</pre>" }
   end
 
+  describe "blockcode" do
+    let(:element) { RedClothParslet::Ast::Blockcode.new("def leopard()\n\tpurr\nend") }
+    it { should == "<pre><code>def leopard()\n\tpurr\nend\n</code></pre>" }
+  end
+
   describe "horizontal rule" do
     let(:element) { RedClothParslet::Ast::Hr.new() }
     it { should == "<hr />" }

@@ -140,6 +140,10 @@ module RedClothParslet::Formatter
       "<code#{html_attributes(el.opts)}>#{escape_html(el.to_s, :pre)}</code>"
     end
 
+    def blockcode(el)
+      "<pre#{html_attributes(el.opts)}><code>#{escape_html(el.to_s, :pre)}\n</code></pre>"
+    end
+
     def notextile(el)
       el.children.join
     end

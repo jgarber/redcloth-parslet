@@ -84,6 +84,11 @@ describe RedClothParslet::Parser::Block do
       as([RedClothParslet::Ast::Notextile.new("something")]) }
   end
 
+  describe "blockcode" do
+    it { should parse("bc. def leopard()\n\t'prrrrr'\nend").with(transform).
+      as([RedClothParslet::Ast::Blockcode.new("def leopard()\n\t'prrrrr'\nend")]) }
+  end
+
   describe "headings" do
     (1..6).each do |num|
       it { should parse("h#{num}. Heading #{num}").with(transform).
