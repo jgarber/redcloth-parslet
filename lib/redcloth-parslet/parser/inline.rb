@@ -39,7 +39,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     inline.exclude(:table_cell_start)
   end
   
-  rule(:soverign_term) do
+  rule(:sovereign_term) do
     typographic_entity |
     image |
     double_quoted_phrase_or_link |
@@ -51,11 +51,12 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   end
 
   rule(:forced_inline_term) do
-    str("[") >> soverign_term >> str("]")
+    str("[") >> sovereign_term >> str("]") |
+    forced_simple_inline_term
   end
 
   rule(:term) do
-    soverign_term |
+    sovereign_term |
     forced_inline_term |
     word
   end
@@ -91,6 +92,22 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   rule(:end_strong) { str('*') >> match("[a-zA-Z0-9*]").absent? }
   rule(:end_em) { str('_') >> match("[a-zA-Z0-9_]").absent? }
   rule(:end_cite) { str('??') >> match("[a-zA-Z0-9?]").absent? }
+
+  rule(:forced_simple_inline_term) do
+    SIMPLE_INLINE_ELEMENTS.map {|el,mark| send("forced_#{el}").unless_excluded(el) }.reduce(:|)
+  end
+  SIMPLE_INLINE_ELEMENTS.each do |element_name, signature|
+    rule_name = "forced_#{element_name}"
+    end_rule_name = "end_#{rule_name}"
+    rule(rule_name) do
+      (str("[") >> str(signature) >>
+      maybe_preceded_by_attributes((
+        (send(end_rule_name).absent? >> any).repeat(1).as(:s)
+      ).as(:content)) >>
+      send(end_rule_name)).as(element_name)
+    end
+    rule(end_rule_name) { str(signature) >> str("]") }
+  end
 
   rule(:double_quoted_phrase_or_link) do
     (str('"') >>

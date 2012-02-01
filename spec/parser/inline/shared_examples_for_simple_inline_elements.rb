@@ -83,6 +83,11 @@ shared_examples 'a simple inline element' do |rule_name, mark, ast_class|
       subject.should parse("1[#{mark}st#{mark}]").with(transform).
         as(["1", ast_class.new(["st"])])
     end
+
+    it "should parse a #{rule_name} enclosed in square brackets that contains spaces" do
+      subject.should parse("[#{mark}p. #{mark}]").with(transform).
+        as([ast_class.new(["p. "])])
+    end
   end
   
 end
