@@ -28,6 +28,11 @@ shared_examples 'a simple inline element' do |rule_name, mark, ast_class|
         as([ast_class.new(["This is strong!"], {:class=>"widget"})])
       }
     end
+
+    context "enclosed in square brackets" do
+      it { should parse("[#{mark}st#{mark}]").with(transform).
+        as([ast_class.new("st")]) }
+    end
   end
   
   context "phrase" do
@@ -72,6 +77,11 @@ shared_examples 'a simple inline element' do |rule_name, mark, ast_class|
     it "should parse a phrase that is not a #{rule_name} because it has space at the beginning" do
       subject.should parse("oh, #{mark} here#{mark} it is!").with(transform).
         as(["oh, #{mark} here#{mark} it is!"])
+    end
+
+    it "should parse a #{rule_name} enclosed in square brackets that is part of a word" do
+      subject.should parse("1[#{mark}st#{mark}]").with(transform).
+        as(["1", ast_class.new(["st"])])
     end
   end
   

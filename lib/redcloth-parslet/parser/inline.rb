@@ -48,11 +48,16 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     all_caps_word |
     dimensions |
     html_tag |
+    forced_simple_inline_term |
     word
   end
 
   rule(:simple_inline_term) do
     SIMPLE_INLINE_ELEMENTS.map {|el,mark| send(el).unless_excluded(el) }.reduce(:|)
+  end
+
+  rule(:forced_simple_inline_term) do
+    SIMPLE_INLINE_ELEMENTS.map {|el,mark| (str("[") >> send(el) >> str("]")).unless_excluded(el) }.reduce(:|)
   end
 
   rule(:simple_inline_term_end_exclusion) do
@@ -146,6 +151,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   end
   rule :exclude_significant_end_characters do
     html_tag.absent? >>
+    forced_simple_inline_term.absent? >>
     footnote_reference.absent? >>
     # TODO: make this the same rule as in parser/block/lists.rb so it's DRY.
     (match("[*#]").repeat(1) >> str(" ")).absent?.if_excluded(:li_start) >>
