@@ -39,7 +39,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     inline.exclude(:table_cell_start)
   end
   
-  rule(:term) do
+  rule(:soverign_term) do
     typographic_entity |
     image |
     double_quoted_phrase_or_link |
@@ -47,17 +47,21 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     acronym |
     all_caps_word |
     dimensions |
-    html_tag |
-    forced_simple_inline_term |
+    html_tag
+  end
+
+  rule(:forced_inline_term) do
+    str("[") >> soverign_term >> str("]")
+  end
+
+  rule(:term) do
+    soverign_term |
+    forced_inline_term |
     word
   end
-
+  
   rule(:simple_inline_term) do
     SIMPLE_INLINE_ELEMENTS.map {|el,mark| send(el).unless_excluded(el) }.reduce(:|)
-  end
-
-  rule(:forced_simple_inline_term) do
-    SIMPLE_INLINE_ELEMENTS.map {|el,mark| (str("[") >> send(el) >> str("]")).unless_excluded(el) }.reduce(:|)
   end
 
   rule(:simple_inline_term_end_exclusion) do
@@ -151,7 +155,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   end
   rule :exclude_significant_end_characters do
     html_tag.absent? >>
-    forced_simple_inline_term.absent? >>
+    forced_inline_term.absent? >>
     footnote_reference.absent? >>
     # TODO: make this the same rule as in parser/block/lists.rb so it's DRY.
     (match("[*#]").repeat(1) >> str(" ")).absent?.if_excluded(:li_start) >>
