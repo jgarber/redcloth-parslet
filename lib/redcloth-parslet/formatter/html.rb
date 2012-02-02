@@ -134,13 +134,11 @@ module RedClothParslet::Formatter
       "<hr />"
     end
 
-    def pre(el)
-      (el.opts.delete(:open_tag) || "<pre#{html_attributes(el.opts)}>") +
-        escape_html(el.to_s, :pre) + "</pre>"
-    end
-
-    def code(el)
-      "<code#{html_attributes(el.opts)}>#{escape_html(el.to_s, :pre)}</code>"
+    %w(pre code).each do |tag|
+      define_method(tag) do |el|
+        (el.opts.delete(:open_tag) || "<#{tag}#{html_attributes(el.opts)}>") +
+          inner(el, nil, :pre) + "</#{tag}>"
+      end
     end
 
     def blockcode(el)
@@ -178,12 +176,12 @@ module RedClothParslet::Formatter
     #
     # Pushes +el+ onto the @stack before converting the child elements and pops it from the stack
     # afterwards.
-    def inner(el, block = false)
+    def inner(el, block = false, escape_type = nil)
       result = ''
       @stack.push(el)
       el.children.flatten.each do |inner_el|
         if inner_el.is_a?(String)
-          result << escape_html(inner_el)
+          result << escape_html(inner_el, escape_type)
         elsif inner_el.respond_to?(:type)
           result << send(inner_el.type, inner_el)
         end
@@ -218,6 +216,7 @@ module RedClothParslet::Formatter
     end
 
     def escape_html(str, type = :all)
+      type = :all unless CHARS_TO_BE_ESCAPED.keys.include? type
       escape_map = type == :pre ? ESCAPE_MAP : TYPOGRAPHIC_ESCAPE_MAP
       str.gsub(CHARS_TO_BE_ESCAPED[type]) {|m| escape_map[m] || m }
     end

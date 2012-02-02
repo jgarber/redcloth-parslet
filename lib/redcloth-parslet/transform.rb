@@ -25,7 +25,10 @@ class RedClothParslet::Transform < Parslet::Transform
   rule(:html_tag => simple(:c)) { RedClothParslet::Ast::HtmlTag.new(c) }
   rule(:pre => simple(:c)) { RedClothParslet::Ast::Pre.new(c) }
   rule(:pre_tag => subtree(:a)) do
-    RedClothParslet::Ast::Pre.new(String(a[:content]), {:open_tag => String(a[:open_tag])})
+    RedClothParslet::Ast::Pre.new(a[:content], {:open_tag => String(a[:open_tag])})
+  end
+  rule(:code_tag => subtree(:a)) do
+    RedClothParslet::Ast::Code.new(a[:content], {:open_tag => String(a[:open_tag])})
   end
   rule(:bq => subtree(:a)) { RedClothParslet::Ast::Blockquote.new(a[:content], a[:opts]) }
   rule(:bc => simple(:c)) { RedClothParslet::Ast::Blockcode.new(c) }

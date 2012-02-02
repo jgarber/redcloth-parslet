@@ -11,4 +11,10 @@ describe RedClothParslet::Parser::Inline do
       as([RedClothParslet::Ast::Code.new(["code *yeah* code"])])
     }
   end
+  
+  describe "code tag" do
+    it { should parse(%Q{<code>code *yeah* code</code>}).with(transform).
+      as([RedClothParslet::Ast::Code.new(["code *yeah* code"])])
+    }
+  end
 end

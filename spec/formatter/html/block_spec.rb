@@ -45,7 +45,11 @@ describe RedClothParslet::Formatter::HTML do
     let(:element) { RedClothParslet::Ast::Pre.new("\nThe bold tag is <b>\n", :open_tag => '<pre>') }
     it { should == "<pre>\nThe bold tag is &lt;b&gt;\n</pre>" }
   end
-
+  describe "code_tag" do
+    let(:element) { RedClothParslet::Ast::Code.new("\nThe bold tag is <b>\n", :open_tag => '<code>') }
+    it { should == "<code>\nThe bold tag is &lt;b&gt;\n</code>" }
+  end
+  
   describe "blockcode" do
     let(:element) { RedClothParslet::Ast::Blockcode.new("def leopard()\n\tpurr\nend") }
     it { should == "<pre><code>def leopard()\n\tpurr\nend</code></pre>" }

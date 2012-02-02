@@ -40,12 +40,21 @@ module RedClothParslet::Parser
     end
   end
   
+  class CodeTag < HtmlTag
+    rule(:tag_name) { str("code") }
+    
+    rule(:tag) do
+      (open_tag.as(:open_tag) >>
+      ((close_tag).absent? >> any.as(:s)).repeat.as(:content) >>
+      close_tag.as(:close_tag)).as(:code_tag)
+    end
+  end
   class PreTag < HtmlTag
     rule(:tag_name) { str("pre") }
     
     rule(:tag) do
       (open_tag.as(:open_tag) >>
-      ((close_tag).absent? >> any).repeat.as(:content) >>
+      ((close_tag).absent? >> (CodeTag.new | any.as(:s))).repeat.as(:content) >>
       close_tag.as(:close_tag)).as(:pre_tag)
     end
   end

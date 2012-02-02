@@ -460,7 +460,7 @@ in: |
 html: |-
   <pre>
   <code>
-    a.gsub!( /&lt;/, '' )
+    a.gsub!( /&lt;/, &#39;&#39; )
   </code>
   </pre>
 --- 

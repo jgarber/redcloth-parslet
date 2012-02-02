@@ -17,5 +17,12 @@ describe RedClothParslet::Parser::Block do
       it { should parse("<pre>No breaks</pre>").with(transform).
         as([RedClothParslet::Ast::Pre.new("No breaks", :open_tag => "<pre>")]) }
     end
+
+    describe "pre + code" do
+      it { should parse("<pre><code>\nThe bold tag is <b>\n</code></pre>").with(transform).
+        as([RedClothParslet::Ast::Pre.new(RedClothParslet::Ast::Code.new("\nThe bold tag is <b>\n", :open_tag => '<code>'), :open_tag => '<pre>')]) }
+      it { should parse("<pre>\n<code>\nNo breaks</code>\n</pre>").with(transform).
+        as([RedClothParslet::Ast::Pre.new(["\n", RedClothParslet::Ast::Code.new("\nNo breaks", :open_tag => '<code>'), "\n"], :open_tag => "<pre>")]) }
+    end
   end
 end

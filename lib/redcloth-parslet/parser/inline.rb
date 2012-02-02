@@ -56,6 +56,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   end
 
   rule(:term) do
+    code_tag |
     sovereign_term |
     forced_inline_term |
     word
@@ -108,6 +109,13 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     end
     rule(end_rule_name) { str(signature) >> str("]") }
   end
+  
+  rule(:code_tag) do
+    (str('<code>') >> 
+        ((end_code_tag.absent? >> any).repeat(1).as(:s)).as(:content) >>
+        end_code_tag).as(:code)
+  end
+  rule(:end_code_tag) { str("</code>") }
 
   rule(:double_quoted_phrase_or_link) do
     (str('"') >>
