@@ -106,7 +106,21 @@ describe RedClothParslet::Formatter::HTML do
       ])
     ]) }
 
-    it { should == "<table><tr><th>one</th><th>two</th><th>three</th></tr><tr><td>1</td><td>2</td><td>3</td></tr></table>" }
+    it { should == <<-END.gsub(/^ +/, '').chomp
+      <table>
+      \t<tr>
+      \t\t<th>one</th>
+      \t\t<th>two</th>
+      \t\t<th>three</th>
+      \t</tr>
+      \t<tr>
+      \t\t<td>1</td>
+      \t\t<td>2</td>
+      \t\t<td>3</td>
+      \t</tr>
+      </table>
+    END
+    }
   end
 
   describe "footnote" do

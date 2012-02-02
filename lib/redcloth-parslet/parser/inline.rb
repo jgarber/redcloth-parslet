@@ -36,7 +36,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   end
   
   rule(:table_contents) do
-    inline.exclude(:table_cell_start)
+    (inline_element.exclude(:table_cell_start) | inline_sp.as(:s)).repeat(1)
   end
   
   rule(:sovereign_term) do

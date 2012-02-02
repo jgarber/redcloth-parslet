@@ -36,12 +36,12 @@ module RedClothParslet::Formatter
       inner(el, true).chomp
     end
 
-    ([:h1, :h2, :h3, :h4, :h5, :h6, :div, :table] +
-    [:strong, :em, :i, :b, :ins, :del, :sup, :sub, :span, :cite, :acronym]).each do |m|
+    ([:h1, :h2, :h3, :h4, :h5, :h6, :div] +
+     [:strong, :em, :i, :b, :ins, :del, :sup, :sub, :span, :cite, :acronym]).each do |m|
       define_method(m) do |el|
-       "<#{m}#{html_attributes(el.opts)}>#{inner(el)}</#{m}>"
+        "<#{m}#{html_attributes(el.opts)}>#{inner(el)}</#{m}>"
       end
-    end
+     end
 
     def p(el)
       inner = inner(el)
@@ -54,7 +54,7 @@ module RedClothParslet::Formatter
 
     [:blockquote].each do |m|
       define_method(m) do |el|
-       "<#{m}#{html_attributes(el.opts)}>\n#{inner(el, true)}</#{m}>"
+        "<#{m}#{html_attributes(el.opts)}>\n#{inner(el, true)}</#{m}>"
       end
     end
 
@@ -77,7 +77,7 @@ module RedClothParslet::Formatter
 
     def li(el)
       ("\t" * @list_nesting) +
-      "<li#{html_attributes(el.opts)}>#{inner(el)}"
+        "<li#{html_attributes(el.opts)}>#{inner(el)}"
     end
 
     def link(el)
@@ -93,14 +93,17 @@ module RedClothParslet::Formatter
       %Q{<img#{html_attributes(el.opts, :image)} />}
     end
 
+    def table(el)
+      "<table#{html_attributes(el.opts)}>\n#{inner(el)}</table>"
+    end
     def table_row(el)
-      "<tr#{html_attributes(el.opts)}>#{inner(el)}</tr>"
+      "\t<tr#{html_attributes(el.opts)}>\n#{inner(el)}\t</tr>\n"
     end
     def table_data(el)
-      "<td#{html_attributes(el.opts)}>#{inner(el)}</td>"
+      "\t\t<td#{html_attributes(el.opts)}>#{inner(el)}</td>\n"
     end
     def table_header(el)
-      "<th#{html_attributes(el.opts)}>#{inner(el)}</th>"
+      "\t\t<th#{html_attributes(el.opts)}>#{inner(el)}</th>\n"
     end
 
     def double_quoted_phrase(el)

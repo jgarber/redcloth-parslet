@@ -21,5 +21,7 @@ class RedClothParslet::Parser::Block < Parslet::Parser
   end
   
   rule(:table_content) { RedClothParslet::Parser::Inline.new.table_contents }
+
+  rule(:spaces) { match("[\t ]").repeat }
   
 end
