@@ -5,4 +5,9 @@ describe RedClothParslet::Parser::Attributes do
   it { should parse("\\7").as([:colspan=>'7']) }
   it { should parse("/3").as([:rowspan=>'3']) }
   it { should parse("/5").as([:rowspan=>'5']) }
+  
+  it { should parse("-").as([:vertical_align=>'-']) }
+  it { should parse("^").as([:vertical_align=>'^']) }
+  it { should parse("~").as([:vertical_align=>'~']) }
+  it { should parse("=~").as([{:align=>'='}, {:vertical_align=>'~'}]) }
 end

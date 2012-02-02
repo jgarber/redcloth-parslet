@@ -9,7 +9,6 @@ class RedClothParslet::Parser::Attributes < Parslet::Parser
     lang |
     style |
     align |
-    vertical_align |
     padding
   end
   
@@ -30,7 +29,6 @@ class RedClothParslet::Parser::Attributes < Parslet::Parser
   end
   
   rule(:align) { match('[<>=]').as(:align) }
-  rule(:vertical_align) { match('[~^-]').as(:vertical_align) }
   rule(:padding) { match('[()]').as(:padding) }
   
   rule(:table_attributes) do
@@ -39,11 +37,13 @@ class RedClothParslet::Parser::Attributes < Parslet::Parser
   rule(:table_attribute) do
     colspan |
     rowspan |
+    vertical_align |
     attribute
   end
   rule(:colspan) { str('\\') >> digits.as(:colspan) }
   rule(:rowspan) { str('/') >> digits.as(:rowspan) }
   rule(:digits) { match("[0-9]").repeat(1) }
+  rule(:vertical_align) { match('[~^-]').as(:vertical_align) }
 
   # TODO: extract this out into a base parser and inherit to keep it DRY
   rule(:mchar) { match('\S') }

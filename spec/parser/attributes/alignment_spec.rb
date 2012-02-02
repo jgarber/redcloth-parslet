@@ -5,11 +5,6 @@ describe RedClothParslet::Parser::Attributes do
   it { should parse(">").as([:align=>'>']) }
   it { should parse("=").as([:align=>'=']) }
   it { should parse("<>").as([{:align=>'<'}, {:align=>'>'}]) }
-
-  it { should parse("-").as([:vertical_align=>'-']) }
-  it { should parse("^").as([:vertical_align=>'^']) }
-  it { should parse("~").as([:vertical_align=>'~']) }
-  it { should parse("=~").as([{:align=>'='}, {:vertical_align=>'~'}]) }
   
   it { should parse("(").as([:padding=>'(']) }
   it { should parse(")").as([:padding=>')']) }
