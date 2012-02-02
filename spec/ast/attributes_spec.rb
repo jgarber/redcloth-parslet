@@ -29,6 +29,16 @@ describe RedClothParslet::Ast::Attributes do
   it "should justify" do
     described_class.new([{:align=>'<'}, {:align=>'>'}]).should == {:style=>{'align'=>'justify'}}
   end
+
+  it "should vertical-align top" do
+    described_class.new([:vertical_align=>'^']).should == {:style=>{'vertical-align'=>'top'}}
+  end
+  it "should vertical-align middle" do
+    described_class.new([:vertical_align=>'-']).should == {:style=>{'vertical-align'=>'middle'}}
+  end
+  it "should vertical-align bottom" do
+    described_class.new([:vertical_align=>'~']).should == {:style=>{'vertical-align'=>'bottom'}}
+  end
   
   it "should pass through other styles" do
     described_class.new([{:style=>'color:red'}]).should == {:style=>{'color'=>'red'}}

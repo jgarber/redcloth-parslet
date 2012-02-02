@@ -15,6 +15,8 @@ module RedClothParslet::Ast
             else
               {'<'=>'left','>'=>'right','='=>'center'}[String(v)]
             end
+          when :vertical_align
+            style["vertical-align"] = {'^'=>'top', '-'=>'middle', '~'=>'bottom'}[String(v)]
           when :class
             self[k] = ((self[k] || '').split(/\s/) + [String(v)]).join(' ')
           when :style
