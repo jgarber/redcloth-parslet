@@ -48,7 +48,7 @@ describe RedClothParslet::Formatter::HTML do
 
   describe "blockcode" do
     let(:element) { RedClothParslet::Ast::Blockcode.new("def leopard()\n\tpurr\nend") }
-    it { should == "<pre><code>def leopard()\n\tpurr\nend\n</code></pre>" }
+    it { should == "<pre><code>def leopard()\n\tpurr\nend</code></pre>" }
   end
 
   describe "horizontal rule" do
