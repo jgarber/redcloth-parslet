@@ -73,4 +73,8 @@ describe RedClothParslet::Parser::Attributes do
       it { should parse('<(myclass)>').as([{:align=>'<'}, {:class=>'myclass'}, {:align=>'>'}]) }
       it { should parse('((myclass))').as([{:padding=>'('}, {:class=>'myclass'}, {:padding=>')'}]) }
     end
+
+  describe "language designation" do
+    it { should parse('[fr]').as([:lang => 'fr']) }
+  end
 end

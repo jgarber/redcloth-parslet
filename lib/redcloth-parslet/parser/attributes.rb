@@ -6,6 +6,7 @@ class RedClothParslet::Parser::Attributes < Parslet::Parser
   
   rule(:attribute) do
     class_id |
+    lang |
     style |
     align |
     padding
@@ -20,7 +21,8 @@ class RedClothParslet::Parser::Attributes < Parslet::Parser
   end
   rule(:classes) { (class_id_char | class_id_sp).repeat(1).as(:class) }
   rule(:id) { str('#') >> class_id_char.repeat(1).as(:id) }
-  rule(:class_id_char) { match('[^\s<>()#]') }
+  rule(:class_id_char) { match('[^\]\[\s<>()#]') }
+  rule(:lang) { str("[") >> class_id_char.repeat(1).as(:lang) >> str("]") }
   
   rule(:style) do
     str('{') >> (str('}').absent? >> (str(" ") | mchar)).repeat(1).as(:style) >> str('}')
