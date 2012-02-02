@@ -31,6 +31,18 @@ class RedClothParslet::Parser::Attributes < Parslet::Parser
   rule(:align) { match('[<>=]').as(:align) }
   rule(:padding) { match('[()]').as(:padding) }
   
+  rule(:table_attributes) do
+    table_attribute.repeat(1)
+  end
+  rule(:table_attribute) do
+    colspan |
+    rowspan |
+    attribute
+  end
+  rule(:colspan) { str('\\') >> digits.as(:colspan) }
+  rule(:rowspan) { str('/') >> digits.as(:rowspan) }
+  rule(:digits) { match("[0-9]").repeat(1) }
+
   # TODO: extract this out into a base parser and inherit to keep it DRY
   rule(:mchar) { match('\S') }
   rule(:class_id_sp) { match('[ \t]') }

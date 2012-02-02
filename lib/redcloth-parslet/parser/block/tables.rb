@@ -17,10 +17,14 @@ class RedClothParslet::Parser::Block < Parslet::Parser
     (str("|_. ") >> table_content.as(:content)).as(:table_header)
   end
   rule(:table_data) do
-    (str("|") >> table_content.as(:content)).as(:table_data)
+    (str("|") >> table_attributes? >> table_content.as(:content)).as(:table_data)
   end
   
   rule(:table_content) { RedClothParslet::Parser::Inline.new.table_contents }
+  rule(:table_attributes?) do
+    (RedClothParslet::Parser::Attributes.new.table_attributes >>
+    str(".") >> match("[\t ]")).as(:attributes).maybe
+  end
 
   rule(:spaces) { match("[\t ]").repeat }
   

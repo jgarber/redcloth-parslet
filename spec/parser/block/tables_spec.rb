@@ -44,7 +44,22 @@ describe RedClothParslet::Parser::Block do
           RedClothParslet::Ast::TableData.new(["row"])
         ])
       ], {:style => {"border"=>"1px solid black"}})]) }
-
+    
+    describe "table data attributes" do
+      it { should parse("|\\2. spans two cols |").with(transform).
+        as([RedClothParslet::Ast::Table.new(
+          RedClothParslet::Ast::TableRow.new(
+            RedClothParslet::Ast::TableData.new("spans two cols ", {:colspan => '2'})
+          )
+        )]) }
+      it { should parse("|/2. spans two rows |").with(transform).
+        as([RedClothParslet::Ast::Table.new(
+          RedClothParslet::Ast::TableRow.new(
+            RedClothParslet::Ast::TableData.new("spans two rows ", {:rowspan => '2'})
+          )
+        )]) }
+    end
+    
     context "spaces around table data" do
       it { should parse("| one | two | three |").with(transform).
         as([RedClothParslet::Ast::Table.new([
