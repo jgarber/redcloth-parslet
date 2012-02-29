@@ -1,5 +1,5 @@
 describe RedClothParslet::Parser::Attributes do
-  subject { described_class.new.table_attributes }
+  subject { described_class.new.td_attributes }
   
   it { should parse("\\2").as([:colspan=>'2']) }
   it { should parse("\\7").as([:colspan=>'7']) }

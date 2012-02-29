@@ -31,10 +31,10 @@ class RedClothParslet::Parser::Attributes < Parslet::Parser
   rule(:align) { match('[<>=]').as(:align) }
   rule(:padding) { match('[()]').as(:padding) }
   
-  rule(:table_attributes) do
-    table_attribute.repeat(1)
+  rule(:td_attributes) do
+    td_attribute.repeat(1)
   end
-  rule(:table_attribute) do
+  rule(:td_attribute) do
     colspan |
     rowspan |
     vertical_align |
