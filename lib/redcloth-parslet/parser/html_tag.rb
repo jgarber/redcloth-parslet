@@ -1,4 +1,6 @@
 module RedClothParslet::Parser
+  INLINE_TAGS = %w(a applet basefont bdo br font iframe img map object param embed q script span sub sup abbr acronym cite code del dfn em ins kbd samp strong var b big i s small strike tt u)
+  
   class HtmlTag < Parslet::Parser
     root(:tag)
     rule(:tag) do
@@ -36,7 +38,7 @@ module RedClothParslet::Parser
     rule(:tag_name) { inline_tag_name.absent? >> any_tag_name }
     
     rule(:inline_tag_name) do
-      %w(a applet basefont bdo br font iframe img map object param embed q script span sub sup abbr acronym cite code del dfn em ins kbd samp strong var b big i s small strike tt u).map {|name| str(name) }.reduce(:|)
+      INLINE_TAGS.map {|name| str(name) }.reduce(:|)
     end
   end
   
