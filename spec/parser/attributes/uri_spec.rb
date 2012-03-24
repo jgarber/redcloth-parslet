@@ -31,6 +31,7 @@ describe RedClothParslet::Parser::Attributes::Uri do
   it { should parse("ftp://ftp.is.co.za/%2Frfc/rfc1808.txt") }
   it { should parse("gopher://spinaltap.micro.umn.edu/00/Weather/California/Los%20Angeles") }
   it { should parse("http://www.math.uio.no/faq/compression-faq/part1.html") }
+  it { should parse("http://en.wikipedia.org/wiki/Textile_(markup_language)") }
   it { should parse("mailto:mduerst@ifi.unizh.ch") }
   it { should parse("news:comp.infosystems.www.servers.unix") }
   it { should parse("telnet://melvyl.ucop.edu/") }
