@@ -41,6 +41,12 @@ describe RedClothParslet::Parser::Inline do
         as([RedClothParslet::Ast::Strong.new(["This is ", RedClothParslet::Ast::Em.new(["really"]), " strong!"])])
       }
     end
+
+    context "in square brackets" do
+      it { should parse("Puh[_leeeze_]!").with(transform).
+        as(["Puh", RedClothParslet::Ast::Em.new(["leeeze"]), "!"])
+      }
+    end
   end
   
   describe "bold" do
