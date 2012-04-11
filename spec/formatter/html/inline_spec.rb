@@ -1,5 +1,5 @@
 describe RedClothParslet::Formatter::HTML do
-  subject { described_class.new(:order_attributes => true).convert(element) }
+  subject { described_class.new(:sort_attributes => true).convert(element) }
 
   %w(strong em span b i ins del cite).each do |tag|
     describe tag do

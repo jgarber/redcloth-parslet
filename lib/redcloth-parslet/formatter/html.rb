@@ -194,21 +194,26 @@ module RedClothParslet::Formatter
 
     # Return the HTML representation of the attributes +attr+.
     def html_attributes(attr, type=:text)
-      attr[:style] = attr[:style].map do |k,v|
-        case k
-        when /padding/
-          "#{k}:#{v}em"
-        when 'align'
-          type == :text ? "text-align:#{v}" : "align:#{v}"
-        else
-          [k,v].join(':')
+      if attr[:style]
+        attr[:style] = attr[:style].map do |k,v|
+          case k
+          when /padding/
+            "#{k}:#{v}em"
+          when 'align'
+            type == :text ? "text-align:#{v}" : "align:#{v}"
+          else
+            [k,v].join(':')
+          end
         end
-      end.join(";") + ";" if attr[:style]
-      order_attributes(attr).map {|k,v| v.nil? ? '' : " #{k}=\"#{escape_html(v.to_s, :attribute)}\"" }.join('')
+        attr[:style].sort! if @options[:sort_attributes]
+        attr[:style] = attr[:style].join(";") + ";"
+      end
+      sort_attributes(attr).map {|k,v| v.nil? ? '' : " #{k}=\"#{escape_html(v.to_s, :attribute)}\"" }.join('')
     end
 
-    def order_attributes(attributes)
-      return attributes unless @options[:order_attributes]
+    def sort_attributes(attributes)
+      return attributes unless @options[:sort_attributes]
+      # Stringify keys, then sort
       attributes.inject({}) do |attrs, (key, value)|
         attrs[key.to_s] = value
         attrs

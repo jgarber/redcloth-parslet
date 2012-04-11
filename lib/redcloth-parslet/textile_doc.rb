@@ -75,9 +75,10 @@ module RedClothParslet
     #     #=>"<p>And then? She <strong>fell</strong>!</p>"
     #
     def to_html( *rules )
+      opts = {:sort_attributes => rules.delete(:sort_attributes)}
       apply_rules(rules)
 
-      RedClothParslet::Formatter::HTML.new.convert(self)
+      RedClothParslet::Formatter::HTML.new(opts).convert(self)
     end
 
     #

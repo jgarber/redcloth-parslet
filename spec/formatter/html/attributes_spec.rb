@@ -1,5 +1,5 @@
 describe RedClothParslet::Formatter::HTML do
-  subject { described_class.new(:order_attributes => true).convert(element) }
+  subject { described_class.new(:sort_attributes => true).convert(element) }
   
   describe "class" do
     let(:element) { RedClothParslet::Ast::Strong.new("", :class=>'myclass') }
