@@ -28,6 +28,12 @@ describe RedClothParslet::Parser::Inline do
     }
   end
   
+  context "in brackets" do
+    it { should parse(%{"Wikipedia article about Textile":http://en.wikipedia.org/wiki/Textile_(markup_language)}).with(transform).
+      as([RedClothParslet::Ast::Link.new("Wikipedia article about Textile", {:href=>"http://en.wikipedia.org/wiki/Textile_(markup_language)"})])
+    }
+  end
+  
   context "image link" do
     it { should parse(%{!openwindow1.gif!:http://hobix.com/}).with(transform).
       as([RedClothParslet::Ast::Link.new(RedClothParslet::Ast::Img.new([], {:src=>"openwindow1.gif", :alt => ""}), {:href => "http://hobix.com/"})])
