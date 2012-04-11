@@ -1,4 +1,4 @@
-describe RedClothParslet::Parser::Attributes::NongreedyUri do
+describe RedClothParslet::Parser::Attributes::LinkUri do
   let(:parser) { described_class.new }
   
   # Though technically valid, punctuation is not allowed at the end of a URL in

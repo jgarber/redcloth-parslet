@@ -1,21 +1,14 @@
-class RedClothParslet::Parser::Attributes::ImageUri < RedClothParslet::Parser::Attributes::NongreedyUri
+class RedClothParslet::Parser::Attributes::ImageUri < RedClothParslet::Parser::Attributes::Uri
   
-  rule(:segment) { (safe_pchar | parenthesized_pchars).repeat >> (str(';') >> param).repeat }
-  rule(:safe_pchar) { unsafe.absent? >> pchar }
-  rule(:parenthesized_pchars) { str("(") >> safe_pchar.repeat >> str(")") }
+  rule(:segment) { (unsafe.absent? >> pchar).repeat >> (str(';') >> param).repeat }
   
-  rule(:rel_segment) { (safe_rel_segment_chars | parenthesized_rel_segment_chars).repeat(1) }
-  rule(:safe_rel_segment_chars) { unsafe.absent? >> (unreserved | escaped | match('[;@&=+$,]')) }
-  rule(:parenthesized_rel_segment_chars) { str("(") >> safe_rel_segment_chars.repeat >> str(")") }
+  rule(:rel_segment) { (unsafe.absent? >> (unreserved | escaped | match('[;@&=+$,]'))).repeat(1) }
   
   rule(:reg_name) { (unsafe.absent? >> (unreserved | escaped | match('[$,;:@&=+]'))).repeat(1) }
   
-  rule(:fragment) { (safe_uric | parenthesized__uric).repeat }
+  rule(:fragment) { (unsafe.absent? >> uric).repeat }
   
-  rule(:query) { (safe_uric | parenthesized__uric).repeat }
-  
-  rule(:safe_uric) { (unsafe.absent? >> uric) }
-  rule(:parenthesized__uric) { str("(") >> safe_uric.repeat >> str(")") }
+  rule(:query) { (unsafe.absent? >> uric).repeat }
   
   # Don't allow these in a URI
   rule(:unsafe) { match('[()]') | terminal_punctuation }

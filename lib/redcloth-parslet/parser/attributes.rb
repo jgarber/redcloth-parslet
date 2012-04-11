@@ -51,5 +51,5 @@ class RedClothParslet::Parser::Attributes < Parslet::Parser
 end
 
 require 'redcloth-parslet/parser/attributes/uri'
-require 'redcloth-parslet/parser/attributes/nongreedy_uri'
 require 'redcloth-parslet/parser/attributes/image_uri'
+require 'redcloth-parslet/parser/attributes/link_uri'

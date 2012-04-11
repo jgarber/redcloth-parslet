@@ -123,19 +123,19 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
       end_double_quoted_phrase_or_link).as(:double_quoted_phrase_or_link)
   end
   rule(:end_double_quoted_phrase_or_link) do
-    str('":') >> nongreedy_uri.as(:href) |
+    str('":') >> link_uri.as(:href) |
     str('"')
   end
   
   rule(:image) do
     (str('!') >> 
-    maybe_preceded_by_attributes(nongreedy_uri.as(:src)) >> 
+    maybe_preceded_by_attributes(image_uri.as(:src)) >> 
     image_alt.maybe >>
     end_image).as(:image)
   end
   rule(:image_alt) { str("(") >> (str(")").absent? >> any).repeat(1).as(:alt) >> str(")") }
   rule(:end_image) do
-    str('!:') >> nongreedy_uri.as(:href) |
+    str('!:') >> link_uri.as(:href) |
     (str('!') >> match("[a-zA-Z0-9]").absent?)
   end
   
@@ -209,7 +209,8 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   rule(:digits) { match('[0-9]').repeat(1) }
   # rule(:mtext) { mchar.repeat(1) >> (inline_sp >> mchar.repeat(1)) }
   
-  rule(:nongreedy_uri) { RedClothParslet::Parser::Attributes::NongreedyUri.new }
+  rule(:image_uri) { RedClothParslet::Parser::Attributes::ImageUri.new }
+  rule(:link_uri) { RedClothParslet::Parser::Attributes::LinkUri.new }
   rule(:html_tag) { RedClothParslet::Parser::HtmlTag.new }
 
   def maybe_preceded_by_attributes(content_rule)
