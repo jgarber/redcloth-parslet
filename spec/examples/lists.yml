@@ -422,7 +422,7 @@ html: |-
 name: with one padding-left increment and class
 in: "((myclass)# one"
 html: |-
-  <ol style="padding-left:1em;" class="myclass">
+  <ol class="myclass" style="padding-left:1em;">
   	<li>one</li>
   </ol>
 ---
@@ -457,6 +457,6 @@ html: |-
 name: with padding-left and padding-right increments and class
 in: "()(myclass)# two"
 html: |-
-  <ol style="padding-left:1em;padding-right:1em;" class="myclass">
+  <ol class="myclass" style="padding-left:1em;padding-right:1em;">
   	<li>two</li>
   </ol>

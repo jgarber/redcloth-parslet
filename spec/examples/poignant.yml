@@ -63,7 +63,7 @@ in: >
 
 html: |-
   <h3>False</h3>
-  <p style="float:left;"><img src="i/blix-neg.gif" title="Shape of a cat." alt="Shape of a cat." /></p>
+  <p style="float:left;"><img alt="Shape of a cat." src="i/blix-neg.gif" title="Shape of a cat." /></p>
   <p><em>The cat Trady Blix.  Frozen in emptiness.  Immaculate whiskers rigid.  Placid eyes of lake.  Tail of warm icicle.  Sponsored by a Very Powerful Pause Button.</em></p>
   <p>The darkness surrounding Blix can be called <strong>negative space</strong>.  Hang on to that phrase. Let it suggest that the emptiness has a negative connotation.  In a similar way, <code>nil</code> has a slightly sour note that it whistles.</p>
   <p>Generally speaking, everything in Ruby has a positive charge to it.  This spark flows through strings, numbers, regexps, all of it.  Only two keywords wear a shady cloak: <code>nil</code> and <code>false</code> draggin us down.</p>

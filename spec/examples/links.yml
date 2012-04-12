@@ -286,6 +286,6 @@ html: |-
 ---
 name: containing HTML tags with quotes
 in: |-
-  "<r:attachment:image name="checkmark.gif" alt="Apply online" />*apply online*":/admissions/apply/
+  "<r:attachment:image alt="Apply online" name="checkmark.gif" />*apply online*":/admissions/apply/
 html: |-
-  <p><a href="/admissions/apply/"><r:attachment:image name="checkmark.gif" alt="Apply online" /><strong>apply online</strong></a></p>
+  <p><a alt="Apply online" href="/admissions/apply/"><r:attachment:image name="checkmark.gif" /><strong>apply online</strong></a></p>

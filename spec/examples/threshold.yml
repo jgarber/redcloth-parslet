@@ -182,21 +182,21 @@ html: |-
 name: image
 desc: Use ! exclamation marks to insert an image tag.
 in: "!/img.gif!"
-html: <p><img src="/img.gif" alt="" /></p>
+html: <p><img alt="" src="/img.gif" /></p>
 ---
 name: image 2
 in: "!http://thresholdstate.com/img.gif!"
-html: <p><img src="http://thresholdstate.com/img.gif" alt="" /></p>
+html: <p><img alt="" src="http://thresholdstate.com/img.gif" /></p>
 ---
 name: image alt
 desc: Use () parentheses to include “alt” text.
 in: "!/img.gif(alt text)!"
-html: <p><img src="/img.gif" title="alt text" alt="alt text" /></p>
+html: <p><img alt="alt text" src="/img.gif" title="alt text" /></p>
 ---
 name: image links
 desc: Images may be combined with links by using an !image! in place of the link text.
 in: "!/img.gif!:http://textpattern.com/"
-html: <p><a href="http://textpattern.com/"><img src="/img.gif" alt="" /></a></p>
+html: <p><a href="http://textpattern.com/"><img alt="" src="/img.gif" /></a></p>
 ---
 name: headers
 desc: Headers are represented by h1., h2., … h6..
@@ -335,11 +335,11 @@ html: <p>The <span style="color:blue;">blue</span> room.</p>
 name: block and phrase attributes combined
 desc: Block and phrase attributes may be combined.
 in: p(myclass#myid3){color:green}[de-de]. A complex paragraph.
-html: <p style="color:green;" class="myclass" lang="de-de" id="myid3">A complex paragraph.</p>
+html: <p class="myclass" id="myid3" lang="de-de" style="color:green;">A complex paragraph.</p>
 ---
 name: block and phrase attributes combined 2
 in: A ??(myclass#myid4){color:green}[de-de]complex?? phrase.
-html: <p>A <cite style="color:green;" class="myclass" lang="de-de" id="myid4">complex</cite> phrase.</p>
+html: <p>A <cite class="myclass" id="myid4" lang="de-de" style="color:green;">complex</cite> phrase.</p>
 ---
 name: extended blocks
 desc: Normally a block modifier covers a single block of text, and ends at the first blank line. To extend a block over multiple paragraphs that include blank lines, use a block modifier with two period marks instead of one. To close the extended block, use a different block modifier on the next paragraph.
@@ -429,8 +429,8 @@ html: <div class="mydiv">My div</div>
 ---
 name: paragraphs with inline xhtml
 desc: Paragraphs that consist only of inline XHTML tags, will be enclosed in <p>...</p> tags.
-in: <img src="/img.gif" alt="image" />
-html: <p><img src="/img.gif" alt="image" /></p>
+in: <img alt="image" src="/img.gif" />
+html: <p><img alt="image" src="/img.gif" /></p>
 ---
 name: paragraphs with inline xhtml 2
 in: <span class="myspan">I'll make my own way.</span>
@@ -753,10 +753,10 @@ in: |-
   A tight["text":http://thresholdstate.com/]link.
   A ["footnoted link":http://thresholdstate.com/][1].
 html: |-
-  <p>A close<img src="/img.gif" alt="" />image.<br />
+  <p>A close<img alt="" src="/img.gif" />image.<br />
   A tight<a href="http://thresholdstate.com/">text</a>link.<br />
   A <a href="http://thresholdstate.com/">footnoted link</a><sup class="footnote" id="fnr1"><a href="#fn1">1</a></sup>.</p>
 # html: |-
-#   <p>A close<img src="/img.gif" alt="" />image.<br />
+#   <p>A close<img alt="" src="/img.gif" />image.<br />
 #   A tight<a href="http://thresholdstate.com/">text</a>link.<br />
 #   A <a href="http://thresholdstate.com/">footnoted link</a><sup class="footnote"><a href="#fn1216642796463b1223ae29d">1</a></sup>.</p>

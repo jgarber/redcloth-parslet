@@ -396,7 +396,7 @@ html: <p class="example1" id="big-red2">Red here</p>
 name: css style
 desc: Style settings can be provided directly by surrounding them in curly braces.
 in: p{color:blue;margin:30px;font-size:120%;font-family:'Comic Sans'}. Spacey blue
-html: <p style="color:blue;margin:30px;font-size:120%;font-family:'Comic Sans';">Spacey blue</p>
+html: <p style="color:blue;font-family:'Comic Sans';font-size:120%;margin:30px;">Spacey blue</p>
 --- 
 name: language designations
 desc: Language designations can be given between angel brackets.
@@ -447,7 +447,7 @@ html: <h2 style="padding-left:1em;padding-right:1em;text-align:right;">Bingo.</h
 name: many modifiers combined
 desc: And, furthermore, coupled with language settings and CSS styles.
 in: h3()>[no]{color:red}. Bingo
-html: <h3 style="padding-left:1em;padding-right:1em;text-align:right;color:red;" lang="no">Bingo</h3>
+html: <h3 lang="no" style="pcolor:red;adding-left:1em;padding-right:1em;text-align:right;">Bingo</h3>
 --- 
 name: code blocks
 desc: For example, long code blocks belong between <code>pre</code> and <code>code</code> tags.  Please also indent your code inside the tags to be sure that all Textile processors out there will ignore the contents.
@@ -583,18 +583,18 @@ html: |-
 name: image
 desc: You can embed an image in your Textile document by surrounding its URL with exclamation marks.
 in: "!http://hobix.com/sample.jpg!"
-html: <p><img src="http://hobix.com/sample.jpg" alt="" /></p>
-lite_mode_html: <img src="http://hobix.com/sample.jpg" alt="" />
+html: <p><img alt="" src="http://hobix.com/sample.jpg" /></p>
+lite_mode_html: <img alt="" src="http://hobix.com/sample.jpg" />
 --- 
 name: image title
 desc: A title for the image can also be provided in parens, just before the closing exclamation.
 in: "!openwindow1.gif(Bunny.)!"
-html: <p><img src="openwindow1.gif" title="Bunny." alt="Bunny." /></p>
+html: <p><img alt="Bunny." src="openwindow1.gif" title="Bunny." /></p>
 --- 
 name: image links
 desc: Links can be attached to images with a colon.
 in: "!openwindow1.gif!:http://hobix.com/"
-html: <p><a href="http://hobix.com/"><img src="openwindow1.gif" alt="" /></a></p>
+html: <p><a alt="" href="http://hobix.com/"><img src="openwindow1.gif" /></a></p>
 --- 
 name: image alignments
 desc: Alignments can be applied as well to images.
@@ -604,7 +604,7 @@ in: |-
   And others sat all round the small
   machine and paid it to sing to them.
 html: |-
-  <p style="float:right;"><img src="obake.gif" alt="" /></p>
+  <p style="float:right;"><img alt="" src="obake.gif" /></p>
   <p>And others sat all round the small<br />
   machine and paid it to sing to them.</p>
 --- 

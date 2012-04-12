@@ -184,10 +184,10 @@ html: <h3 style="text-align:center;">centered header</h3>
 latex: "\\begin{center}\\subsubsection{centered header}\\end{center}\n\n"
 ---
 in: '!>/image.gif! right-aligned image'
-html: <p style="float:right;"><img src="/image.gif" alt="" /> right-aligned image</p>
+html: <p style="float:right;"><img alt="" src="/image.gif" /> right-aligned image</p>
 ---
 in: p[no]{color:red}. A Norse of a different colour.
-html: <p style="color:red;" lang="no">A Norse of a different colour.</p>
+html: <p lang="no" style="color:red;">A Norse of a different colour.</p>
 ---
 in: |-
   |This|is|a|simple|table|
@@ -404,14 +404,14 @@ html: |-
   		<th>a</th>
   		<th>header</th>
   	</tr>
-  	<tr style="text-align:left;background:gray;">
+  	<tr style="background:gray;text-align:left;">
   		<td colspan="2">this is</td>
   		<td style="background:red;width:200px;">a</td>
-  		<td style="vertical-align:top;text-align:justify;height:200px;">row</td>
+  		<td style="height:200px;text-align:justify;vertical-align:top;">row</td>
   	</tr>
   	<tr>
   		<td>this</td>
-  		<td style="text-align:justify;padding:10px;">is</td>
+  		<td style="padding:10px;text-align:justify;">is</td>
   		<td style="vertical-align:top;">another</td>
   		<td class="bob" id="bob">row</td>
   	</tr>
@@ -430,7 +430,7 @@ in: |-
   That was a linebreak. And something to indicate *strength*. Of course I could use <em>my own HTML tags</em> if I <strong>felt</strong> like it.
 html: |-
   <p>An image:</p>
-  <p><img src="/common/textist.gif" title="optional alt text" alt="optional alt text" /></p>
+  <p><img alt="optional alt text" src="/common/textist.gif" title="optional alt text" /></p>
   <ol>
   	<li>Librarians rule</li>
   	<li>Yes they do</li>

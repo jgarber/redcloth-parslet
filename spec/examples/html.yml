@@ -46,7 +46,7 @@ lite_mode_html: |-
 ---
 name: mixing of textile and XHTML
 in: |-
-  <img src="test.jpg" alt="test" />
+  <img alt="test" src="test.jpg" />
 
   Regular *paragraph*.
 
@@ -64,12 +64,12 @@ in: |-
 
   Another paragraph.
 html: |-
-  <p><img src="test.jpg" alt="test" /></p>
+  <p><img alt="test" src="test.jpg" /></p>
   <p>Regular <strong>paragraph</strong>.</p>
   <div class="test">
   <p>This is one paragraph.</p>
   <p>This is another.</p>
-  <p><img src="an/image.jpg" alt="" /></p>
+  <p><img alt="" src="an/image.jpg" /></p>
   <ul>
   	<li>A list</li>
   	<li>in a div.</li>

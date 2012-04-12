@@ -134,7 +134,7 @@ in: |-
   |>. right|
   |<. left|
 html: |-
-  <table style="width: 200px; border:2px solid gray;">
+  <table style="border:2px solid gray;width: 200px;">
   	<tr>
   		<th style="text-align:center;">Alignment</th>
   	</tr>
@@ -263,42 +263,42 @@ html: |-
   		<td>Milestone</td>
   	</tr>
   	<tr>
-  		<td><img src="/i/g.gif" alt="" /></td>
+  		<td><img alt="" src="/i/g.gif" /></td>
   		<td>11/29/04</td>
   		<td>11/29/04</td>
   		<td>011</td>
   		<td><span class="caps">XML</span> spec complete (KH is on schedule)</td>
   	</tr>
   	<tr>
-  		<td><img src="/i/g.gif" alt="" /></td>
+  		<td><img alt="" src="/i/g.gif" /></td>
   		<td>11/22/04</td>
   		<td>11/22/04</td>
   		<td>070</td>
   		<td>Dialog pass 1 builds an index file</td>
   	</tr>
   	<tr>
-  		<td><img src="/i/g.gif" alt="" /></td>
+  		<td><img alt="" src="/i/g.gif" /></td>
   		<td>11/24/04</td>
   		<td>11/24/04</td>
   		<td>070</td>
   		<td>Dialog pass 2 98% complete</td>
   	</tr>
   	<tr>
-  		<td><img src="/i/g.gif" alt="" /></td>
+  		<td><img alt="" src="/i/g.gif" /></td>
   		<td>11/30/04</td>
   		<td>11/30/04</td>
   		<td>070</td>
   		<td>Feature complete. Passes end-to-end smoke test.</td>
   	</tr>
   	<tr>
-  		<td><img src="/i/w.gif" alt="" /></td>
+  		<td><img alt="" src="/i/w.gif" /></td>
   		<td>12/02/04</td>
   		<td> </td>
   		<td>011</td>
   		<td>Dialog pass 1 and 2 complete (98+%)</td>
   	</tr>
   	<tr>
-  		<td><img src="/i/w.gif" alt="" /></td>
+  		<td><img alt="" src="/i/w.gif" /></td>
   		<td>12/03/04</td>
   		<td> </td>
   		<td>081</td>
