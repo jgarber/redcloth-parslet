@@ -211,7 +211,6 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   rule(:inline_sp) { match('[ \t]').repeat(1) }
   rule(:inline_sp?) { inline_sp.maybe }
   rule(:sp) { inline_sp | str("\n") }
-  rule(:digits) { match('[0-9]').repeat(1) }
   # rule(:mtext) { mchar.repeat(1) >> (inline_sp >> mchar.repeat(1)) }
   
   rule(:image_uri) { RedClothParslet::Parser::Attributes::ImageUri.new }

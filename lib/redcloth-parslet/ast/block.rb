@@ -27,6 +27,7 @@ module RedClothParslet::Ast
   class Footnote < Element; end
 
   class List
+    @@last_list_count = 0
     def self.build(li_hashes, opts={})
       list_nesting = []
       list_layout = ""
@@ -38,6 +39,9 @@ module RedClothParslet::Ast
           list_nesting.last.children << closed_list
         else
           list_nesting << ((li[:layout].to_s[-1,1] == "*") ? Ul.new : Ol.new)
+          if cont = li[:continuation]
+            opts[:start] = cont == '_' ? @@last_list_count + 1 : cont.to_i
+          end
           if opts.any?
             list_nesting.last.opts = opts
             opts = {}
@@ -50,6 +54,8 @@ module RedClothParslet::Ast
         closed_list = list_nesting.pop
         list_nesting.last.children << closed_list
       end
+      list_start_number = list_nesting.first.opts[:start] || 1
+      @@last_list_count = list_start_number + list_nesting.first.children.size - 1
       list_nesting.first
     end
   end

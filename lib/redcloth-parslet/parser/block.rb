@@ -1,4 +1,6 @@
 class RedClothParslet::Parser::Block < Parslet::Parser
+  include RedClothParslet::Parser::Common
+
   root(:textile_doc)
   rule(:textile_doc) do
     block_element.repeat(1)

@@ -10,8 +10,8 @@ class RedClothParslet::Transform < Parslet::Transform
   rule(:attributes => subtree(:a), :src => simple(:s), :alt => simple(:alt)) {|dict| {:opts => RedClothParslet::Ast::Attributes.new(dict[:a].push({:src => dict[:s], :alt => dict[:alt]}))} }
   rule(:attributes => subtree(:a), :src => subtree(:s), :href => simple(:h)) {|dict| {:opts => RedClothParslet::Ast::Attributes.new(dict[:a].push({:src => dict[:s], :alt => dict[:alt], :href => dict[:h]}))} }
 
-  rule(:layout => simple(:l), :attributes => subtree(:a), :content => subtree(:c)) {|dict|
-    {:layout => dict[:l], :content => dict[:c], :opts => RedClothParslet::Ast::Attributes.new(dict[:a])}
+  rule(:layout => simple(:l), :continuation => simple(:cont), :attributes => subtree(:a), :content => subtree(:c)) {|dict|
+    {:layout => dict[:l], :continuation => dict[:cont], :content => dict[:c], :opts => RedClothParslet::Ast::Attributes.new(dict[:a])}
   }
 
   rule(:extended => subtree(:ext)) { ext[:successive].unshift(ext[:first]) }
