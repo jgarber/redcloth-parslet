@@ -1,4 +1,6 @@
 class RedClothParslet::Parser::Inline < Parslet::Parser
+  include RedClothParslet::Parser::Common
+
   root(:inline)
   rule(:inline) do
     sp.absent? >>
@@ -169,7 +171,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     ellipsis
   end
 
-  rule(:ip_mark) { (str("(") >> (str("TM") | str("C") | str("R")) >> str(")")).as(:entity) }
+  rule(:ip_mark) { (str("(") >> (stri("tm") | stri("c") | stri("r")) >> str(")")).as(:entity) }
   rule(:m_dash) { str('--').as(:entity) >> str('-').repeat }
   rule(:ellipsis) { str('...').as(:entity) }
   rule(:standalone_en_dash) { (inline_sp >> str('-')).as(:entity) >> sp.present? }

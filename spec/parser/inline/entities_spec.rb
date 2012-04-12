@@ -83,7 +83,16 @@ describe RedClothParslet::Parser::Inline do
     }
     it { should parse("(C)").with(transform).
       as([RedClothParslet::Ast::Entity.new("(C)")])
-    }    
+    }
+    it { should parse("(tm)").with(transform).
+      as([RedClothParslet::Ast::Entity.new("(tm)")])
+    }
+    it { should parse("(r)").with(transform).
+      as([RedClothParslet::Ast::Entity.new("(r)")])
+    }
+    it { should parse("(c)").with(transform).
+      as([RedClothParslet::Ast::Entity.new("(c)")])
+    }
   end
   
 end

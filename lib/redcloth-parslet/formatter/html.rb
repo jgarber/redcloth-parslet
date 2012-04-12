@@ -22,8 +22,11 @@ module RedClothParslet::Formatter
       "x" => "&#215;",
       "..." => "&#8230;",
       "(TM)"=>"&#8482;",
+      "(tm)"=>"&#8482;",
       "(C)"=>"&#169;",
-      "(R)"=>"&#174;"
+      "(c)"=>"&#169;",
+      "(R)"=>"&#174;",
+      "(r)"=>"&#174;"
     }
     TYPOGRAPHIC_ESCAPE_MAP = ESCAPE_MAP.merge("'" => "&#8217;")
     CHARS_TO_BE_ESCAPED = {

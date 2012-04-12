@@ -2,6 +2,7 @@ module RedClothParslet::Parser
   
 end
 
+require 'redcloth-parslet/parser/common'
 require 'redcloth-parslet/parser/exclusions'
 require 'redcloth-parslet/parser/attributes'
 require 'redcloth-parslet/parser/html_tag'
