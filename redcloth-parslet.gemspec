@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
   
   s.add_development_dependency 'rspec', "~> 2.0"
   s.add_development_dependency 'rake'
+  s.add_development_dependency 'fuubar'
 
   # If you need to check in files that aren't .rb files, add them here
   s.files         = Dir["{lib}/**/*.rb", "bin/*", "LICENSE", "*.textile"]
