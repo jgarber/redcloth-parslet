@@ -594,7 +594,7 @@ html: <p><img alt="Bunny." src="openwindow1.gif" title="Bunny." /></p>
 name: image links
 desc: Links can be attached to images with a colon.
 in: "!openwindow1.gif!:http://hobix.com/"
-html: <p><a alt="" href="http://hobix.com/"><img src="openwindow1.gif" /></a></p>
+html: <p><a href="http://hobix.com/"><img alt="" src="openwindow1.gif" /></a></p>
 --- 
 name: image alignments
 desc: Alignments can be applied as well to images.

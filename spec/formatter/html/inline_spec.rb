@@ -54,6 +54,13 @@ describe RedClothParslet::Formatter::HTML do
     it { should == '<img alt="" src="mac.png" />' }
   end
 
+  describe "image with empty alt" do
+    let(:element) { RedClothParslet::Ast::Img.new([], {:src=>"mac.png", :alt=>""}) }
+    it "should also populate title" do
+      subject.should == '<img alt="" src="mac.png" />'
+    end
+  end
+
   describe "image with alt" do
     let(:element) { RedClothParslet::Ast::Img.new([], {:src=>"mac.png", :alt=>"Mac"}) }
     it "should also populate title" do

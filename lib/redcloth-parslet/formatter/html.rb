@@ -88,7 +88,7 @@ module RedClothParslet::Formatter
     end
 
     def img(el)
-      if el.opts[:alt]
+      if el.opts[:alt] && el.opts[:alt] != ''
         el.opts[:title] = el.opts[:alt]
       else
         el.opts[:alt] = ""
