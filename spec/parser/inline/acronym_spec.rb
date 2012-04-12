@@ -15,10 +15,10 @@ describe RedClothParslet::Parser::Inline do
   context "acronym in a phrase" do
         
     it { should parse("I use CSS(Cascading Style Sheets).").with(transform).
-      as(["I use ", RedClothParslet::Ast::Acronym.new("CSS", {:title => "Cascading Style Sheets"}), "."]) }
+      as(["I use ", RedClothParslet::Ast::Acronym.new(RedClothParslet::Ast::Caps.new("CSS"), {:title => "Cascading Style Sheets"}), "."]) }
     
       it { should parse("It employs AI(artificial intelligence) processing.").with(transform).
-        as(["It employs ", RedClothParslet::Ast::Acronym.new("AI", {:title => "artificial intelligence"}), " processing."]) }
+        as(["It employs ", RedClothParslet::Ast::Acronym.new(RedClothParslet::Ast::Caps.new("AI"), {:title => "artificial intelligence"}), " processing."]) }
 
   end
   
