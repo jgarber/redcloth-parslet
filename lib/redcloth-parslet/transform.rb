@@ -54,6 +54,7 @@ class RedClothParslet::Transform < Parslet::Transform
       RedClothParslet::Ast::DoubleQuotedPhrase.new(a[:content])
     end
   end
+  rule(:parentheses => subtree(:a)) { ['(', a[:content], ')'] }
   rule(:image => subtree(:a)) do
     if href = a[:opts].delete(:href)
       RedClothParslet::Ast::Link.new(RedClothParslet::Ast::Img.new([], a[:opts]), {:href => href})

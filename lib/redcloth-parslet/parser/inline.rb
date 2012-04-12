@@ -46,6 +46,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     image |
     double_quoted_phrase_or_link |
     simple_inline_term |
+    parenthesized_sovereign_term |
     acronym |
     all_caps_word |
     dimensions |
@@ -111,6 +112,8 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     end
     rule(end_rule_name) { str(signature) >> str("]") }
   end
+
+  rule(:parenthesized_sovereign_term) { (str('(') >> sovereign_term.as(:content) >> str(')')).as(:parentheses) }
   
   rule(:code_tag) do
     (str('<code>') >> 

@@ -111,6 +111,9 @@ describe RedClothParslet::Parser::Inline do
     it { should parse("I got a PDQ job with NASA in the US.").with(transform).
       as(["I got a ", RedClothParslet::Ast::Caps.new("PDQ"), " job with ", RedClothParslet::Ast::Caps.new("NASA"), " in the US."])
     }
+    it { should parse("(USA)").with(transform).
+      as(["(", RedClothParslet::Ast::Caps.new("USA"), ")"])
+    }
   end
 
   describe 'subscript' do
