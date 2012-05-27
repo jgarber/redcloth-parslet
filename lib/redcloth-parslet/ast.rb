@@ -5,7 +5,17 @@ module RedClothParslet
   # The AST can be traversed with a visitor. See RedClothParslet::Format::HTML
   # for an example.
   module Ast
-    
+    # Allow AST classes to be instantiated with a method call
+    # Example: #p is the same as RedClothParslet::Ast::P.new
+    def method_missing(m, *args)
+      constant = RedClothParslet::Ast
+      klass = m.to_s.sub(/^[a-z\d]*/) { $&.capitalize }
+      if constant.const_defined?(klass)
+        constant.const_get(klass).new(*args)
+      else
+        super
+      end
+    end
   end
 end
 
