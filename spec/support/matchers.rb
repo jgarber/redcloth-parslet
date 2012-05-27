@@ -52,7 +52,7 @@ module RedClothParslet
         end
 
         def as(expected_output = nil, &block) # :nodoc: 
-          @as = expected_output
+          @as = [*expected_output]
           @block = block
           self
         end
