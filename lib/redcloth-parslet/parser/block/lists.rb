@@ -3,7 +3,7 @@ class RedClothParslet::Parser::Block < Parslet::Parser
   rule(:list) do
     (
       attributes?.as(:attributes) >> 
-      li.repeat(1).as(:content) >> 
+      li.repeat(2).as(:content) >> 
       block_end
     ).as(:list)
   end

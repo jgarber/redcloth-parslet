@@ -42,10 +42,11 @@ describe RedClothParslet::Parser::Block do
       ], {:class=>'class', :id=>'id'})]) }
     it { should parse("#7(class#id) seven\n# eight").with(transform).
       as([RedClothParslet::Ast::Ol.new([RedClothParslet::Ast::Li.new("seven", {:class=>'class', :id=>'id'}), RedClothParslet::Ast::Li.new("eight")], {:start=>7})]) }
-    it { should parse("# one\n\n#_(class#id) two").with(transform).
-      as([RedClothParslet::Ast::Ol.new(RedClothParslet::Ast::Li.new("one")), RedClothParslet::Ast::Ol.new(RedClothParslet::Ast::Li.new("two", {:class=>'class', :id=>'id'}), {:start=>2})]) }
-    it { should parse("#9 nine\n\n#_ ten").with(transform).
-      as([RedClothParslet::Ast::Ol.new(RedClothParslet::Ast::Li.new("nine"), {:start=>9}), RedClothParslet::Ast::Ol.new(RedClothParslet::Ast::Li.new("ten"), {:start=>10})]) }
+    it { should parse("# one\n# two\n\n#_(class#id) three\n# four").with(transform).
+      as([RedClothParslet::Ast::Ol.new(RedClothParslet::Ast::Li.new("one"), RedClothParslet::Ast::Li.new("two")), RedClothParslet::Ast::Ol.new([RedClothParslet::Ast::Li.new("three", {:class=>'class', :id=>'id'}), RedClothParslet::Ast::Li.new("four")], {:start=>3})]) }
+    it { should parse("#8 eight\n# nine\n\n#_ ten\n# eleven").with(transform).
+      as([RedClothParslet::Ast::Ol.new([RedClothParslet::Ast::Li.new("eight"), RedClothParslet::Ast::Li.new("nine")], {:start=>8}), RedClothParslet::Ast::Ol.new([RedClothParslet::Ast::Li.new("ten"), RedClothParslet::Ast::Li.new("eleven")], {:start=>10})]) }
+    it { should_not parse("*10 times as many*").with(transform).as([RedClothParslet::Ast::Ul.new([RedClothParslet::Ast::Li.new("times as many*")], {:start => 10})]) }
   end
   
   context "list item attributes" do
