@@ -14,7 +14,7 @@ module RedClothParslet
             else
               @result = @transform.apply(@result) if @transform
               @result = join_adjacent_strings(@result)
-              (@as == @result || @as.nil?)
+              (@as == [*@result] || @as.nil?)
             end
           rescue Parslet::ParseFailed
             @trace = parser.error_tree.ascii_tree if true #opts && opts[:trace]
