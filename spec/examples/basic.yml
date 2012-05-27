@@ -447,7 +447,7 @@ html: <h2 style="padding-left:1em;padding-right:1em;text-align:right;">Bingo.</h
 name: many modifiers combined
 desc: And, furthermore, coupled with language settings and CSS styles.
 in: h3()>[no]{color:red}. Bingo
-html: <h3 lang="no" style="pcolor:red;adding-left:1em;padding-right:1em;text-align:right;">Bingo</h3>
+html: <h3 lang="no" style="color:red;padding-left:1em;padding-right:1em;text-align:right;">Bingo</h3>
 --- 
 name: code blocks
 desc: For example, long code blocks belong between <code>pre</code> and <code>code</code> tags.  Please also indent your code inside the tags to be sure that all Textile processors out there will ignore the contents.
