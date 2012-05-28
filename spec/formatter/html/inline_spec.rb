@@ -23,8 +23,8 @@ describe RedClothParslet::Formatter::HTML do
      "(TM)"=>"&#8482;", "(C)"=>"&#169;", "(R)"=>"&#174;",
      "(tm)"=>"&#8482;", "(c)"=>"&#169;", "(r)"=>"&#174;"}.each do |input,output|
       it "should escape #{input} as #{output}" do
-        described_class.new().convert(entity(input)).should == output
-      end
+       described_class.new().convert(entity(input)).should == output
+     end
     end
   end
 

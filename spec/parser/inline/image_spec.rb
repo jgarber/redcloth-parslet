@@ -35,5 +35,4 @@ describe RedClothParslet::Parser::Inline do
           "!"])
     }
   end
-  
 end

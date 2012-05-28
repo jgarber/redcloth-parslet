@@ -1,7 +1,7 @@
 describe RedClothParslet::Parser::Inline do
   let(:parser) { described_class.new }
   let(:transform) { RedClothParslet::Transform.new }
-  
+
   describe "#double_quoted_phrase_or_link" do
     it "should consume a double-quoted phrase" do
       parser.double_quoted_phrase_or_link.should parse('"Wow"')
@@ -9,8 +9,7 @@ describe RedClothParslet::Parser::Inline do
   end
   describe "quotes" do
     it { should parse(%Q{"Hey!"}).with(transform).
-      as([double_quoted_phrase(["Hey!"])])
+         as(double_quoted_phrase("Hey!"))
     }
   end
-  
 end

@@ -1,35 +1,35 @@
 describe RedClothParslet::Parser::Inline do
   let(:parser) { described_class.new }
   let(:transform) { RedClothParslet::Transform.new }
-  
+
   describe "em-dash" do
     it "should consume em-dashes" do
       parser.m_dash.should parse('--')
     end
-    
+
     it { should parse("Observe--very nice!").with(transform).
-      as(["Observe", entity("--"), "very nice!"])
+         as(["Observe", entity("--"), "very nice!"])
     }
     it { should parse("Observe -- very nice!").with(transform).
-      as(["Observe ", entity("--"), " very nice!"])
+         as(["Observe ", entity("--"), " very nice!"])
     }
   end
-  
+
   describe "single hyphens" do
     it { should parse("Twenty-five persimmons!").with(transform).
-      as(["Twenty-five persimmons!"])
+         as("Twenty-five persimmons!")
     }
     it { should parse("Observe - tiny and brief!").with(transform).
-      as(["Observe", entity(" -"), " tiny and brief!"])
+         as(["Observe", entity(" -"), " tiny and brief!"])
     }
   end
 
   describe "ellipses" do
     it { should parse("She trailed off...").with(transform).
-      as(["She trailed off", entity("...")])
+         as(["She trailed off", entity("...")])
     }
   end
-  
+
   describe "dimensions" do
     context "parser" do
       subject { parser.dimensions }
@@ -47,52 +47,51 @@ describe RedClothParslet::Parser::Inline do
     end
 
     it { should parse("Observe: 2x3.").with(transform).
-      as(["Observe: 2", entity("x"), "3."])
+         as(["Observe: 2", entity("x"), "3."])
     }
     it { should parse("The room is 2x3 inches big.").with(transform).
-      as(["The room is 2", entity("x"), "3 inches big."])
+         as(["The room is 2", entity("x"), "3 inches big."])
     }
     it { should parse("Observe: 4 x 3.").with(transform).
-      as(["Observe: 4 ", entity("x"), " 3."])
+         as(["Observe: 4 ", entity("x"), " 3."])
     }
     it { should parse(%Q{The lumber is 1" x 2" x 5'}).with(transform).
-      as(['The lumber is ', dimension('1"'), ' ',
-          entity("x"), ' ', 
-          dimension('2"'), ' ', 
-          entity("x"), ' ', 
-          dimension("5'")])
+         as(['The lumber is ', dimension('1"'), ' ',
+             entity("x"), ' ', 
+             dimension('2"'), ' ', 
+             entity("x"), ' ', 
+             dimension("5'")])
     }
     it { should parse(%Q{The lumber is 3/4" x 1-1/2"}).with(transform).
-      as(['The lumber is ', dimension('3/4"'), ' ',
-          entity("x"), ' ', 
-          dimension('1-1/2"')])
+         as(['The lumber is ', dimension('3/4"'), ' ',
+             entity("x"), ' ', 
+             dimension('1-1/2"')])
     }
     it { should parse(%Q{The lumber is 2 1/4" x 1 1/2"}).with(transform).
-      as(['The lumber is ', dimension('2 1/4"'), ' ',
-          entity("x"), ' ', 
-          dimension('1 1/2"')])
+         as(['The lumber is ', dimension('2 1/4"'), ' ',
+             entity("x"), ' ', 
+             dimension('1 1/2"')])
     }
   end
-  
+
   describe "intellectual property marks" do
     it { should parse("(TM)").with(transform).
-      as([entity("(TM)")])
+         as(entity("(TM)"))
     }
     it { should parse("(R)").with(transform).
-      as([entity("(R)")])
+         as(entity("(R)"))
     }
     it { should parse("(C)").with(transform).
-      as([entity("(C)")])
+         as(entity("(C)"))
     }
     it { should parse("(tm)").with(transform).
-      as([entity("(tm)")])
+      as(entity("(tm)"))
     }
     it { should parse("(r)").with(transform).
-      as([entity("(r)")])
+      as(entity("(r)"))
     }
     it { should parse("(c)").with(transform).
-      as([entity("(c)")])
+      as(entity("(c)"))
     }
   end
-  
 end

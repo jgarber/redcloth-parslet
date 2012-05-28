@@ -1,15 +1,15 @@
 describe RedClothParslet::Parser::Attributes::Uri do
   let(:parser) { described_class.new }
-  
+
   it { should parse("http://google.com") }
   it { should parse("foo") }
   it { should parse("/bar") }
-  
+
   %w(ftp http https gopher mailto news nntp telnet wais file prospero).each do |scheme|
     it { should parse("#{scheme}://redcloth.org/") }
   end
   it { should parse("mailto:xxx@xxx.xxx.xxx") }
-  
+
   it { should parse("http://redcloth.org/foo/bar/baz") }
   it { should parse("http://redcloth.org/") }
   it { should parse("http://localhost") }
@@ -41,7 +41,7 @@ describe RedClothParslet::Parser::Attributes::Uri do
   it { should parse("ftp://:pass@localhost/") }
   it { should parse("ftp://user@localhost/") }
   it { should parse("ftp://localhost/") }
-  
+
   it { should parse("http://[FEDC:BA98:7654:3210:FEDC:BA98:7654:3210]:80/index.html") }
   it { should parse("http://[1080:0:0:0:8:800:200C:417A]/index.html") }
   it { should parse("http://[3ffe:2a00:100:7031::1]") }
@@ -52,5 +52,4 @@ describe RedClothParslet::Parser::Attributes::Uri do
 
   it { should_not parse("http://a_b:80/") }
   it { should_not parse("http://a_b/") }
-  
 end
