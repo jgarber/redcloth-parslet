@@ -4,54 +4,54 @@ describe RedClothParslet::Parser::Block do
 
   describe "undecorated paragraphs" do
     it { should parse("Just plain text.").with(transform).
-      as([RedClothParslet::Ast::P.new(["Just plain text."])]) }
+      as([p(["Just plain text."])]) }
 
     context "containing inline HTML tag" do
       it { should parse('<img src="test.jpg" alt="test" />').with(transform).
-        as([RedClothParslet::Ast::P.new(RedClothParslet::Ast::HtmlTag.new('<img src="test.jpg" alt="test" />'))]) }
+        as([p(html_tag('<img src="test.jpg" alt="test" />'))]) }
     end
   end
 
   describe "explicit paragraphs" do
     it { should parse("p. This is a paragraph.").with(transform).
-      as([RedClothParslet::Ast::P.new(["This is a paragraph."])]) }
+      as([p(["This is a paragraph."])]) }
 
     context "with attributes" do
       it { should parse("p(myclass). This is a paragraph.").with(transform).
-        as([RedClothParslet::Ast::P.new(["This is a paragraph."], {:class=>'myclass'})]) }
+        as([p(["This is a paragraph."], {:class=>'myclass'})]) }
     end
   end
 
   describe "successive paragraphs" do
     it { should parse("One paragraph.\n\nTwo.").with(transform).
-      as([RedClothParslet::Ast::P.new(["One paragraph."]), RedClothParslet::Ast::P.new(["Two."])]) }
+      as([p(["One paragraph."]), p(["Two."])]) }
 
     it { should parse("p. Double.\n\np. Trouble.").with(transform).
-      as([RedClothParslet::Ast::P.new(["Double."]), RedClothParslet::Ast::P.new(["Trouble."])]) }
+      as([p(["Double."]), p(["Trouble."])]) }
 
     it { should parse("Mix it up.\n\np. Just a bit.\n\nNo worries, mate.").with(transform).
-      as([RedClothParslet::Ast::P.new(["Mix it up."]),
-          RedClothParslet::Ast::P.new(["Just a bit."]),
-          RedClothParslet::Ast::P.new(["No worries, mate."])]) }
+      as([p(["Mix it up."]),
+          p(["Just a bit."]),
+          p(["No worries, mate."])]) }
   end
 
   describe "extended quote" do
     it { should parse(%Q{"This is part of a multi-paragraph quote}).with(transform).
-      as([RedClothParslet::Ast::P.new(%Q{"This is part of a multi-paragraph quote}, :possible_unfinished_quote_paragraph => true)])
+      as([p(%Q{"This is part of a multi-paragraph quote}, :possible_unfinished_quote_paragraph => true)])
     }
   end
 
   describe "extended blocks" do
     it { should parse("p.. This is a paragraph.\n\nAnd so is this.").with(transform).
-      as([RedClothParslet::Ast::P.new("This is a paragraph."), RedClothParslet::Ast::P.new("And so is this.")]) }
+      as([p("This is a paragraph."), p("And so is this.")]) }
 
     it { should parse("div.. This is a div.\n\nAnd so is this.\n\np. Return to paragraph.").with(transform).
-      as([RedClothParslet::Ast::Div.new("This is a div."), RedClothParslet::Ast::Div.new("And so is this."), RedClothParslet::Ast::P.new("Return to paragraph.")]) }
+      as([div("This is a div."), div("And so is this."), p("Return to paragraph.")]) }
 
     it { should parse("bq.. This is a paragraph in a blockquote.\n\nAnd so is this.").with(transform).
-      as([RedClothParslet::Ast::Blockquote.new(
-          RedClothParslet::Ast::P.new("This is a paragraph in a blockquote."),
-          RedClothParslet::Ast::P.new("And so is this.")
+      as([blockquote(
+          p("This is a paragraph in a blockquote."),
+          p("And so is this.")
         )]) }
     %w(div notextile pre p).each do |block_type|
       its(:next_block_start) { should parse("#{block_type}. ") }
@@ -59,34 +59,34 @@ describe RedClothParslet::Parser::Block do
     end
 
     it { should parse("notextile.. Don't touch this!\n\nOr this!").with(transform).
-      as([RedClothParslet::Ast::Notextile.new("Don't touch this!\n\nOr this!")]) }
+      as([notextile("Don't touch this!\n\nOr this!")]) }
   end
 
   describe "list start in a paragraph" do
     it { should parse("Two for the price of one!\n* Offer not valid in Alaska").with(transform).
-      as([RedClothParslet::Ast::P.new(["Two for the price of one!\n* Offer not valid in Alaska"])]) }
+      as([p(["Two for the price of one!\n* Offer not valid in Alaska"])]) }
   end
 
   describe "Block quote" do
     it { should parse("bq. Injustice anywhere is a threat to justice everywhere.").with(transform).
-      as([RedClothParslet::Ast::Blockquote.new([RedClothParslet::Ast::P.new(["Injustice anywhere is a threat to justice everywhere."])])]) }
+      as([blockquote([p(["Injustice anywhere is a threat to justice everywhere."])])]) }
 
     context "with attributes" do
       it { should parse("bq(myclass). This is a blockquote.").with(transform).
-        as([RedClothParslet::Ast::Blockquote.new([RedClothParslet::Ast::P.new(["This is a blockquote."])], {:class=>'myclass'})]) }
+        as([blockquote([p(["This is a blockquote."])], {:class=>'myclass'})]) }
     end
   end
 
   describe "notextile block" do
     it { should parse("<notextile>\nsomething\n</notextile>").with(transform).
-      as([RedClothParslet::Ast::Notextile.new("something")]) }
+      as([notextile("something")]) }
     it { should parse("notextile. something").with(transform).
-      as([RedClothParslet::Ast::Notextile.new("something")]) }
+      as([notextile("something")]) }
   end
 
   describe "blockcode" do
     it { should parse("bc. def leopard()\n\t'prrrrr'\nend").with(transform).
-      as([RedClothParslet::Ast::Blockcode.new("def leopard()\n\t'prrrrr'\nend")]) }
+      as([blockcode("def leopard()\n\t'prrrrr'\nend")]) }
   end
 
   describe "headings" do
@@ -99,33 +99,33 @@ describe RedClothParslet::Parser::Block do
 
   describe "div" do
     it { should parse("div. inside").with(transform).
-      as([RedClothParslet::Ast::Div.new(["inside"])]) }
+      as([div(["inside"])]) }
   end
 
   describe "pre" do
     it { should parse("pre. Preformatted").with(transform).
-      as([RedClothParslet::Ast::Pre.new(["Preformatted"])]) }
+      as([pre(["Preformatted"])]) }
 
     context "when extended" do
       it { should parse("pre.. Preformatted\n\nStill preformatted").with(transform).
-        as([RedClothParslet::Ast::Pre.new(["Preformatted\n\nStill preformatted"])]) }
+        as([pre(["Preformatted\n\nStill preformatted"])]) }
     end
   end
 
   describe "horizontal rules" do
     it { should parse("***").with(transform).
-      as([RedClothParslet::Ast::Hr.new()]) }
+      as([hr()]) }
     it { should parse("---").with(transform).
-      as([RedClothParslet::Ast::Hr.new()]) }
+      as([hr()]) }
     it { should parse("___").with(transform).
-      as([RedClothParslet::Ast::Hr.new()]) }
+      as([hr()]) }
   end
 
   describe "footnote" do
     it { should parse("fn1. A footnote").with(transform).
-      as([RedClothParslet::Ast::Footnote.new("A footnote", :number => "1")]) }
+      as([footnote("A footnote", :number => "1")]) }
 
     it { should parse("fn1(myclass). A footnote").with(transform).
-      as([RedClothParslet::Ast::Footnote.new("A footnote", :number => "1", :class => "myclass")]) }
+      as([footnote("A footnote", :number => "1", :class => "myclass")]) }
   end
 end

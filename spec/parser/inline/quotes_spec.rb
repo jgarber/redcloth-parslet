@@ -9,7 +9,7 @@ describe RedClothParslet::Parser::Inline do
   end
   describe "quotes" do
     it { should parse(%Q{"Hey!"}).with(transform).
-      as([RedClothParslet::Ast::DoubleQuotedPhrase.new(["Hey!"])])
+      as([double_quoted_phrase(["Hey!"])])
     }
   end
   

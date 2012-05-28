@@ -4,70 +4,70 @@ describe RedClothParslet::Parser::Block do
   
   describe "table" do
     it { should parse("|one|two|three|").with(transform).
-      as([RedClothParslet::Ast::Table.new([
-        RedClothParslet::Ast::TableRow.new([
-          RedClothParslet::Ast::TableData.new(["one"]),
-          RedClothParslet::Ast::TableData.new(["two"]),
-          RedClothParslet::Ast::TableData.new(["three"])
+      as([table([
+        table_row([
+          table_data(["one"]),
+          table_data(["two"]),
+          table_data(["three"])
         ])
       ])]) }
       
     it { should parse("|one|two|three|\n|four|five|six|").with(transform).
-      as([RedClothParslet::Ast::Table.new([
-        RedClothParslet::Ast::TableRow.new([
-          RedClothParslet::Ast::TableData.new(["one"]),
-          RedClothParslet::Ast::TableData.new(["two"]),
-          RedClothParslet::Ast::TableData.new(["three"])
+      as([table([
+        table_row([
+          table_data(["one"]),
+          table_data(["two"]),
+          table_data(["three"])
         ]),
-        RedClothParslet::Ast::TableRow.new([
-          RedClothParslet::Ast::TableData.new(["four"]),
-          RedClothParslet::Ast::TableData.new(["five"]),
-          RedClothParslet::Ast::TableData.new(["six"])
+        table_row([
+          table_data(["four"]),
+          table_data(["five"]),
+          table_data(["six"])
         ])
       ])]) }
   
     it { should parse("|_. Jan|_. Feb|_. Mar|").with(transform).
-      as([RedClothParslet::Ast::Table.new([
-        RedClothParslet::Ast::TableRow.new([
-          RedClothParslet::Ast::TableHeader.new(["Jan"]),
-          RedClothParslet::Ast::TableHeader.new(["Feb"]),
-          RedClothParslet::Ast::TableHeader.new(["Mar"])
+      as([table([
+        table_row([
+          table_header(["Jan"]),
+          table_header(["Feb"]),
+          table_header(["Mar"])
         ])
       ])]) }
       
     describe "table attributes" do
       it { should parse("table{border:1px solid black}.\n|This|is|a|row|").with(transform).
-        as([RedClothParslet::Ast::Table.new([
-          RedClothParslet::Ast::TableRow.new([
-            RedClothParslet::Ast::TableData.new(["This"]),
-            RedClothParslet::Ast::TableData.new(["is"]),
-            RedClothParslet::Ast::TableData.new(["a"]),
-            RedClothParslet::Ast::TableData.new(["row"])
+        as([table([
+          table_row([
+            table_data(["This"]),
+            table_data(["is"]),
+            table_data(["a"]),
+            table_data(["row"])
           ])
         ], {:style => {"border"=>"1px solid black"}})]) }
         
       it { should parse("|A|row|\n{background:#ddd}. |Gray|row|").with(transform).
-        as([RedClothParslet::Ast::Table.new([
-          RedClothParslet::Ast::TableRow.new([
-            RedClothParslet::Ast::TableData.new(["A"]),
-            RedClothParslet::Ast::TableData.new(["row"])
+        as([table([
+          table_row([
+            table_data(["A"]),
+            table_data(["row"])
           ]),
-          RedClothParslet::Ast::TableRow.new([
-            RedClothParslet::Ast::TableData.new(["Gray"]),
-            RedClothParslet::Ast::TableData.new(["row"])
+          table_row([
+            table_data(["Gray"]),
+            table_data(["row"])
           ], {:style => {"background"=>"#ddd"}})
         ])]) }
       
       it { should parse("|\\2. spans two cols |").with(transform).
-        as([RedClothParslet::Ast::Table.new(
-          RedClothParslet::Ast::TableRow.new(
-            RedClothParslet::Ast::TableData.new("spans two cols ", {:colspan => '2'})
+        as([table(
+          table_row(
+            table_data("spans two cols ", {:colspan => '2'})
           )
         )]) }
       it { should parse("|/2. spans two rows |").with(transform).
-        as([RedClothParslet::Ast::Table.new(
-          RedClothParslet::Ast::TableRow.new(
-            RedClothParslet::Ast::TableData.new("spans two rows ", {:rowspan => '2'})
+        as([table(
+          table_row(
+            table_data("spans two rows ", {:rowspan => '2'})
           )
         )]) }
     end
@@ -84,11 +84,11 @@ describe RedClothParslet::Parser::Block do
 
     context "spaces around table data" do
       it { should parse("| one | two | three |").with(transform).
-        as([RedClothParslet::Ast::Table.new([
-          RedClothParslet::Ast::TableRow.new([
-            RedClothParslet::Ast::TableData.new([" one "]),
-            RedClothParslet::Ast::TableData.new([" two "]),
-            RedClothParslet::Ast::TableData.new([" three "])
+        as([table([
+          table_row([
+            table_data([" one "]),
+            table_data([" two "]),
+            table_data([" three "])
           ])
         ])]) }
     end

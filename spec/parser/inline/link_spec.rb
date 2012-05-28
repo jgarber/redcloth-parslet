@@ -4,18 +4,18 @@ describe RedClothParslet::Parser::Inline do
   
   describe "#double_quoted_phrase_or_link" do
     it "should parse a basic link" do
-      parser.double_quoted_phrase_or_link.should parse('"Google":http://google.com').with(transform).as(RedClothParslet::Ast::Link.new(["Google"], {:href=>"http://google.com"}))
+      parser.double_quoted_phrase_or_link.should parse('"Google":http://google.com').with(transform).as(link(["Google"], {:href=>"http://google.com"}))
     end
 
     it "should parse link with attributes" do
-      parser.double_quoted_phrase_or_link.should parse('"(appropriate)RedCloth":http://redcloth.org').with(transform).as(RedClothParslet::Ast::Link.new(["RedCloth"], {:href=>"http://redcloth.org", :class=>"appropriate"}))
+      parser.double_quoted_phrase_or_link.should parse('"(appropriate)RedCloth":http://redcloth.org').with(transform).as(link(["RedCloth"], {:href=>"http://redcloth.org", :class=>"appropriate"}))
     end
   end
   
   context "link in context" do
     it { should parse(%{See "Wikipedia":http://wikipedia.org/ for more.}).with(transform).
       as(["See ", 
-          RedClothParslet::Ast::Link.new(["Wikipedia"], {:href=>"http://wikipedia.org/"}),
+          link(["Wikipedia"], {:href=>"http://wikipedia.org/"}),
           " for more."])
     }
   end
@@ -23,20 +23,20 @@ describe RedClothParslet::Parser::Inline do
   context "link at the end of a sentence" do
     it { should parse(%{Visit "Apple":http://apple.com/.}).with(transform).
       as(["Visit ", 
-          RedClothParslet::Ast::Link.new(["Apple"], {:href=>"http://apple.com/"}), 
+          link(["Apple"], {:href=>"http://apple.com/"}), 
           "."])
     }
   end
   
   context "in brackets" do
     it { should parse(%{"Wikipedia article about Textile":http://en.wikipedia.org/wiki/Textile_(markup_language)}).with(transform).
-      as([RedClothParslet::Ast::Link.new("Wikipedia article about Textile", {:href=>"http://en.wikipedia.org/wiki/Textile_(markup_language)"})])
+      as([link("Wikipedia article about Textile", {:href=>"http://en.wikipedia.org/wiki/Textile_(markup_language)"})])
     }
   end
   
   context "image link" do
     it { should parse(%{!openwindow1.gif!:http://hobix.com/}).with(transform).
-      as([RedClothParslet::Ast::Link.new(RedClothParslet::Ast::Img.new([], {:src=>"openwindow1.gif", :alt => ""}), {:href => "http://hobix.com/"})])
+      as([link(img([], {:src=>"openwindow1.gif", :alt => ""}), {:href => "http://hobix.com/"})])
     }
   end
   

@@ -16,6 +16,11 @@ module RedClothParslet
         super
       end
     end
+
+    # P for paragraph
+    def p(*args)
+      method_missing(:p, *args)
+    end
   end
 end
 

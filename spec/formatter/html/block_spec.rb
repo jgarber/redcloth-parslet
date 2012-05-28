@@ -2,69 +2,69 @@ describe RedClothParslet::Formatter::HTML do
   subject { described_class.new(:sort_attributes => true).convert(element) }
 
   describe "line breaks" do
-    let(:element) { RedClothParslet::Ast::P.new(["Line one\nline two."]) }
+    let(:element) { p(["Line one\nline two."]) }
     it { should == "<p>Line one<br />\nline two.</p>" }
   end
 
   describe "p" do
-    let(:element) { RedClothParslet::Ast::P.new(["My paragraph."]) }
+    let(:element) { p(["My paragraph."]) }
     it { should == "<p>My paragraph.</p>" }
 
     context "containing inline HTML" do
-      let(:element) { RedClothParslet::Ast::P.new(RedClothParslet::Ast::HtmlTag.new('<img src="test.jpg" alt="test" />')) }
+      let(:element) { p(html_tag('<img src="test.jpg" alt="test" />')) }
       it { should == '<p><img src="test.jpg" alt="test" /></p>' }
     end
   end
 
   describe "bq" do
-    let(:element) { RedClothParslet::Ast::Blockquote.new([ RedClothParslet::Ast::P.new(["My paragraph."]) ]) }
+    let(:element) { blockquote([ p(["My paragraph."]) ]) }
     it { should == "<blockquote>\n<p>My paragraph.</p>\n</blockquote>" }
   end
 
   describe "unfinished quote paragraph" do
-    let(:element) { RedClothParslet::Ast::P.new(%Q{"This is part of a multi-paragraph quote}, :possible_unfinished_quote_paragraph => true) }
+    let(:element) { p(%Q{"This is part of a multi-paragraph quote}, :possible_unfinished_quote_paragraph => true) }
     it { should == "<p>&#8220;This is part of a multi-paragraph quote</p>" }
   end
 
   describe "notextile" do
-    let(:element) { RedClothParslet::Ast::Notextile.new(["inside"]) }
+    let(:element) { notextile(["inside"]) }
     it { should == "inside" }
   end
 
   describe "div" do
-    let(:element) { RedClothParslet::Ast::Div.new(["I am a div"]) }
+    let(:element) { div(["I am a div"]) }
     it { should == "<div>I am a div</div>" }
   end
 
   describe "pre" do
-    let(:element) { RedClothParslet::Ast::Pre.new(["Preformatted -> nice!\n\nTwice as nice!"]) }
+    let(:element) { pre(["Preformatted -> nice!\n\nTwice as nice!"]) }
     it { should == "<pre>Preformatted -&gt; nice!\n\nTwice as nice!</pre>" }
   end
 
   describe "pre_tag" do
-    let(:element) { RedClothParslet::Ast::Pre.new("\nThe bold tag is <b>\n", :open_tag => '<pre>') }
+    let(:element) { pre("\nThe bold tag is <b>\n", :open_tag => '<pre>') }
     it { should == "<pre>\nThe bold tag is &lt;b&gt;\n</pre>" }
   end
   describe "code_tag" do
-    let(:element) { RedClothParslet::Ast::Code.new("\nThe bold tag is <b>\n", :open_tag => '<code>') }
+    let(:element) { code("\nThe bold tag is <b>\n", :open_tag => '<code>') }
     it { should == "<code>\nThe bold tag is &lt;b&gt;\n</code>" }
   end
   
   describe "blockcode" do
-    let(:element) { RedClothParslet::Ast::Blockcode.new("def leopard()\n\tpurr\nend") }
+    let(:element) { blockcode("def leopard()\n\tpurr\nend") }
     it { should == "<pre><code>def leopard()\n\tpurr\nend</code></pre>" }
   end
 
   describe "horizontal rule" do
-    let(:element) { RedClothParslet::Ast::Hr.new() }
+    let(:element) { hr() }
     it { should == "<hr />" }
   end
 
   describe "ul" do
-    let(:element) { RedClothParslet::Ast::Ul.new([
-      RedClothParslet::Ast::Li.new(["1"]),
-      RedClothParslet::Ast::Ul.new(RedClothParslet::Ast::Li.new(["1.1"])),
-      RedClothParslet::Ast::Li.new(["2"])
+    let(:element) { ul([
+      li(["1"]),
+      ul(li(["1.1"])),
+      li(["2"])
     ]) }
     it { should == <<-END.gsub(/^ +/, '').chomp
       <ul>
@@ -79,10 +79,10 @@ describe RedClothParslet::Formatter::HTML do
   end
 
   describe "ol" do
-    let(:element) { RedClothParslet::Ast::Ol.new([
-      RedClothParslet::Ast::Li.new(["one"]),
-      RedClothParslet::Ast::Ol.new(RedClothParslet::Ast::Li.new(["one-one"])),
-      RedClothParslet::Ast::Li.new(["two"])
+    let(:element) { ol([
+      li(["one"]),
+      ol(li(["one-one"])),
+      li(["two"])
     ]) }
     it { should == <<-END.gsub(/^ +/, '').chomp
       <ol>
@@ -97,16 +97,16 @@ describe RedClothParslet::Formatter::HTML do
   end
 
   describe "table" do
-    let(:element) { RedClothParslet::Ast::Table.new([
-      RedClothParslet::Ast::TableRow.new([
-        RedClothParslet::Ast::TableHeader.new(["one"]),
-        RedClothParslet::Ast::TableHeader.new(["two"]),
-        RedClothParslet::Ast::TableHeader.new(["three"])
+    let(:element) { table([
+      table_row([
+        table_header(["one"]),
+        table_header(["two"]),
+        table_header(["three"])
       ]),
-      RedClothParslet::Ast::TableRow.new([
-        RedClothParslet::Ast::TableData.new(["1"]),
-        RedClothParslet::Ast::TableData.new(["2"]),
-        RedClothParslet::Ast::TableData.new(["3"])
+      table_row([
+        table_data(["1"]),
+        table_data(["2"]),
+        table_data(["3"])
       ])
     ]) }
 
@@ -128,7 +128,7 @@ describe RedClothParslet::Formatter::HTML do
   end
 
   describe "footnote" do
-    let(:element) { RedClothParslet::Ast::Footnote.new("A footnote", :number => "1") }
+    let(:element) { footnote("A footnote", :number => "1") }
     it { should == '<p class="footnote" id="fn1"><a href="#fnr1"><sup>1</sup></a> A footnote</p>' }
   end
 

@@ -8,13 +8,13 @@ describe RedClothParslet::Parser::Inline do
     it_should_behave_like 'a simple inline element', 'code', '@', RedClothParslet::Ast::Code
 
     it { should parse(%Q{@code *yeah* code@}).with(transform).
-      as([RedClothParslet::Ast::Code.new(["code *yeah* code"])])
+      as([code(["code *yeah* code"])])
     }
   end
   
   describe "code tag" do
     it { should parse(%Q{<code>code *yeah* code</code>}).with(transform).
-      as([RedClothParslet::Ast::Code.new(["code *yeah* code"])])
+      as([code(["code *yeah* code"])])
     }
   end
 end
