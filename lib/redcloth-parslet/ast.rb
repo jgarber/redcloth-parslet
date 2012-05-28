@@ -9,7 +9,7 @@ module RedClothParslet
     # Example: #p is the same as RedClothParslet::Ast::P.new
     def method_missing(m, *args)
       constant = RedClothParslet::Ast
-      klass = m.to_s.sub(/^[a-z\d]*/) { $&.capitalize }
+      klass = m.to_s.gsub(/(?:_)?([a-z\d]*)/i) { $1.capitalize }
       if constant.const_defined?(klass)
         constant.const_get(klass).new(*args)
       else
