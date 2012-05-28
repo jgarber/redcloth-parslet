@@ -16,8 +16,8 @@ module RedClothParslet
               @result = join_adjacent_strings(@result)
               (@as == [*@result] || @as.nil?)
             end
-          rescue Parslet::ParseFailed
-            @trace = parser.error_tree.ascii_tree if true #opts && opts[:trace]
+          rescue Parslet::ParseFailed => ex
+            @trace = ex.cause.ascii_tree if true #opts && opts[:trace]
             false
           end
         end
