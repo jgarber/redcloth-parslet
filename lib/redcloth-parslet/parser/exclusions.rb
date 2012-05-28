@@ -52,7 +52,7 @@ class ExclusiveCompare < Parslet::Atoms::Base
     if positive ^ entity_stack(context).include?(name)
       # skip evaluation of the parslet because it is
       # excluded in this context
-      return positive ? succ(nil) : context.err(self, source, @error_msgs[:premature])
+      return positive ? succ(nil) : context.err(self, source, @error_msgs[:excluded])
     else
       parslet.try(source, context)
     end

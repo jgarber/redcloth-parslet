@@ -48,4 +48,15 @@ describe "Exclusions Parslet extension" do
                " [E"]
     )
   end
+
+  class ZeroParser < Parslet::Parser
+    rule(:zero) { str('0').unless_excluded(:zero) }
+    root(:zero)
+  end
+
+  it "should raise an error when parse fails due to an exclusion" do
+    expect {
+      ZeroParser.new.exclude(:zero).parse("0")
+    }.to raise_error(Parslet::ParseFailed, "zero is excluded in this context at line 1 char 1.")
+  end
 end
