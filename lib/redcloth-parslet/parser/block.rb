@@ -70,7 +70,7 @@ class RedClothParslet::Parser::Block < Parslet::Parser
 
   rule(:attributes?) { RedClothParslet::Parser::Attributes.new.attribute.repeat }
 
-  rule(:eof) { any.absent? }
+  rule(:eof) { str("\n").repeat >> any.absent? }
   rule(:block_end) { eof | double_newline }
   rule(:extended_block_end) { (eof | next_block_start).present? }
   rule(:next_block_start) { match("[a-z]").repeat(1) >> attributes? >> (str('. ') | str('.. ')) }

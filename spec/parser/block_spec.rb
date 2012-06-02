@@ -6,6 +6,9 @@ describe RedClothParslet::Parser::Block do
     it { should parse("Just plain text.").with(transform).
          as(p("Just plain text.")) }
 
+    it { should parse("Trailing newline.\n").with(transform).
+         as(p("Trailing newline.")) }
+
     context "containing inline HTML tag" do
       it { should parse('<img src="test.jpg" alt="test" />').with(transform).
            as(p(html_tag('<img src="test.jpg" alt="test" />'))) }
