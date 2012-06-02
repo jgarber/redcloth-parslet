@@ -12,6 +12,8 @@ describe RedClothParslet::Parser::Attributes::Uri do
 
   it { should parse("http://redcloth.org/foo/bar/baz") }
   it { should parse("http://redcloth.org/") }
+  it { should parse("http://ruby-lang.org/") }
+  it { should parse("http://a-b.cc/") }
   it { should parse("http://localhost") }
   it { should parse("http://localhost:3000") }
   it { should parse("http://localhost:1") }

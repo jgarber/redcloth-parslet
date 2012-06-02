@@ -108,10 +108,10 @@ class RedClothParslet::Parser::Attributes::Uri < Parslet::Parser
   rule(:ipv6ref) { str('[') >> ipv6addr >> str(']') }
   
   # domainlabel   = alphanum | alphanum *( alphanum | "-" ) alphanum
-  rule(:domainlabel) { alphanum >> ((alphanum >> alphanum.present?).repeat >> alphanum).maybe }
+  rule(:domainlabel) { alphanum >> ((alphanumdash >> alphanumdash.present?).repeat >> alphanum).maybe }
   
   # toplabel      = alpha | alpha *( alphanum | "-" ) alphanum
-  rule(:toplabel) { alpha >> ((alphanum >> alphanum.present?).repeat >> alphanum).maybe }
+  rule(:toplabel) { alpha >> ((alphanumdash >> alphanumdash.present?).repeat >> alphanum).maybe }
   
   # hostname      = *( domainlabel "." ) toplabel [ "." ]
   rule(:hostname) { (domainlabel >> str('.')).repeat >> toplabel >> str('.').maybe }
@@ -163,5 +163,6 @@ class RedClothParslet::Parser::Attributes::Uri < Parslet::Parser
   
   rule(:alpha) { match('[a-zA-Z]') }
   rule(:alphanum) { match('[a-zA-Z\d]') }
+  rule(:alphanumdash) { match('[-a-zA-Z\d]') }
   
 end
