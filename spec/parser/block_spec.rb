@@ -131,4 +131,14 @@ describe RedClothParslet::Parser::Block do
     it { should parse("fn1(myclass). A footnote").with(transform).
          as(footnote("A footnote", :number => "1", :class => "myclass")) }
   end
+
+  context "link alias" do
+    let!(:link_aliases) { {} }
+    it "should set itself in the link_aliases hash" do
+      parse_tree = subject.parse(%{[redcloth]http://redcloth.org})
+      transform.apply(parse_tree, :link_aliases => link_aliases)
+      link_aliases.should have_key("redcloth")
+      link_aliases["redcloth"].should == "http://redcloth.org"
+    end
+  end
 end

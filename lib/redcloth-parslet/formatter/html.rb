@@ -36,7 +36,7 @@ module RedClothParslet::Formatter
     }
 
     def textile_doc(el)
-      inner(el, true).chomp
+      inner(el, true).strip
     end
 
     ([:h1, :h2, :h3, :h4, :h5, :h6, :div] +
@@ -84,6 +84,9 @@ module RedClothParslet::Formatter
     end
 
     def link(el)
+      if @options[:link_aliases] && @options[:link_aliases].has_key?(el.opts[:href])
+        el.opts[:href] = @options[:link_aliases][el.opts[:href]]
+      end
       "<a#{html_attributes(el.opts)}>#{inner(el)}</a>"
     end
 

@@ -12,7 +12,7 @@ module RedClothParslet
             if @block
               @block.call(@result)
             else
-              @result = @transform.apply(@result) if @transform
+              @result = @transform.apply(@result, @context) if @transform
               @result = join_adjacent_strings(@result)
               (@as == [*@result] || @as.nil?)
             end
@@ -80,8 +80,9 @@ module RedClothParslet
           end
         end
 
-        def with(transform)
+        def with(transform, context=nil)
           @transform = transform
+          @context = context
           self
         end
 

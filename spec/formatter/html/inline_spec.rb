@@ -46,7 +46,13 @@ describe RedClothParslet::Formatter::HTML do
 
   describe "link" do
     let(:element) { link(["Google"], {:href=>"http://google.com"}) }
+
     it { should == '<a href="http://google.com">Google</a>' }
+
+    it "should use the href from a link alias" do
+      textile_doc = described_class.new(:link_aliases => {'redcloth' => 'http://redcloth.org'})
+      textile_doc.convert(link(["RedCloth"], {:href=>'redcloth'})).should == '<a href="http://redcloth.org">RedCloth</a>'
+    end
   end
 
   describe "image" do

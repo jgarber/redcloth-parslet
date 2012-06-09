@@ -17,6 +17,7 @@ class RedClothParslet::Parser::Block < Parslet::Parser
     blockquote |
     blockcode |
     footnote |
+    link_alias |
     extended_pre_block |
     pre_block |
     pre_tag_block |
@@ -42,6 +43,11 @@ class RedClothParslet::Parser::Block < Parslet::Parser
   rule(:footnote) do
     (str("fn") >> (match("[0-9]").repeat(1).as(:number) >> attributes?).as(:attributes) >> str(". ") >> content.as(:content) >> block_end).as(:footnote)
   end
+
+  rule(:link_alias) do
+    (str("[") >> match["a-zA-Z_-"].repeat(1).as(:alias) >> str("]") >> link_uri.as(:href) >> block_end).as(:link_alias)
+  end
+  rule(:link_uri) { RedClothParslet::Parser::Attributes::LinkUri.new }
 
   rule(:notextile_block_tags) { (str("<notextile>\n") >> (notextile_block_end_tag.absent? >> any).repeat.as(:s) >> notextile_block_end_tag >> block_end).as(:notextile) }
   rule(:notextile_block_end_tag) { str("\n</notextile>") }

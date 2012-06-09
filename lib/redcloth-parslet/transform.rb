@@ -34,6 +34,7 @@ class RedClothParslet::Transform < Parslet::Transform
   rule(:bc => simple(:c)) { RedClothParslet::Ast::Blockcode.new(c) }
   rule(:list => subtree(:a)) { RedClothParslet::Ast::List.build(a[:content], a[:opts]) }
   rule(:footnote => subtree(:a)) { RedClothParslet::Ast::Footnote.new(a[:content], a[:opts]) }
+  rule(:link_alias => subtree(:a)) { link_aliases[String(a[:alias])] = String(a[:href]); nil }
   rule(:table => subtree(:a)) { RedClothParslet::Ast::Table.new(a[:content], a[:opts]) }
   rule(:table_row => subtree(:a)) { RedClothParslet::Ast::TableRow.new(a[:content], a[:opts]) }
   rule(:table_data => subtree(:a) ) do #, :leading_space => simple(:ls), :trailing_space => simple(:ts)) do

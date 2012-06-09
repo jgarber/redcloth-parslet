@@ -65,7 +65,8 @@ module RedClothParslet
     def initialize( string, restrictions = [] )
       restrictions.each { |r| method("#{r}=").call( true ) }
       tree = RedClothParslet::Parser::Block.new.parse(string)
-      self.children = RedClothParslet::Transform.new.apply(tree)
+      @link_aliases = {}
+      self.children = RedClothParslet::Transform.new.apply(tree, :link_aliases => @link_aliases)
     end
 
     #
@@ -75,7 +76,8 @@ module RedClothParslet
     #     #=>"<p>And then? She <strong>fell</strong>!</p>"
     #
     def to_html( *rules )
-      opts = {:sort_attributes => rules.delete(:sort_attributes)}
+      opts = {:sort_attributes => rules.delete(:sort_attributes),
+        :link_aliases => @link_aliases}
       apply_rules(rules)
 
       RedClothParslet::Formatter::HTML.new(opts).convert(self)
