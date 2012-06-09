@@ -1,7 +1,9 @@
 module RedClothParslet::Formatter
   class HTML
+    attr_accessor :options
+
     def initialize(options={})
-      @options = options
+      @options = {:link_aliases => {}}.merge(options)
     end
 
     def convert(root)
@@ -84,8 +86,9 @@ module RedClothParslet::Formatter
     end
 
     def link(el)
-      if @options[:link_aliases] && @options[:link_aliases].has_key?(el.opts[:href])
-        el.opts[:href] = @options[:link_aliases][el.opts[:href]]
+      href = el.opts[:href]
+      if link_alias = options[:link_aliases][href]
+        href.replace link_alias
       end
       "<a#{html_attributes(el.opts)}>#{inner(el)}</a>"
     end
@@ -211,14 +214,14 @@ module RedClothParslet::Formatter
             [k,v].join(':')
           end
         end
-        attr[:style].sort! if @options[:sort_attributes]
+        attr[:style].sort! if options[:sort_attributes]
         attr[:style] = attr[:style].join(";") + ";"
       end
       sort_attributes(attr).map {|k,v| v.nil? ? '' : " #{k}=\"#{escape_html(v.to_s, :attribute)}\"" }.join('')
     end
 
     def sort_attributes(attributes)
-      return attributes unless @options[:sort_attributes]
+      return attributes unless options[:sort_attributes]
       # Stringify keys, then sort
       attributes.inject({}) do |attrs, (key, value)|
         attrs[key.to_s] = value
