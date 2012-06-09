@@ -105,7 +105,7 @@ describe RedClothParslet::Formatter::HTML do
   end
 
   describe "sub" do
-    let(:element) { sub("2") }
+    let(:element) { RedClothParslet::Ast::Sub.new("2") }
     it { should == "<sub>2</sub>" }
   end
 end

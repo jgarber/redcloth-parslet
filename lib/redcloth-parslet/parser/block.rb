@@ -36,8 +36,8 @@ class RedClothParslet::Parser::Block < Parslet::Parser
   end
 
   SIMPLE_BLOCK_ELEMENTS.each do |block_type|
-    rule("extended_#{block_type}s") { (((str(block_type) >> attributes?.as(:attributes) >> str(".. ") >> content.as(:content) >> block_end).as(block_type)).as(:first) >> ((extended_block_end.absent? >> undecorated_block.as(block_type)).repeat(1)).as(:successive) >> extended_block_end).as(:extended) }
-    rule(block_type) { (str(block_type) >> attributes?.as(:attributes) >> str(". ") >> content.as(:content) >> block_end).as(block_type) }
+    rule("extended_#{block_type}s") { (((str(block_type.to_s) >> attributes?.as(:attributes) >> str(".. ") >> content.as(:content) >> block_end).as(block_type)).as(:first) >> ((extended_block_end.absent? >> undecorated_block.as(block_type)).repeat(1)).as(:successive) >> extended_block_end).as(:extended) }
+    rule(block_type) { (str(block_type.to_s) >> attributes?.as(:attributes) >> str(". ") >> content.as(:content) >> block_end).as(block_type) }
   end
 
   rule(:footnote) do
