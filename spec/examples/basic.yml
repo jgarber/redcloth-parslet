@@ -604,7 +604,7 @@ in: |-
   And others sat all round the small
   machine and paid it to sing to them.
 html: |-
-  <p style="float:right;"><img alt="" src="obake.gif" /></p>
+  <p><img alt="" src="obake.gif" style="float:right;" /></p>
   <p>And others sat all round the small<br />
   machine and paid it to sing to them.</p>
 --- 

@@ -75,8 +75,8 @@ describe RedClothParslet::Formatter::HTML do
   end
 
   describe "image with alignment" do
-    let(:element) { img([], {:src=>"mac.png", :align=>"left"}) }
-    it { should == '<img align="left" alt="" src="mac.png" />' }
+    let(:element) { img([], {:src=>"mac.png", :style=>{"align"=>"left"}}) }
+    it { should == '<img alt="" src="mac.png" style="float:left;" />' }
   end
 
   describe "acronym" do

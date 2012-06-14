@@ -209,7 +209,7 @@ module RedClothParslet::Formatter
           when /padding/
             "#{k}:#{v}em"
           when 'align'
-            type == :text ? "text-align:#{v}" : "align:#{v}"
+            align_attribute(v, type)
           else
             [k,v].join(':')
           end
@@ -218,6 +218,17 @@ module RedClothParslet::Formatter
         attr[:style] = attr[:style].join(";") + ";"
       end
       sort_attributes(attr).map {|k,v| v.nil? ? '' : " #{k}=\"#{escape_html(v.to_s, :attribute)}\"" }.join('')
+    end
+
+    def align_attribute(v, type)
+      case type
+      when :text
+        "text-align:#{v}"
+      when :image
+        "float:#{v}"
+      else
+        "align:#{v}"
+      end
     end
 
     def sort_attributes(attributes)
