@@ -123,7 +123,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   rule(:end_code_tag) { str("</code>") }
 
   rule(:double_quoted_phrase_or_link) do
-    (str('"') >>
+    (str('"') >> str(':').absent? >>
       maybe_preceded_by_attributes(inline.exclude(:double_quoted_phrase_or_link).as(:content)) >>
       end_double_quoted_phrase_or_link).as(:double_quoted_phrase_or_link)
   end
@@ -191,7 +191,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     (match("[*#]").repeat(1) >> str(" ")).absent?.if_excluded(:li_start) >>
     # TODO: make this the same rule as in parser/block/tables.rb so it's DRY.
     str("|").absent?.if_excluded(:table_cell_start) >>
-    match('[":]').absent?.if_excluded(:double_quoted_phrase_or_link) >>
+    (str('":') | str('"')).absent?.if_excluded(:double_quoted_phrase_or_link) >>
     simple_inline_term_end_exclusion
   end
   
