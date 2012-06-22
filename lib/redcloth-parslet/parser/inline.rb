@@ -22,6 +22,8 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   ]
   
   # Inline elements are terms (words) divided by spaces or spaces themselves.
+  # Sometimes terms are contiguous, such as <code>*bold*.</code> (bold phrase 
+  # followed by a period, which is a word).
   rule(:inline_element) do
     standalone_en_dash |
     standalone_symbol_from_simple_inline_element |
