@@ -56,6 +56,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   end
 
   rule(:forced_inline_term) do
+    (str("[") >> double_quoted_phrase >> str("]")).as(:forced_quote) |
     str("[") >> sovereign_term >> str("]") |
     forced_simple_inline_term
   end
@@ -124,14 +125,23 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   end
   rule(:end_code_tag) { str("</code>") }
 
-  rule(:double_quoted_phrase_or_link) do
-    (str('"') >> str(':').absent? >>
-      maybe_preceded_by_attributes(inline.exclude(:double_quoted_phrase_or_link).as(:content)) >>
-      end_double_quoted_phrase_or_link).as(:double_quoted_phrase_or_link)
+  # double_quoted_phrase_or_link is easier to detect than splitting the two up.
+  # double_quoted_phrase is just for negation
+  [:double_quoted_phrase, :double_quoted_phrase_or_link].each do |name|
+    rule(name) do
+      # nesting can cause sequential quotes with the second starting with a colon,
+      # so we have to negate that case to get nesting to work
+      (str('"') >> str(':').absent? >>
+        maybe_preceded_by_attributes(inline.exclude(:double_quoted_phrase_or_link).as(:content)) >>
+        send("end_" + name.to_s)).as(:double_quoted_phrase_or_link)
+    end
+  end
+  rule(:end_double_quoted_phrase) do
+    str('"')
   end
   rule(:end_double_quoted_phrase_or_link) do
     str('":') >> link_uri.as(:href) |
-    str('"')
+    end_double_quoted_phrase
   end
   
   rule(:image) do
