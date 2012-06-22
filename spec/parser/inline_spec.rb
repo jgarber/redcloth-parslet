@@ -69,11 +69,33 @@ describe RedClothParslet::Parser::Inline do
     it { should parse(%Q{""Example"":http://example.com}).with(transform).
          as(link(double_quoted_phrase("Example"), {:href=>"http://example.com"}))
     }
+    it "should allow quotes inside a link" do
+      pending
+      subject.inline.exclude(:link).should parse(%Q{"a "short" example":http://google.com})#.with(transform).
+        #as(double_quoted_phrase("word"))
+    end
+    it { should parse(%Q{"a "short" example":http://example.com}).with(transform).
+         as(link(["a ", double_quoted_phrase("short"), " example"], {:href=>"http://example.com"}))
+    }
   end
 
   context "link in double-quoted phrase" do
+    it "should allow a double_quoted_phrase" do
+      subject.sovereign_term.should parse(%Q{"a little example"}).with(transform).
+         as(double_quoted_phrase(["a little example"]))
+        #as(double_quoted_phrase("word"))
+    end
+    it "should allow a link inside a double_quoted_phrase" do
+      pending
+      subject.sovereign_term.should parse(%Q{"a "little":http://example.com example"}).with(transform).
+         as(double_quoted_phrase(["a ", link("little", {:href=>"http://example.com"}), " example"]))
+        #as(double_quoted_phrase("word"))
+    end
     it { should parse(%Q{""Example":http://example.com"}).with(transform).
          as(double_quoted_phrase(link("Example", {:href=>"http://example.com"})))
+    }
+    it { should parse(%Q{"a "little":http://example.com example"}).with(transform).
+         as(double_quoted_phrase(["a ", link("little", {:href=>"http://example.com"}), " example"]))
     }
   end
 

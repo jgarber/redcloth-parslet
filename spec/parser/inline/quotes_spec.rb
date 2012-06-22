@@ -11,5 +11,9 @@ describe RedClothParslet::Parser::Inline do
     it { should parse(%Q{"Hey!"}).with(transform).
          as(double_quoted_phrase("Hey!"))
     }
+
+    it { should parse(%Q{["(Berk.) Hilton"]}).with(transform).
+         as(["[\"(Berk.) Hilton\"]"])
+    }
   end
 end

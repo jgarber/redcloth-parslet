@@ -29,7 +29,7 @@ describe RedClothParslet::Parser::Inline do
   end
 
   context "in brackets" do
-    it { should parse(%{"Wikipedia article about Textile":http://en.wikipedia.org/wiki/Textile_(markup_language)}).with(transform).
+    it { should parse(%{["Wikipedia article about Textile":http://en.wikipedia.org/wiki/Textile_(markup_language)]}).with(transform).
          as([link("Wikipedia article about Textile", {:href=>"http://en.wikipedia.org/wiki/Textile_(markup_language)"})])
     }
   end
