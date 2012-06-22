@@ -12,6 +12,10 @@ describe RedClothParslet::Parser::Inline do
     end
   end
 
+  it "should parse a link containing a colon" do
+    parser.double_quoted_phrase_or_link.should parse('"Packrat Parsing: Simple, Powerful, Lazy, Linear Time":http://bford.info/pub/lang/packrat-icfp02/').with(transform).as(link("Packrat Parsing: Simple, Powerful, Lazy, Linear Time", {:href=>"http://bford.info/pub/lang/packrat-icfp02/"}))
+  end
+
   context "link in context" do
     it { should parse(%{See "Wikipedia":http://wikipedia.org/ for more.}).with(transform).
          as(["See ", 
