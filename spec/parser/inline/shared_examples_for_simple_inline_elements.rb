@@ -19,13 +19,13 @@ shared_examples 'a simple inline element' do |rule_name, mark, ast_class|
       as(ast_class.new(["A little #{mark}pearl here."]))
     end
 
-    it "should not parse strong phrase containing #{rule_name}_end" do
+    it "should not parse #{rule_name} phrase containing #{rule_name}_end" do
       parser.send(rule_name).should_not parse("#{mark}Another pearl#{mark} there.#{mark}")
     end
 
     context "with attributes" do
-      it { should parse("#{mark}(widget)This is strong!#{mark}").with(transform).
-           as(ast_class.new("This is strong!", {:class=>"widget"}))
+      it { should parse("#{mark}(widget)This is something!#{mark}").with(transform).
+           as(ast_class.new("This is something!", {:class=>"widget"}))
       }
     end
 
