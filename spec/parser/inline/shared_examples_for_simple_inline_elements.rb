@@ -23,6 +23,12 @@ shared_examples 'a simple inline element' do |rule_name, mark, ast_class|
       parser.send(rule_name).should_not parse("#{mark}Another pearl#{mark} there.#{mark}")
     end
 
+    unless rule_name == "code"
+      it "should not parse #{rule_name} phrase containing a newline" do
+        parser.send(rule_name).should_not parse("#{mark}Line\nbreak.#{mark}")
+      end
+    end
+
     context "with attributes" do
       it { should parse("#{mark}(widget)This is something!#{mark}").with(transform).
            as(ast_class.new("This is something!", {:class=>"widget"}))

@@ -65,6 +65,8 @@ describe RedClothParslet::Parser::Inline do
     it_should_behave_like 'a simple inline element', 'i', '__', RedClothParslet::Ast::I
   end
 
+  it { should parse("__Amanita__s are mushrooms.\nLungworts (__Lobaria__) are lichens.") }
+
   context "double-quoted phrase in link" do
     it { should parse(%Q{""Example"":http://example.com}).with(transform).
          as(link(double_quoted_phrase("Example"), {:href=>"http://example.com"}))

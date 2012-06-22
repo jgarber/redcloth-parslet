@@ -16,6 +16,10 @@ describe RedClothParslet::Parser::Inline do
     parser.double_quoted_phrase_or_link.should parse('"Packrat Parsing: Simple, Powerful, Lazy, Linear Time":http://bford.info/pub/lang/packrat-icfp02/').with(transform).as(link("Packrat Parsing: Simple, Powerful, Lazy, Linear Time", {:href=>"http://bford.info/pub/lang/packrat-icfp02/"}))
   end
 
+  it { should parse(%{"Red\nCloth":http://redcloth.org/}).with(transform).
+       as(link("Red\nCloth", {:href=>"http://redcloth.org/"}))
+  }
+
   context "link in context" do
     it { should parse(%{See "Wikipedia":http://wikipedia.org/ for more.}).with(transform).
          as(["See ", 

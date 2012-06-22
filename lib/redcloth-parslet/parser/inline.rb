@@ -85,7 +85,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     end_rule_name = "end_#{element_name}".to_sym
     rule(element_name) do
       (str(signature) >>
-      maybe_preceded_by_attributes(inline.exclude(element_name).as(:content)) >> 
+      maybe_preceded_by_attributes(inline.exclude(element_name).exclude(:newline).as(:content)) >> 
       send(end_rule_name)).as(element_name)
     end
     rule(end_rule_name) { str(signature) >> match("[a-zA-Z0-9]").absent? }
@@ -222,7 +222,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   rule(:mchar) { typographic_entity.absent? >> match('\S') }
   rule(:inline_sp) { match('[ \t]').repeat(1) }
   rule(:inline_sp?) { inline_sp.maybe }
-  rule(:sp) { inline_sp | str("\n") }
+  rule(:sp) { inline_sp | str("\n").unless_excluded(:newline) }
   # rule(:mtext) { mchar.repeat(1) >> (inline_sp >> mchar.repeat(1)) }
   
   rule(:image_uri) { RedClothParslet::Parser::Attributes::ImageUri.new }
