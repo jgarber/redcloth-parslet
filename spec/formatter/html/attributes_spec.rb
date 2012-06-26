@@ -52,5 +52,9 @@ describe RedClothParslet::Formatter::HTML do
     it { should include("align:left") }
   end
 
+  describe "language designation" do
+    let(:element) { strong("", {:lang => 'fr'}) }
+    it { should include(%Q{lang="fr"}) }
+  end
 
 end
