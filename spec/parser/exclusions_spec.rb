@@ -59,4 +59,21 @@ describe "Exclusions Parslet extension" do
       ZeroParser.new.exclude(:zero).parse("0")
     }.to raise_error(Parslet::ParseFailed, "zero is excluded in this context at line 1 char 1.")
   end
+
+  class OmeletParser < Parslet::Parser
+    root(:omelet)
+    rule(:omelet) do
+      egg_whites |
+      egg
+    end
+    rule(:egg_whites) { egg.exclude(:yellow) }
+    rule(:egg) do
+      str('(') >> yolk.unless_excluded(:yellow) >> str(')')
+    end
+    rule(:yolk) { str('o') }
+  end
+
+  it "should parse an alternate even if a previous alternate failed due to exclusions" do
+    OmeletParser.new.should parse("(o)")
+  end
 end
