@@ -57,8 +57,8 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
 
   rule(:forced_inline_term) do
     (str("[") >> double_quoted_phrase >> str("]")).as(:forced_quote) |
-    str("[") >> sovereign_term >> str("]") |
-    forced_simple_inline_term
+    forced_simple_inline_term |
+    str("[") >> sovereign_term >> str("]")
   end
 
   rule(:term) do
