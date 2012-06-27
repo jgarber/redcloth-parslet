@@ -7,7 +7,9 @@ describe RedClothParslet::Parser::Attributes::LinkUri do
     it { should parse("http://red.cloth.org") }
     it { should parse("http://redcloth.org./") }
 
-    %w(. !).each do |punct|
+    TERMINAL_LINK_PUNCTUATION = %w(. ! , ;)
+
+    TERMINAL_LINK_PUNCTUATION.each do |punct|
       it { should parse("http://redcloth.org/text#{punct}ile") }
       it { should parse("http://redcloth.org/text#{punct}ile.html") }
       it { should parse("http://redcloth.org/text#{punct}ile/") }
@@ -21,7 +23,7 @@ describe RedClothParslet::Parser::Attributes::LinkUri do
       it { should parse("index?foo=bar#{punct}baz") }
     end
 
-    [".", "!", ")"].each do |punct|
+    (TERMINAL_LINK_PUNCTUATION + [')']).each do |punct|
       it { should_not parse("http://redcloth.org#{punct}") }
       it { should_not parse("http://redcloth.org/#{punct}") }
       it { should_not parse("http://redcloth.org/textile#{punct}") }

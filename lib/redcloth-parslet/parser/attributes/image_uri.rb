@@ -13,10 +13,10 @@ class RedClothParslet::Parser::Attributes::ImageUri < RedClothParslet::Parser::A
   # Don't allow these in a URI
   rule(:unsafe) { match('[()]') | terminal_punctuation }
   
-  # Greedy punctuation is okay inside a URI, but not at the end
-  rule(:terminal_punctuation) { greedy_punctuation >> (str(':') | (pchar | match('[#/;]')).absent?) }
+  # Greedy punctuation is okay inside a URI, but not at the e
+  rule(:terminal_punctuation) { greedy_punctuation >> (str(':') | (pchar | match['#/;']).absent?) }
   
   # In the context of inline Textile, these may not terminate a URI
-  rule(:greedy_punctuation) { match('[!."]').repeat }
+  rule(:greedy_punctuation) { match('[;!.",]').repeat }
   
 end

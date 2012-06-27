@@ -1,6 +1,6 @@
 class RedClothParslet::Parser::Attributes::LinkUri < RedClothParslet::Parser::Attributes::ImageUri
   
-  rule(:segment) { (safe_pchar | parenthesized_pchars).repeat >> (str(';') >> param).repeat }
+  rule(:segment) { (safe_pchar | parenthesized_pchars).repeat >> (unsafe.absent? >> str(';') >> param).repeat }
   rule(:safe_pchar) { unsafe.absent? >> pchar }
   rule(:parenthesized_pchars) { str("(") >> safe_pchar.repeat >> str(")") }
   
