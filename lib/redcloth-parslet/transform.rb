@@ -48,13 +48,8 @@ class RedClothParslet::Transform < Parslet::Transform
       RedClothParslet::Ast::const_get(block_type.to_s.capitalize).new(a[:content], a[:opts])
     end
   end
-  rule(:double_quoted_phrase_or_link => subtree(:a)) do
-    if a[:opts].has_key?(:href)
-      RedClothParslet::Ast::Link.new(a[:content], a[:opts])
-    else
-      RedClothParslet::Ast::DoubleQuotedPhrase.new(a[:content])
-    end
-  end
+  rule(:double_quoted_phrase => subtree(:a)) { RedClothParslet::Ast::DoubleQuotedPhrase.new(a[:content]) }
+  rule(:link => subtree(:a)) { RedClothParslet::Ast::Link.new(a[:content], a[:opts]) }
   rule(:forced_quote => subtree(:q)) { ['[', q, ']'] }
   rule(:parentheses => subtree(:a)) { ['(', a[:content], ')'] }
   rule(:image => subtree(:a)) do

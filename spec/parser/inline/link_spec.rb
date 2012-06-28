@@ -2,24 +2,24 @@ describe RedClothParslet::Parser::Inline do
   let(:parser) { described_class.new }
   let(:transform) { RedClothParslet::Transform.new }
 
-  describe "#double_quoted_phrase_or_link" do
+  describe "#link" do
     it "should parse a basic link" do
-      parser.double_quoted_phrase_or_link.should parse('"Google":http://google.com').with(transform).as(link("Google", {:href=>"http://google.com"}))
+      parser.link.should parse('"Google":http://google.com').with(transform).as(link("Google", {:href=>"http://google.com"}))
     end
 
     it "should parse link with attributes" do
-      parser.double_quoted_phrase_or_link.should parse('"(appropriate)RedCloth":http://redcloth.org').with(transform).as(link("RedCloth", {:href=>"http://redcloth.org", :class=>"appropriate"}))
+      parser.link.should parse('"(appropriate)RedCloth":http://redcloth.org').with(transform).as(link("RedCloth", {:href=>"http://redcloth.org", :class=>"appropriate"}))
     end
 
     it "should parse link with title" do
       pending "Have to work on separating double quotes first"
-      parser.double_quoted_phrase_or_link.should parse('"link text(with title)":http://example.com/').with(transform).
+      parser.link.should parse('"link text(with title)":http://example.com/').with(transform).
         as(link("link text", :href => "http://example.com/", :title => "with title"))
     end
   end
 
   it "should parse a link containing a colon" do
-    parser.double_quoted_phrase_or_link.should parse('"Packrat Parsing: Simple, Powerful, Lazy, Linear Time":http://bford.info/pub/lang/packrat-icfp02/').with(transform).as(link("Packrat Parsing: Simple, Powerful, Lazy, Linear Time", {:href=>"http://bford.info/pub/lang/packrat-icfp02/"}))
+    parser.link.should parse('"Packrat Parsing: Simple, Powerful, Lazy, Linear Time":http://bford.info/pub/lang/packrat-icfp02/').with(transform).as(link("Packrat Parsing: Simple, Powerful, Lazy, Linear Time", {:href=>"http://bford.info/pub/lang/packrat-icfp02/"}))
   end
 
   it { should parse(%{"Red\nCloth":http://redcloth.org/}).with(transform).
