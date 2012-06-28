@@ -6,6 +6,7 @@ gemspec #:development_group => :test
 group :test do
   gem 'rake'
   gem 'rspec', '~> 2.0'
+  gem 'fuubar'
 end
 
 group :development do
