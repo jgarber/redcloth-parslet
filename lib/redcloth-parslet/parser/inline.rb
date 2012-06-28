@@ -137,24 +137,19 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     str('"')
   end
 
+  # NOTE: A parenthetical link contains just a parenthetical phrase,
+  # so class and title aren't allowed
   rule(:link) do
     (str('"') >>
-      maybe_preceded_by_attributes(inline.exclude(:link).as(:content)) >>
-      end_link).as(:link) |
-    parenthetical_link
+      ( maybe_preceded_by_attributes(inline.exclude(:link).as(:content)) |
+        inline.exclude(:parenthetical_link).as(:content)) >>
+      end_link).as(:link)
   end
   rule(:end_link) do
     link_title.maybe >> str('":') >> link_uri.as(:href)
   end
   rule(:link_title) do
     str('(') >> inline.exclude(:paren).as(:title) >> str(')')
-  end
-  # A parenthetical link contains just a parenthetical phrase, so
-  # class and title can't be allowed.
-  rule(:parenthetical_link) do
-    (str('"') >>
-      inline.exclude(:parenthetical_link).as(:content) >>
-      end_link).as(:link)
   end
   rule(:end_parenthetical_link) do
     str('":') >> link_uri.as(:href)
