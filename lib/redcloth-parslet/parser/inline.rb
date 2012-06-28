@@ -138,9 +138,10 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   end
 
   rule(:link) do
-    (str('"') >> 
+    (str('"') >>
       maybe_preceded_by_attributes(inline.exclude(:link).as(:content)) >>
-      end_link).as(:link)
+      end_link).as(:link) |
+    parenthetical_link
   end
   rule(:end_link) do
     link_title.maybe >> str('":') >> link_uri.as(:href)
@@ -148,7 +149,17 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   rule(:link_title) do
     str('(') >> inline.exclude(:paren).as(:title) >> str(')')
   end
-  
+  # A parenthetical link contains just a parenthetical phrase, so
+  # class and title can't be allowed.
+  rule(:parenthetical_link) do
+    (str('"') >>
+      inline.exclude(:parenthetical_link).as(:content) >>
+      end_link).as(:link)
+  end
+  rule(:end_parenthetical_link) do
+    str('":') >> link_uri.as(:href)
+  end
+
   rule(:image) do
     (str('!') >> 
     maybe_preceded_by_attributes(image_uri.as(:src)) >> 
@@ -210,6 +221,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     str("|").absent?.if_excluded(:table_cell_start) >>
     str(')').absent?.if_excluded(:paren) >>
     (str('"') | end_link).absent?.if_excluded(:link) >>
+    (str('"') | end_parenthetical_link).absent?.if_excluded(:parenthetical_link) >>
     end_double_quoted_phrase.absent?.if_excluded(:double_quoted_phrase) >>
     simple_inline_term_end_exclusion
   end

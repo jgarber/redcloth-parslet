@@ -15,8 +15,13 @@ describe RedClothParslet::Parser::Inline do
       parser.link.should parse('"link text(with title)":http://example.com/').with(transform).
         as(link("link text", :href => "http://example.com/", :title => "with title"))
     end
+
+    it "should parse a parenthetical link" do
+      parser.link.should parse('"(whatever)":http://example.com/').with(transform).
+        as(link("(whatever)", :href => "http://example.com/"))
+    end
   end
-  
+
   describe "#link_title" do
     it "should parse a link title" do
       parser.link_title.should parse('(link title)').with(transform).

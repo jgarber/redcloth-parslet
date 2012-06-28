@@ -9,6 +9,7 @@ class RedClothParslet::Transform < Parslet::Transform
   rule(:content => subtree(:c), :attributes => subtree(:a)) {|dict| {:content => dict[:c], :opts => RedClothParslet::Ast::Attributes.new(dict[:a])} }
 
   # links
+  rule(:content => subtree(:c), :href => simple(:h)) {|dict| {:content => dict[:c], :opts => RedClothParslet::Ast::Attributes.new({:href => dict[:h]})} }
   rule(:content => subtree(:c), :attributes => subtree(:a), :href => simple(:h)) {|dict| {:content => dict[:c], :opts => RedClothParslet::Ast::Attributes.new(dict[:a].push({:href => dict[:h]}))} }
   rule(:content => subtree(:c), :attributes => subtree(:a), :href => simple(:h), :title => subtree(:t)) {|dict| {:content => dict[:c], :opts => RedClothParslet::Ast::Attributes.new(dict[:a].push({:href => dict[:h], :title => dict[:t].join}))} }
 
