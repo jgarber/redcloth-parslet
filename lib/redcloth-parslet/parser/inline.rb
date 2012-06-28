@@ -127,6 +127,8 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   rule(:end_code_tag) { str("</code>") }
 
   rule(:double_quoted_phrase) do
+    # Nesting can cause sequential quotes or links with the second starting with
+    # a colon, so we have to negate that case to get nesting to work.
     (str('"') >> str(':').absent? >>
       maybe_preceded_by_attributes(inline.exclude(:double_quoted_phrase_or_link).as(:content)) >>
       end_double_quoted_phrase).as(:double_quoted_phrase)
@@ -136,7 +138,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   end
 
   rule(:link) do
-    (str('"') >> str(':').absent? >>
+    (str('"') >> 
       maybe_preceded_by_attributes(inline.exclude(:double_quoted_phrase_or_link).as(:content)) >>
       end_link).as(:link)
   end
