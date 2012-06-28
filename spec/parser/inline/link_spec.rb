@@ -10,6 +10,12 @@ describe RedClothParslet::Parser::Inline do
     it "should parse link with attributes" do
       parser.double_quoted_phrase_or_link.should parse('"(appropriate)RedCloth":http://redcloth.org').with(transform).as(link("RedCloth", {:href=>"http://redcloth.org", :class=>"appropriate"}))
     end
+
+    it "should parse link with title" do
+      pending "Have to work on separating double quotes first"
+      parser.double_quoted_phrase_or_link.should parse('"link text(with title)":http://example.com/').with(transform).
+        as(link("link text", :href => "http://example.com/", :title => "with title"))
+    end
   end
 
   it "should parse a link containing a colon" do

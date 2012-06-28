@@ -143,6 +143,9 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     str('":') >> link_uri.as(:href) |
     end_double_quoted_phrase
   end
+  #rule(:link_title) do
+    #str('(') >> inline.as(:title) >> str(')')
+  #end
   
   rule(:image) do
     (str('!') >> 
