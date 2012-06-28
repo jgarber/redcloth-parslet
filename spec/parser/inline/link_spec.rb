@@ -12,9 +12,15 @@ describe RedClothParslet::Parser::Inline do
     end
 
     it "should parse link with title" do
-      pending "Have to work on separating double quotes first"
       parser.link.should parse('"link text(with title)":http://example.com/').with(transform).
         as(link("link text", :href => "http://example.com/", :title => "with title"))
+    end
+  end
+  
+  describe "#link_title" do
+    it "should parse a link title" do
+      parser.link_title.should parse('(link title)').with(transform).
+        as({:title => ["link title"]})
     end
   end
 
