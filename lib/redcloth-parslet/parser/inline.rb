@@ -130,7 +130,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     # Nesting can cause sequential quotes or links with the second starting with
     # a colon, so we have to negate that case to get nesting to work.
     (str('"') >> str(':').absent? >>
-      maybe_preceded_by_attributes(inline.exclude(:double_quoted_phrase_or_link).as(:content)) >>
+      maybe_preceded_by_attributes(inline.exclude(:double_quoted_phrase).as(:content)) >>
       end_double_quoted_phrase).as(:double_quoted_phrase)
   end
   rule(:end_double_quoted_phrase) do
@@ -139,7 +139,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
 
   rule(:link) do
     (str('"') >> 
-      maybe_preceded_by_attributes(inline.exclude(:double_quoted_phrase_or_link).as(:content)) >>
+      maybe_preceded_by_attributes(inline.exclude(:link).as(:content)) >>
       end_link).as(:link)
   end
   rule(:end_link) do
@@ -208,7 +208,8 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     (match("[*#]").repeat(1) >> str(" ")).absent?.if_excluded(:li_start) >>
     # TODO: make this the same rule as in parser/block/tables.rb so it's DRY.
     str("|").absent?.if_excluded(:table_cell_start) >>
-    (str('":') | str('"')).absent?.if_excluded(:double_quoted_phrase_or_link) >>
+    (str('"') | end_link).absent?.if_excluded(:link) >>
+    end_double_quoted_phrase.absent?.if_excluded(:double_quoted_phrase) >>
     simple_inline_term_end_exclusion
   end
   
