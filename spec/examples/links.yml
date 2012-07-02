@@ -140,8 +140,8 @@ html: <p><a href="http://example.com/" title="link title">link text</a></p>
 # comments: this is a real test and should pass
 ---
 name: link with title attribute and class
-in: '"(link)text(link title)":http://example.com/'
-html: <p><a href="http://example.com/" class="link" title="link title">text</a></p>
+in: '"(link) text(link title)":http://example.com/'
+html: <p><a class="link" href="http://example.com/" title="link title">text</a></p>
 comments: link text can not contain parentheses
 ---
 name: link with space between link text and title attribute
