@@ -11,6 +11,11 @@ describe RedClothParslet::Parser::Inline do
       parser.link.should parse('"(appropriate)RedCloth":http://redcloth.org').with(transform).as(link("RedCloth", {:href=>"http://redcloth.org", :class=>"appropriate"}))
     end
 
+    it "should parse link with space after attributes" do
+      parser.link.should parse('"(link) text(link title)":http://example.com/').with(transform).
+        as(link("text", :class => "link", :href => "http://example.com/", :title => "link title"))
+    end
+
     it "should parse link with title" do
       parser.link.should parse('"link text(with title)":http://example.com/').with(transform).
         as(link("link text", :href => "http://example.com/", :title => "with title"))

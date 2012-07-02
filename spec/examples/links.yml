@@ -131,6 +131,7 @@ html: <p>This is a <a href="http://example.com/?foo=bar#a10">link</a>, but this 
 in: '(This is a "link":http://example.com/?foo=bar#a10) but this is not.'
 html: <p>(This is a <a href="http://example.com/?foo=bar#a10">link</a>) but this is not.</p>
 ---
+name: link with title attribute
 in: '"link text(link title)":http://example.com/'
 html: <p><a href="http://example.com/" title="link title">link text</a></p>
 # ---
@@ -138,8 +139,8 @@ html: <p><a href="http://example.com/" title="link title">link text</a></p>
 # html: <p>&#8220;link text(link title) &#8220;:http://example.com/</p>
 # comments: this is a real test and should pass
 ---
-name: link with title attribute
-in: '"(link) text(link title)":http://example.com/'
+name: link with title attribute and class
+in: '"(link)text(link title)":http://example.com/'
 html: <p><a href="http://example.com/" class="link" title="link title">text</a></p>
 comments: link text can not contain parentheses
 ---

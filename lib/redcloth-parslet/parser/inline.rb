@@ -46,8 +46,8 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   rule(:sovereign_term) do
     typographic_entity |
     image |
-    link |
-    double_quoted_phrase |
+    link.unless_excluded(:link) |
+    double_quoted_phrase.unless_excluded(:double_quoted_phrase) |
     simple_inline_term |
     parenthesized_sovereign_term |
     acronym |
@@ -130,7 +130,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     # Nesting can cause sequential quotes or links with the second starting with
     # a colon, so we have to negate that case to get nesting to work.
     (str('"') >> str(':').absent? >>
-      maybe_preceded_by_attributes(inline.exclude(:double_quoted_phrase).as(:content)) >>
+      inline.exclude(:double_quoted_phrase).as(:content) >>
       end_double_quoted_phrase).as(:double_quoted_phrase)
   end
   rule(:end_double_quoted_phrase) do
@@ -244,7 +244,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   rule(:html_tag) { RedClothParslet::Parser::HtmlTag.new }
 
   def maybe_preceded_by_attributes(content_rule)
-    attributes?.as(:attributes) >> content_rule |
+    attributes?.as(:attributes) >> inline_sp.maybe >> content_rule |
     content_rule
   end
 
