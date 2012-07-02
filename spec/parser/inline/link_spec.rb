@@ -21,6 +21,11 @@ describe RedClothParslet::Parser::Inline do
         as(link("link text", :href => "http://example.com/", :title => "with title"))
     end
 
+    it "should parse link with space before title" do
+      parser.link.should parse('"link text (with title)":http://example.com/').with(transform).
+        as(link("link text", :href => "http://example.com/", :title => "with title"))
+    end
+
     it "should parse a parenthetical link" do
       parser.link.should parse('"(whatever)":http://example.com/').with(transform).
         as(link("(whatever)", :href => "http://example.com/"))

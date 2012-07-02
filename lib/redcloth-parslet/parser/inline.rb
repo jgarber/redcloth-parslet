@@ -146,7 +146,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
       end_link).as(:link)
   end
   rule(:end_link) do
-    link_title.maybe >> str('":') >> link_uri.as(:href)
+    inline_sp.maybe >> link_title.maybe >> str('":') >> link_uri.as(:href)
   end
   rule(:link_title) do
     str('(') >> inline.exclude(:paren).as(:title) >> str(')')
