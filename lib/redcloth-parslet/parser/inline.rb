@@ -177,8 +177,11 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     ).as(:acronym)
   end
 
-  rule(:all_caps_word) { match("[A-Z]").repeat(3).as(:caps) }
-  
+  rule(:all_caps_word) do
+    match("[A-Z]").repeat(3).as(:caps) >>
+      (match('[a-z0-9]').repeat(1) >> match('[A-Z]')).absent?
+  end
+
   rule(:dimensions) do
     (dimension | factor.as(:s)).as(:left) >> 
     inline_sp?.as(:left_space) >>

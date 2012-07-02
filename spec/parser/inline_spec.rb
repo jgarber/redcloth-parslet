@@ -124,6 +124,8 @@ describe RedClothParslet::Parser::Inline do
     it { should parse("(USA)").with(transform).
          as(["(", caps("USA"), ")"])
     }
+    it { should parse("EOLs").with(transform).as([caps('EOL'), 's']) }
+    it { should parse("LOLCamelCase").with(transform).as("LOLCamelCase") }
   end
 
   describe 'subscript' do
