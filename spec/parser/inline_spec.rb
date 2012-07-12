@@ -148,8 +148,13 @@ describe RedClothParslet::Parser::Inline do
          as(["I am ", html_tag("<b>"), "very", html_tag("</b>"), " serious."]) }
   end
 
-  describe "notextile tags" do
+  describe "notextile" do
     it { should parse('This is how you make a link: <notextile>"link":http://www.redcloth.org</notextile>').with(transform).
          as(["This is how you make a link: ", notextile(%{"link":http://www.redcloth.org})]) }
+
+    it { should parse('==Escaped portion -- will not be formatted by Textile at all==').with(transform).
+         as(notextile('Escaped portion -- will not be formatted by Textile at all')) }
+    it { should parse('Un==escaped portion -- will be formatted==').with(transform).
+         as(["Un==escaped portion ", entity("--"), " will be formatted=="]) }
   end
 end

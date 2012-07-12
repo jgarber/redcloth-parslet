@@ -26,6 +26,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   # followed by a period, which is a word).
   rule(:inline_element) do
     notextile_tags |
+    notextile_double_equals |
     standalone_en_dash |
     standalone_symbol_from_simple_inline_element |
     space_between_terms |
@@ -228,6 +229,8 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
 
   rule(:notextile_tags) { (str("<notextile>") >> (notextile_end_tag.absent? >> any).repeat.as(:s) >> notextile_end_tag).as(:notextile) }
   rule(:notextile_end_tag) { str("</notextile>") }
+  rule(:notextile_double_equals) { (str("==") >> (notextile_double_equals_end.absent? >> any).repeat.as(:s) >> notextile_double_equals_end).as(:notextile) }
+  rule(:notextile_double_equals_end) { str("==") }
 
   rule(:code_words) do
     (code_chars >> 
