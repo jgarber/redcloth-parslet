@@ -53,4 +53,20 @@ describe RedClothParslet::Parser::Attributes::LinkUri do
     it { should parse("index?foo=bar(none)baz") }
     it { should parse("#foo(bar)") }
   end
+
+  describe "opening parentheses" do
+    it { should parse("http://redcloth.org/text(ile") }
+    it { should parse("http://redcloth.org/text(ile.html") }
+    it { should parse("http://redcloth.org/text(ile/") }
+    it { should parse("http://redcloth.org/text(ile#") }
+    it { should parse("http://redcloth.org/#foo(bar") }
+    it { should parse("/foo(bar") }
+    it { should parse("/foo(bar/") }
+    it { should parse("foo(bar") }
+    it { should parse("foo(t;bar") }
+    it { should parse("foo;bar(nonebaz") }
+    it { should parse("index?foo=bar(nonebaz") }
+    it { should parse("#foo(bar") }
+
+  end
 end
