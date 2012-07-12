@@ -194,7 +194,7 @@ html: '<p><a href="http://slashdot.org/">(just in case you were wondering)</a></
 ---
 name: that has a class and whose text is a parenthetical statement
 in: '"(myclass) (just in case you were wondering)":http://slashdot.org/'
-html: '<p><a href="http://slashdot.org/" class="myclass">(just in case you were wondering)</a></p>'
+html: '<p><a class="myclass" href="http://slashdot.org/">(just in case you were wondering)</a></p>'
 ---
 name: link containing parentheses
 in: '"It is (very) fortunate that this works":http://slashdot.org/'
