@@ -147,4 +147,9 @@ describe RedClothParslet::Parser::Inline do
     it { should parse("I am <b>very</b> serious.").with(transform).
          as(["I am ", html_tag("<b>"), "very", html_tag("</b>"), " serious."]) }
   end
+
+  describe "notextile tags" do
+    it { should parse('This is how you make a link: <notextile>"link":http://www.redcloth.org</notextile>').with(transform).
+         as(["This is how you make a link: ", notextile(%{"link":http://www.redcloth.org})]) }
+  end
 end

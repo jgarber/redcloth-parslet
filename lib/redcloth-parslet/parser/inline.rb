@@ -25,6 +25,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   # Sometimes terms are contiguous, such as <code>*bold*.</code> (bold phrase 
   # followed by a period, which is a word).
   rule(:inline_element) do
+    notextile_tags |
     standalone_en_dash |
     standalone_symbol_from_simple_inline_element |
     space_between_terms |
@@ -224,6 +225,9 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   rule :footnote_reference do
     str("[") >> digits.as(:footnote_reference) >> str("]")
   end
+
+  rule(:notextile_tags) { (str("<notextile>") >> (notextile_end_tag.absent? >> any).repeat.as(:s) >> notextile_end_tag).as(:notextile) }
+  rule(:notextile_end_tag) { str("</notextile>") }
 
   rule(:code_words) do
     (code_chars >> 
