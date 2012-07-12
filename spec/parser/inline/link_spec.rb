@@ -32,6 +32,13 @@ describe RedClothParslet::Parser::Inline do
     end
   end
 
+  describe "#link_content" do
+    it "should parse parenthetical link content" do
+      parser.link_content.should parse('(link content)').with(transform).
+        as("(link content)")
+    end
+  end
+
   describe "#link_title" do
     it "should parse a link title" do
       parser.link_title.should parse('(link title)').with(transform).
@@ -53,6 +60,45 @@ describe RedClothParslet::Parser::Inline do
              link("Wikipedia", {:href=>"http://wikipedia.org/"}),
              " for more."])
     }
+  end
+
+  context "link possibly containing classes, parentheses, and a title" do
+    # "(parenthetical)":http://t.co
+    it { should parse(%{"(parenthetical)":http://t.co}).with(transform).
+         as link('(parenthetical)', :href => 'http://t.co') }
+    # "(class)this":http://t.co
+    it { should parse(%{"(class) this":http://t.co}).with(transform).
+         as link('this', :class => 'class', :href => 'http://t.co') }
+    # "(class) this":http://t.co
+    it { should parse(%{"(class) this":http://t.co}).with(transform).
+         as link('this', :class => 'class', :href => 'http://t.co') }
+    # "(class)(parenthetical)":http://t.co
+    it { should parse(%{"(class)(parenthetical)":http://t.co}).with(transform).
+         as link('(parenthetical)', :class => 'class', :href => 'http://t.co') }
+    # "(class) (parenthetical) (title)":http://t.co
+    it { should parse(%{"(class) (parenthetical) (title)":http://t.co}).with(transform).
+         as link('(parenthetical)', :class => 'class', :href => 'http://t.co', :title => 'title') }
+    # "(class) (parenthetical)(title)":http://t.co
+    it { should parse(%{"(class) (parenthetical)(title)":http://t.co}).with(transform).
+         as link('(parenthetical)', :class => 'class', :href => 'http://t.co', :title => 'title') }
+    # "(class) this (title)":http://t.co
+    it { should parse(%{"(class) this (title)":http://t.co}).with(transform).
+         as link('this', :class => 'class', :href => 'http://t.co', :title => 'title') }
+    # "(class)this (title)":http://t.co
+    it { should parse(%{"(class)this (title)":http://t.co}).with(transform).
+         as link('this', :class => 'class', :href => 'http://t.co', :title => 'title') }
+    # "(class) this(title)":http://t.co
+    it { should parse(%{"(class) this(title)":http://t.co}).with(transform).
+         as link('this', :class => 'class', :href => 'http://t.co', :title => 'title') }
+    # "(class)this(title)":http://t.co
+    it { should parse(%{"(class)this(title)":http://t.co}).with(transform).
+         as link('this', :class => 'class', :href => 'http://t.co', :title => 'title') }
+    # "this(title)":http://t.co
+    it { should parse(%{"this(title)":http://t.co}).with(transform).
+         as link('this', :href => 'http://t.co', :title => 'title') }
+    # "this (title)":http://t.co
+    it { should parse(%{"this (title)":http://t.co}).with(transform).
+         as link('this', :href => 'http://t.co', :title => 'title') }
   end
 
   context "link at the end of a sentence" do
