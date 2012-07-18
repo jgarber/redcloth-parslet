@@ -1,3 +1,36 @@
-RedCloth + Parslet
+h1. RedCloth + Parslet
 
-Yet another attempt to rewrite RedCloth.
+Yet another attempt to rewrite RedCloth, which is a Textile parser for Ruby.
+
+h2. Installation
+
+h2. Changes from RedCloth 4
+
+h3. Gem name no longer case-sensitive
+
+Historically, the RedCloth gem was case-sensitive. @gem install redcloth@ or including @gem 'redcloth'@ in your Gemfile would result in an error. Now, either case works.
+
+h3. hard_breaks option removed
+
+Textile has "always defined line breaks":http://code.google.com/p/textpattern/source/browse/current/textpattern/lib/classTextile.php?r=1#422 to indicate an HTML BR tag, such as in an address or a poem. RedCloth 3 (c. 2004) integrated Markdown formatting, which ignores line breaks, and then RedCloth 4 (c. 2008) removed Markdown and "deprecated the @hard_breaks@ option":https://github.com/jgarber/redcloth/blob/8ba72f35731af053b0bfbef250b58d674c227f7d/lib/redcloth/textile_doc.rb#L28. RedCloth 5 has removed the option entirely.
+
+Ignoring line breaks is not part of the Textile spec. If your document has extraneous line breaks, it must not be Textile. RedCloth 3 and 4 can still parse markup that was intended for them. If you need features or bug fixes from RedCloth 5, consider "upgrading" your input text.
+
+h3. LaTeX formatting extracted
+
+A LaTeX formatter used to be included with RedCloth. It is not anymore, but creating a redcloth-latex gem that defines the formatter class wouldn't be difficult. If you do so, I'll feature your gem here.
+
+h2. Usage
+
+h2. Options and customization
+
+h2. Contributing
+
+h1. Textile
+
+h2. What is Textile?
+
+h2. Reasons to prefer it to Markdown
+
+h2. Reference and resources
+

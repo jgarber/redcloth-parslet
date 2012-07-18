@@ -7,6 +7,7 @@ PATH
 GEM
   remote: http://rubygems.org/
   specs:
+    RedCloth (4.2.9)
     archive-tar-minitar (0.5.2)
     autotest-fsevent (0.2.7)
       sys-uname
@@ -53,11 +54,13 @@ GEM
     ruby_core_source (0.1.5)
       archive-tar-minitar (>= 0.5.2)
     sys-uname (0.8.6)
+    yard (0.8.2.1)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  RedCloth
   autotest-fsevent
   autotest-growl
   autotest-standalone
@@ -67,3 +70,4 @@ DEPENDENCIES
   rspec (~> 2.0)
   ruby-debug
   ruby-debug19
+  yard
