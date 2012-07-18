@@ -80,10 +80,6 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     SIMPLE_INLINE_ELEMENTS.map {|el,mark| send("end_#{el}").absent?.if_excluded(el) }.reduce(:>>)
   end
 
-  rule(:standalone_symbol_from_simple_inline_element) do
-    SIMPLE_INLINE_ELEMENTS.map {|el,mark| (inline_sp >> (typographic_entity >> sp).absent? >> str(mark).repeat(1)).as(:s) >> sp.present? }.reduce(:|)
-  end
-
   # general pattern for inline elements
   SIMPLE_INLINE_ELEMENTS.each do |element_name, signature|
     end_rule_name = "end_#{element_name}".to_sym
@@ -95,11 +91,6 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     rule(end_rule_name) { str(signature) >> match("[a-zA-Z0-9]").absent? }
   end
   # exceptions to above pattern
-  rule(:code) do
-    (str('@') >> 
-        maybe_preceded_by_attributes(code_words.as(:content)) >>
-        end_code).as(:code)
-  end
   rule(:end_strong) { str('*') >> match("[a-zA-Z0-9*]").absent? }
   rule(:end_em) { str('_') >> match("[a-zA-Z0-9_]").absent? }
   rule(:end_cite) { str('??') >> match("[a-zA-Z0-9?]").absent? }
@@ -122,52 +113,6 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
 
   rule(:parenthesized_sovereign_term) { (str('(') >> sovereign_term.as(:content) >> str(')')).as(:parentheses) }
   
-  rule(:code_tag) do
-    (str('<code>') >> 
-        ((end_code_tag.absent? >> any).repeat(1).as(:s)).as(:content) >>
-        end_code_tag).as(:code)
-  end
-  rule(:end_code_tag) { str("</code>") }
-
-  rule(:double_quoted_phrase) do
-    # Nesting can cause sequential quotes or links with the second starting with
-    # a colon, so we have to negate that case to get nesting to work.
-    (str('"') >> str(':').absent? >>
-      inline.exclude(:double_quoted_phrase).as(:content) >>
-      end_double_quoted_phrase).as(:double_quoted_phrase)
-  end
-  rule(:end_double_quoted_phrase) do
-    str('"')
-  end
-
-  rule(:link_content) do
-    (str('(') >> link_content.exclude(:paren).as(:content) >> str(')')).as(:parentheses)|
-    inline.exclude(:link)
-  end
-  rule(:link) do
-    (str('"') >>
-      maybe_preceded_by_attributes(link_content.as(:content)).exclude(:link) >>
-      end_link).as(:link)
-  end
-  rule(:end_link) do
-    inline_sp.maybe >> link_title.maybe >> str('":') >> link_uri.as(:href)
-  end
-  rule(:link_title) do
-    str('(') >> (str(")").absent? >> any).repeat(1).as(:title) >> str(')')
-  end
-
-  rule(:image) do
-    (str('!') >> 
-    maybe_preceded_by_attributes(image_uri.as(:src)) >> 
-    image_alt.maybe >>
-    end_image).as(:image)
-  end
-  rule(:image_alt) { str("(") >> (str(")").absent? >> any).repeat(1).as(:alt) >> str(")") }
-  rule(:end_image) do
-    str('!:') >> link_uri.as(:href) |
-    (str('!') >> match("[a-zA-Z0-9]").absent?)
-  end
-  
   rule(:acronym) do
     (
       match("[A-Z]").as(:s).repeat(1).as(:content) >> 
@@ -183,29 +128,6 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
       (match('[a-z0-9]').repeat(1) >> match('[A-Z]')).absent?
   end
 
-  rule(:dimensions) do
-    (dimension | factor.as(:s)).as(:left) >> 
-    inline_sp?.as(:left_space) >>
-    str('x').as(:entity) >> 
-    inline_sp?.as(:right_space) >> 
-    ((dimensions | dimension | factor.as(:s))).as(:right)
-  end
-  rule(:dimension) do
-    ( factor >> match(%q{['"]}) ).repeat(1).as(:dimension)
-  end
-  rule(:factor) { digits >> (match('[.,/ -]') >> digits).repeat }
-  
-  rule(:typographic_entity) do
-    m_dash |
-    ip_mark |
-    ellipsis
-  end
-
-  rule(:ip_mark) { (str("(") >> (stri("tm") | stri("c") | stri("r")) >> str(")")).as(:entity) }
-  rule(:m_dash) { str('--').as(:entity) >> str('-').repeat }
-  rule(:ellipsis) { str('...').as(:entity) }
-  rule(:standalone_en_dash) { (inline_sp >> str('-')).as(:entity) >> sp.present? }
-  
   rule :word do
     char = (exclude_significant_end_characters >> mchar)
     char.repeat(1).as(:s) >> footnote_reference.maybe
@@ -236,22 +158,11 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   rule(:notextile_double_equals) { (str("==") >> (notextile_double_equals_end.absent? >> any).repeat.as(:s) >> notextile_double_equals_end).as(:notextile) }
   rule(:notextile_double_equals_end) { str("==") }
 
-  rule(:code_words) do
-    (code_chars >> 
-      (match('\s+') >> 
-        (code_chars)
-      ).repeat
-    ).as(:s)
-  end
-  rule(:code_chars) { (end_code.absent? >> match('\S')).repeat(1) | (str('@') >> match('\s').present?) }
   rule(:mchar) { typographic_entity.absent? >> match('\S') }
   rule(:inline_sp) { match('[ \t]').repeat(1) }
   rule(:inline_sp?) { inline_sp.maybe }
   rule(:sp) { inline_sp | str("\n").unless_excluded(:newline) }
-  # rule(:mtext) { mchar.repeat(1) >> (inline_sp >> mchar.repeat(1)) }
-  
-  rule(:image_uri) { RedClothParslet::Parser::Attributes::ImageUri.new }
-  rule(:link_uri) { RedClothParslet::Parser::Attributes::LinkUri.new }
+
   rule(:html_tag) { RedClothParslet::Parser::HtmlTag.new }
 
   def maybe_preceded_by_attributes(content_rule)
@@ -262,3 +173,9 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   rule(:attribute) { RedClothParslet::Parser::Attributes.new.attribute }
   rule(:attributes?) { (exclude_significant_end_characters >> attribute).repeat }
 end
+
+require 'redcloth-parslet/parser/inline/code'
+require 'redcloth-parslet/parser/inline/entities'
+require 'redcloth-parslet/parser/inline/image'
+require 'redcloth-parslet/parser/inline/link'
+require 'redcloth-parslet/parser/inline/quotes'
