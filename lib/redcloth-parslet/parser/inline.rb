@@ -46,16 +46,17 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   end
   
   rule(:sovereign_term) do
-    typographic_entity |
-    image |
-    link.unless_excluded(:link) |
-    double_quoted_phrase.unless_excluded(:double_quoted_phrase) |
-    simple_inline_term |
-    parenthesized_sovereign_term |
-    acronym |
-    all_caps_word |
-    dimensions |
-    html_tag
+    exclude_end_rules >>
+    ( typographic_entity |
+      image |
+      link.unless_excluded(:link) |
+      double_quoted_phrase.unless_excluded(:double_quoted_phrase) |
+      simple_inline_term |
+      parenthesized_sovereign_term |
+      acronym |
+      all_caps_word |
+      dimensions |
+      html_tag )
   end
 
   rule(:forced_inline_term) do
@@ -152,7 +153,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     inline_sp.maybe >> link_title.maybe >> str('":') >> link_uri.as(:href)
   end
   rule(:link_title) do
-    str('(') >> inline.exclude(:paren).as(:title) >> str(')')
+    str('(') >> (str(")").absent? >> any).repeat(1).as(:title) >> str(')')
   end
 
   rule(:image) do
@@ -222,7 +223,10 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     end_double_quoted_phrase.absent?.if_excluded(:double_quoted_phrase) >>
     simple_inline_term_end_exclusion
   end
-  
+  rule :exclude_end_rules do
+    end_link.absent?.if_excluded(:link)
+  end
+
   rule :footnote_reference do
     str("[") >> digits.as(:footnote_reference) >> str("]")
   end

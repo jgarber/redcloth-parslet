@@ -11,7 +11,7 @@ class RedClothParslet::Transform < Parslet::Transform
   # links
   rule(:content => subtree(:c), :href => simple(:h)) {|dict| {:content => dict[:c], :opts => RedClothParslet::Ast::Attributes.new({:href => dict[:h]})} }
   rule(:content => subtree(:c), :attributes => subtree(:a), :href => simple(:h)) {|dict| {:content => dict[:c], :opts => RedClothParslet::Ast::Attributes.new(dict[:a].push({:href => dict[:h]}))} }
-  rule(:content => subtree(:c), :attributes => subtree(:a), :href => simple(:h), :title => subtree(:t)) {|dict| {:content => dict[:c], :opts => RedClothParslet::Ast::Attributes.new(dict[:a].push({:href => dict[:h], :title => dict[:t].join}))} }
+  rule(:content => subtree(:c), :attributes => subtree(:a), :href => simple(:h), :title => simple(:t)) {|dict| {:content => dict[:c], :opts => RedClothParslet::Ast::Attributes.new(dict[:a].push({:href => dict[:h], :title => String(dict[:t])}))} }
 
   # images
   rule(:attributes => subtree(:a), :src => simple(:s)) {|dict| {:opts => RedClothParslet::Ast::Attributes.new(dict[:a].push({:src => dict[:s]}))} }
