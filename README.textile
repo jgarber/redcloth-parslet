@@ -26,6 +26,25 @@ h2. Options and customization
 
 h2. Contributing
 
+h2. Credits
+
+h3. Author
+
+Jason Garber is a Ruby developer in Philadelphia. He has been developing in Ruby since 2005 and has been the official maintainer of RedCloth since 2008.
+
+h3. Acknowledgements
+
+The author would like to thank "all the contributors":https://github.com/jgarber/redcloth/graphs/contributors to RedCloth over the years, but in particular:
+
+* Why the Lucky Stiff (original author, 2003)
+* Bil Kleb (LaTeX formatter, 2009)
+* Ola Bini (JRuby compatibility, 2008)
+* Lucas Carlson (2006)
+
+h2. License
+
+See LICENSE.
+
 h1. Textile
 
 h2. What is Textile?
