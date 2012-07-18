@@ -1,6 +1,6 @@
 h1. RedCloth + Parslet
 
-Yet another attempt to rewrite RedCloth, which is a Textile parser for Ruby.
+Yet another attempt to rewrite RedCloth, which is a Textile parser for Ruby. When finished, it will become RedCloth 5.0.
 
 h2. Installation
 
