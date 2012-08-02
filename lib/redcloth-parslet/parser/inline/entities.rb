@@ -25,4 +25,13 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   rule(:m_dash) { str('--').as(:entity) >> str('-').repeat }
   rule(:ellipsis) { str('...').as(:entity) }
   rule(:standalone_en_dash) { (inline_sp >> str('-')).as(:entity) >> sp.present? }
+
+  rule(:html_entity) do
+    (str('&') >>
+    ( match('[A-Za-z0-9]').repeat(1) |
+      str('#') >> 
+      ( match('[0-9]').repeat(1) |
+        str('x') >> match('[0-9A-Fa-f]').repeat(1) ) ) >>
+    str(';')).as(:entity)
+  end
 end

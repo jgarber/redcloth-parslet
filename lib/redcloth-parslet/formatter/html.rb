@@ -163,7 +163,7 @@ module RedClothParslet::Formatter
     end
 
     def entity(el)
-      ESCAPE_MAP[el.to_s]
+      ESCAPE_MAP[el.to_s] || el.to_s
     end
 
     private

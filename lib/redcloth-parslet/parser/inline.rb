@@ -48,6 +48,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   rule(:sovereign_term) do
     exclude_end_rules >>
     ( typographic_entity |
+      html_entity |
       image |
       link.unless_excluded(:link) |
       double_quoted_phrase.unless_excluded(:double_quoted_phrase) |

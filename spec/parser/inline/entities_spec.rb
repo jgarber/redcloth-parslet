@@ -94,4 +94,28 @@ describe RedClothParslet::Parser::Inline do
       as(entity("(c)"))
     }
   end
+
+  describe "HTML entities" do
+    it { should parse("&pound;").with(transform).
+         as(entity("&pound;"))
+    }
+    it { should parse("&frac12;").with(transform).
+         as(entity("&frac12;"))
+    }
+    it { should parse("&AElig;").with(transform).
+         as(entity("&AElig;"))
+    }
+    it { should parse("&#9731;").with(transform).
+         as(entity("&#9731;"))
+    }
+    it { should parse("&#x2698;").with(transform).
+         as(entity("&#x2698;"))
+    }
+    it { should parse("&#x1f319;").with(transform).
+         as(entity("&#x1f319;"))
+    }
+    it { should parse("&#x1F349;").with(transform).
+         as(entity("&#x1F349;"))
+    }
+  end
 end

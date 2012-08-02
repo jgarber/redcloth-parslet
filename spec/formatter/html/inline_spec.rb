@@ -26,6 +26,12 @@ describe RedClothParslet::Formatter::HTML do
        described_class.new().convert(entity(input)).should == output
      end
     end
+
+    ["&pound;", "&AElig;", "&#9731;", "&#x2698;", "&#x1f319;"].each do |entity|
+      it "should preserve the entity #{entity}" do
+       described_class.new().convert(entity(entity)).should == "#{entity}"
+     end
+    end
   end
 
   describe "apostrophe" do
