@@ -6,7 +6,7 @@ module RedClothParslet
   # for an example.
   module Ast
     # Allow AST classes to be instantiated with a method call
-    # Example: #p is the same as RedClothParslet::Ast::P.new
+    # Example: #html_tag is the same as RedClothParslet::Ast::HtmlTag.new
     def method_missing(m, *args)
       constant = RedClothParslet::Ast
       klass = m.to_s.gsub(/(?:_)?([a-z\d]*)/i) { $1.capitalize }
@@ -17,7 +17,7 @@ module RedClothParslet
       end
     end
 
-    # P for paragraph
+    # P for paragraph instead of puts
     def p(*args)
       method_missing(:p, *args)
     end
