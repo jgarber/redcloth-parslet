@@ -39,4 +39,23 @@ describe RedClothParslet::Parser::Block do
     it { should parse("*(class#id) one\n* two").with(transform).
          as(ul([ li(["one"], {:class=>'class', :id=>'id'}), li(["two"]) ])) }
   end
+
+  describe "dl" do
+    its(:dt) { should parse("- octopus").with(transform).
+               as(dt("octopus")) }
+    its(:dd) { should parse(" := a cat with eight legs").with(transform).
+               as(dd("a cat with eight legs")) }
+    its(:dt) { should parse("- hamlet := a small pig").with(transform).
+               as([dt("hamlet"), dd("a small pig")]) }
+    its(:dt) { should parse("- gum:=hair adhesive").with(transform).
+               as([dt("gum"), dd("hair adhesive")]) }
+
+    it { should parse("- hangover := the wrath of grapes\n- raisin := a grape with a sunburn").with(transform).
+         as(dl( dt("hangover"), dd("the wrath of grapes"), dt("raisin"), dd("a grape with a sunburn") )) }
+
+    describe "inline content" do
+      its(:definition_list_content) { should parse("gossip") }
+      its(:definition_list_content) { should_not parse("hearsay:=") }
+    end
+  end
 end

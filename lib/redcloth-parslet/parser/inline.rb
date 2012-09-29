@@ -41,6 +41,10 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     inline.exclude(:li_start)
   end
   
+  rule(:definition_list_contents) do
+    inline.exclude(:dt_start)
+  end
+  
   rule(:table_contents) do
     (inline_element.exclude(:table_cell_start) | inline_sp.as(:s)).repeat(1)
   end
@@ -139,6 +143,8 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     footnote_reference.absent? >>
     # TODO: make this the same rule as in parser/block/lists.rb so it's DRY.
     (match("[*#]").repeat(1) >> str(" ")).absent?.if_excluded(:li_start) >>
+    # TODO: make this the same rule as in parser/block/lists.rb so it's DRY.
+    (str("- ") | str(":=")).absent?.if_excluded(:dt_start) >>
     # TODO: make this the same rule as in parser/block/tables.rb so it's DRY.
     str("|").absent?.if_excluded(:table_cell_start) >>
     str(')').absent?.if_excluded(:paren) >>

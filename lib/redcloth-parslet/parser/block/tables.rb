@@ -32,6 +32,5 @@ class RedClothParslet::Parser::Block < Parslet::Parser
   end
 
   rule(:inline_sp) { match('[ \t]').repeat(1) }
-  rule(:spaces) { match("[\t ]").repeat }
   
 end

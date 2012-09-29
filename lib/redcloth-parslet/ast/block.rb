@@ -14,6 +14,9 @@ module RedClothParslet::Ast
   class Ul < Element; end
   class Ol < Element; end
   class Li < Element; end
+  class Dl < Element; end
+  class Dt < Element; end
+  class Dd < Element; end
   class Hr < Element; end
 
   class Blockquote < Element; end

@@ -8,6 +8,7 @@ class RedClothParslet::Parser::Block < Parslet::Parser
 
   rule(:block_element) do
     list |
+    definition_list |
     table |
     simple_block_elements |
     notextile_block_tags |
@@ -81,6 +82,7 @@ class RedClothParslet::Parser::Block < Parslet::Parser
   rule(:extended_block_end) { (eof | next_block_start).present? }
   rule(:next_block_start) { match("[a-z]").repeat(1) >> attributes? >> (str('. ') | str('.. ')) }
   rule(:double_newline) { str("\n") >> (match("[\s\t]").repeat >> str("\n")).repeat(1) }
+  rule(:spaces) { match("[\t ]").repeat }
 end
 
 require 'redcloth-parslet/parser/block/lists'
