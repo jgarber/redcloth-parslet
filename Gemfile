@@ -14,7 +14,4 @@ group :development do
   gem 'RedCloth' # <- needed for YARD; this will be problematic
   gem 'ruby-debug', :platforms => :ruby_18
   gem 'ruby-debug19', :platforms => :ruby_19
-  gem 'autotest-standalone'
-  gem 'autotest-fsevent'
-  gem 'autotest-growl'
 end
