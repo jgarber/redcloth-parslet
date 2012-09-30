@@ -96,6 +96,20 @@ describe RedClothParslet::Formatter::HTML do
     }
   end
 
+  describe "dl" do
+    let(:element) { dl([
+      dt(["tact"]),
+      dd(["the ability to close your mouth before someone else wants to"])
+    ]) }
+    it { should == <<-END.gsub(/^ +/, '').chomp
+      <dl>
+      	<dt>tact</dt>
+      	<dd>the ability to close your mouth before someone else wants to</dd>
+      </dl>
+    END
+    }
+  end
+
   describe "table" do
     let(:element) { table([
       table_row([

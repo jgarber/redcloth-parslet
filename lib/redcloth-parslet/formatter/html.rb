@@ -57,7 +57,7 @@ module RedClothParslet::Formatter
       "<p#{html_attributes(el.opts)}>#{inner}</p>"
     end
 
-    [:blockquote].each do |m|
+    [:blockquote, :dl].each do |m|
       define_method(m) do |el|
         "<#{m}#{html_attributes(el.opts)}>\n#{inner(el, true)}</#{m}>"
       end
@@ -83,6 +83,12 @@ module RedClothParslet::Formatter
     def li(el)
       ("\t" * @list_nesting) +
         "<li#{html_attributes(el.opts)}>#{inner(el)}"
+    end
+
+    [:dt, :dd].each do |m|
+      define_method(m) do |el|
+        "\t<#{m}>#{inner(el)}</#{m}>"
+      end
     end
 
     def link(el)
@@ -180,9 +186,7 @@ module RedClothParslet::Formatter
       result
     end
 
-    # Return the converted content of the children of +el+ as a string. The parameter +indent+ has
-    # to be the amount of indentation used for the element +el+.
-    #
+    # Return the converted content of the children of +el+ as a string.
     # Pushes +el+ onto the @stack before converting the child elements and pops it from the stack
     # afterwards.
     def inner(el, block = false, escape_type = nil)
