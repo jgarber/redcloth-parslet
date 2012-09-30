@@ -43,7 +43,7 @@ describe RedClothParslet::Parser::Block do
   describe "dl" do
     its(:dt) { should parse("- octopus").with(transform).
                as(dt("octopus")) }
-    its(:dd) { should parse(" := a cat with eight legs").with(transform).
+    its(:dd) { should parse(":= a cat with eight legs").with(transform).
                as(dd("a cat with eight legs")) }
     its(:definition) { should parse("- hamlet := a small pig").with(transform).
                as([dt("hamlet"), dd("a small pig")]) }

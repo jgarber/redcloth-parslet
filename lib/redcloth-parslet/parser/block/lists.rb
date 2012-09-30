@@ -19,9 +19,9 @@ class RedClothParslet::Parser::Block < Parslet::Parser
   rule(:li_end) { block_end.present? | (block_end.absent? >> str("\n") >> li_start.present?) }
 
   rule(:definition_list) { definition.repeat(1).as(:dl) }
-  rule(:definition) { dt >> (dt_end >> dt).repeat >> dd >> definition_end }
+  rule(:definition) { dt >> (dt_end >> dt).repeat >> spaces >> dd >> definition_end }
   rule(:dt) { (str("- ") >> definition_list_content.as(:content)).as(:dt) }
-  rule(:dd) { (spaces >> str(":=") >> spaces >> definition_list_content.as(:content)).as(:dd) }
+  rule(:dd) { (str(":=") >> spaces >> definition_list_content.as(:content)).as(:dd) }
 
   rule(:dt_start) { str("- ") }
   rule(:dt_end) { block_end.absent? >> str("\n") >> dt_start.present? }
