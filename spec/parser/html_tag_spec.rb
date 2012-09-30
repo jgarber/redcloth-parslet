@@ -7,6 +7,7 @@ describe RedClothParslet::Parser::HtmlTag do
     it { should parse("<br class='clear' />") }
     it { should parse("<div selected>") }
     it { should parse("</div>") }
+    it { should parse("<!-- an HTML comment\n\nspanning multiple blocks-->") }
   end
 
   describe "attribute" do

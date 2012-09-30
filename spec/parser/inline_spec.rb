@@ -146,6 +146,8 @@ describe RedClothParslet::Parser::Inline do
          as(["Fluffy ", html_tag("<img src='bunnies' />"), "."]) }
     it { should parse("I am <b>very</b> serious.").with(transform).
          as(["I am ", html_tag("<b>"), "very", html_tag("</b>"), " serious."]) }
+    it { should parse('<!-- comment -->').with(transform).
+         as(html_tag('<!-- comment -->')) }
   end
 
   describe "notextile" do

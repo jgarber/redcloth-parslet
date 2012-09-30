@@ -7,13 +7,21 @@ module RedClothParslet::Parser
       (
         open_tag |
         close_tag |
-        self_closing_tag
+        self_closing_tag |
+        comment_tag
       ).as(:html_tag)
     end
 
     rule(:self_closing_tag) { str("<") >> tag_name >> attributes? >> (spaces? >> str("/")) >> str(">") }
     rule(:open_tag) { str("<") >> tag_name >> attributes? >> str(">") }
     rule(:close_tag) { str("</") >> tag_name >> str(">") }
+
+    rule(:comment_tag) do
+      str("<!--") >>
+      (comment_tag_end.absent? >> any).repeat >>
+      comment_tag_end
+    end
+    rule(:comment_tag_end) { str("-->") }
 
     rule(:tag_name) { any_tag_name }
     rule(:any_tag_name) { match("[A-Za-z_:]") >> name_char.repeat }

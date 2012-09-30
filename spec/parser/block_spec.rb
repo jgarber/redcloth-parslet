@@ -96,7 +96,6 @@ describe RedClothParslet::Parser::Block do
     (1..6).each do |num|
       it { should parse("h#{num}. Heading #{num}").with(transform).
            as(RedClothParslet::Ast.const_get("H#{num}").new("Heading #{num}")) }
-
     end
   end
 
@@ -140,5 +139,10 @@ describe RedClothParslet::Parser::Block do
       link_aliases.should have_key("redcloth")
       link_aliases["redcloth"].should == "http://redcloth.org"
     end
+  end
+
+  context "html" do
+    it { should parse('<!-- comment -->').with(transform).
+         as(html_tag('<!-- comment -->')) }
   end
 end
