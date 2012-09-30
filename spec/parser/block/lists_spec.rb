@@ -45,10 +45,20 @@ describe RedClothParslet::Parser::Block do
                as(dt("octopus")) }
     its(:dd) { should parse(" := a cat with eight legs").with(transform).
                as(dd("a cat with eight legs")) }
-    its(:dt) { should parse("- hamlet := a small pig").with(transform).
+    its(:definition) { should parse("- hamlet := a small pig").with(transform).
                as([dt("hamlet"), dd("a small pig")]) }
-    its(:dt) { should parse("- gum:=hair adhesive").with(transform).
+    its(:definition) { should parse("- gum:=hair adhesive").with(transform).
                as([dt("gum"), dd("hair adhesive")]) }
+
+    its(:dt) { should parse("- line-spanning\nterm").with(transform).
+               as(dt("line-spanning\nterm")) }
+    its(:dd) { should parse(":= line-spanning\ndefinition").with(transform).
+               as(dd("line-spanning\ndefinition")) }
+
+    its(:definition_list) { should_not parse("- one\n- two\n- three") }
+
+    it { should parse("- rabbit\n- bunny := the cutest rodent you've ever seen").with(transform).
+         as(dl( dt("rabbit"), dt("bunny"), dd("the cutest rodent you've ever seen") )) }
 
     it { should parse("- hangover := the wrath of grapes\n- raisin := a grape with a sunburn").with(transform).
          as(dl( dt("hangover"), dd("the wrath of grapes"), dt("raisin"), dd("a grape with a sunburn") )) }

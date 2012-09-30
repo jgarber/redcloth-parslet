@@ -18,12 +18,14 @@ class RedClothParslet::Parser::Block < Parslet::Parser
   end
   rule(:li_end) { block_end.present? | (block_end.absent? >> str("\n") >> li_start.present?) }
 
-  rule(:definition_list) { dt.repeat(2).as(:dl) }
-  rule(:dt) { (str("- ") >> definition_list_content.as(:content)).as(:dt) >> dd.maybe >> dt_end }
+  rule(:definition_list) { definition.repeat(1).as(:dl) }
+  rule(:definition) { dt >> (dt_end >> dt).repeat >> dd >> definition_end }
+  rule(:dt) { (str("- ") >> definition_list_content.as(:content)).as(:dt) }
   rule(:dd) { (spaces >> str(":=") >> spaces >> definition_list_content.as(:content)).as(:dd) }
 
   rule(:dt_start) { str("- ") }
-  rule(:dt_end) { block_end.present? | (block_end.absent? >> str("\n") >> dt_start.present?) }
+  rule(:dt_end) { block_end.absent? >> str("\n") >> dt_start.present? }
+  rule(:definition_end) { block_end.present? | dt_end }
 
   rule(:list_content) { RedClothParslet::Parser::Inline.new.list_contents }
 
