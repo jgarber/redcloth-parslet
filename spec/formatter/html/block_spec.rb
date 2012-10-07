@@ -55,6 +55,11 @@ describe RedClothParslet::Formatter::HTML do
     it { should == "<pre><code>def leopard()\n\tpurr\nend</code></pre>" }
   end
 
+  describe "hard break" do
+    let(:element) { br() }
+    it { should == "<br />" }
+  end
+
   describe "horizontal rule" do
     let(:element) { hr() }
     it { should == "<hr />" }

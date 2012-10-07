@@ -145,8 +145,10 @@ module RedClothParslet::Formatter
       %Q{<p#{html_attributes(el.opts)}><a href="#fnr#{num}"><sup>#{num}</sup></a> #{inner(el)}</p>}
     end
 
-    def hr(el)
-      "<hr />"
+    [:hr, :br].each do |m|
+      define_method(m) do |el|
+        "<#{m}#{html_attributes(el.opts)} />"
+      end
     end
 
     %w(pre code).each do |tag|
