@@ -23,8 +23,13 @@ class RedClothParslet::Parser::Block < Parslet::Parser
     pre_block |
     pre_tag_block |
     block_html_tag |
-    hr |
+    self_closing_block_elements |
+    section_break |
     undecorated_paragraph
+  end
+
+  rule(:self_closing_block_elements) do
+    [:hr, :br].map {|type| (str(type) >> attributes?.as(:attributes) >> str(".") >> spaces >> block_end).as(type) }.reduce(:|)
   end
 
   SIMPLE_BLOCK_ELEMENTS = [:div, :p] +
@@ -66,7 +71,7 @@ class RedClothParslet::Parser::Block < Parslet::Parser
   rule(:blockcode) { (str("bc. ") >> (block_end.absent? >> any).repeat.as(:s) >> block_end).as(:bc) }
   rule(:extended_blockcode) { (str("bc.. ") >> ((str("\n") >> extended_block_end).absent? >> any).repeat.as(:s) >> extended_block_end).as(:bc) }
 
-  rule(:hr) { (str("*").repeat(3) | str("-").repeat(3) | str("_").repeat(3)).as(:hr) >> block_end }
+  rule(:section_break) { (str("*").repeat(3) | str("-").repeat(3) | str("_").repeat(3)).as(:section_break) >> block_end }
 
   rule(:undecorated_block) { content.as(:content) >> block_end }
   rule(:undecorated_paragraph) { unfinished_quote_paragraph | undecorated_block.as(:p) }

@@ -121,6 +121,15 @@ describe RedClothParslet::Parser::Block do
          as(hr()) }
     it { should parse("___").with(transform).
          as(hr()) }
+    it { should parse("hr. ").with(transform).
+         as(hr()) }
+    it { should parse("hr(class).").with(transform).
+         as(hr({:class => 'class'})) }
+  end
+
+  describe "hard break" do
+    it { should parse("br(class).").with(transform).
+         as(br({:class => 'class'})) }
   end
 
   describe "footnote" do

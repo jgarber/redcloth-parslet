@@ -3,6 +3,7 @@ class RedClothParslet::Transform < Parslet::Transform
   rule(:s => simple(:s)) { String(s) }
   rule(:s => simple(:s), :footnote_reference => simple(:footnote_reference)) { [String(s), RedClothParslet::Ast::FootnoteReference.new(String(footnote_reference))] }
   rule(:caps => simple(:s)) { RedClothParslet::Ast::Caps.new(String(s)) }
+  rule(:attributes => subtree(:a)) {|dict| {:opts => RedClothParslet::Ast::Attributes.new(dict[:a])} }
 
   # content
   rule(:content => subtree(:c)) {|dict| {:content => dict[:c], :opts => {}} }
@@ -57,7 +58,9 @@ class RedClothParslet::Transform < Parslet::Transform
     RedClothParslet::Ast::TableData.new(a[:content], a[:opts])
   end
   rule(:table_header => subtree(:a)) { RedClothParslet::Ast::TableHeader.new(a[:content], a[:opts]) }
-  rule(:hr => subtree(:a)) { RedClothParslet::Ast::Hr.new() }
+  rule(:section_break => simple(:s)) { RedClothParslet::Ast::Hr.new }
+  rule(:hr => subtree(:a)) { RedClothParslet::Ast::Hr.new(a[:opts]) }
+  rule(:br => subtree(:a)) { RedClothParslet::Ast::Br.new(a[:opts]) }
 
   RedClothParslet::Parser::Inline::SIMPLE_INLINE_ELEMENTS.each do |block_type, symbol|
     rule(block_type => subtree(:a)) do

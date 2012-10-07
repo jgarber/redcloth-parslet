@@ -18,6 +18,7 @@ module RedClothParslet::Ast
   class Dt < Element; end
   class Dd < Element; end
   class Hr < Element; end
+  class Br < Element; end
 
   class Blockquote < Element; end
   class Blockcode < Element; end
