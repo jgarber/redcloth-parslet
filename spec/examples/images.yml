@@ -237,7 +237,7 @@ latex: |+
 ---
 name: image attributes has double quote html entity in alt and title
 in: '!/pictures/bacon.jpg(The fox said: "Have some chunky bacon")!'
-html: '<p><img alt="The fox said: &quot;Have some chunky bacon&quot; src="/pictures/bacon.jpg" title="The fox said: &quot;Have some chunky bacon&quot;"" /></p>'
+html: '<p><img alt="The fox said: &quot;Have some chunky bacon&quot;" src="/pictures/bacon.jpg" title="The fox said: &quot;Have some chunky bacon&quot;" /></p>'
 latex: |+
   \begin{figure}
     \centering
