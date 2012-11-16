@@ -218,11 +218,11 @@ html: <p><img alt="" class="myclass" src="../../image.jpg" /></p>
 ---
 name: image with style
 in: "!{color:red}image.jpg!"
-html: <p><img alt="" style="color:red;" src="image.jpg" /></p>
+html: <p><img alt="" src="image.jpg" style="color:red;" /></p>
 ---
 name: image with style and dotspace
 in: "!{color:red}. image.jpg!"
-html: <p><img alt="" style="color:red;" src="image.jpg" /></p>
+html: <p><img alt="" src="image.jpg" style="color:red;" /></p>
 ---
 name: image attributes has ampersand html entity in alt and title
 in: "!/pictures/cat_and_fox.jpg(Trady Blix & The cartoon fox)!"
