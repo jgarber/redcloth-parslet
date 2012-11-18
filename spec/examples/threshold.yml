@@ -269,7 +269,7 @@ in: |-
 html: |-
   <pre><code>&lt;script&gt;
   // a Javascript example
-  alert("Hello World");
+  alert(&quot;Hello World&quot;);
   &lt;/script&gt;</code></pre>
 ---
 name: preformatted text
@@ -376,7 +376,7 @@ html: |-
   function hello() {
   // display a hello message</code>
 
-  <code>print "Hello, World";
+  <code>print &quot;Hello, World&quot;;
   }
   ?&gt;</code></pre>
   <p>Following paragraph.</p>
