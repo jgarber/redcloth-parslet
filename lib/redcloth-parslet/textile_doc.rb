@@ -75,18 +75,6 @@ module RedClothParslet
       RedClothParslet::Formatter::HTML.new(opts).convert(self)
     end
 
-    #
-    # Generates LaTeX from the Textile contents.
-    #
-    #   RedCloth.new( "And then? She *fell*!" ).to_latex
-    #     #=> "And then? She \\textbf{fell}!\n\n"
-    #
-    def to_latex( *rules )
-      apply_rules(rules)
-
-      RedClothParslet::Formatter::LATEX.new.convert(self)
-    end
-
     private
     def apply_rules(rules)
       rules.each do |r|

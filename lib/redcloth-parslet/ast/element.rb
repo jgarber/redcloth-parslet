@@ -25,7 +25,7 @@ module RedClothParslet::Ast
     def inspect
       opts_inspection = " opts:#{opts.inspect}"
       children_inspection = " children:#{children.inspect}"
-      "#<#{self.class}#{opts_inspection if opts.any?}#{children_inspection if children.any?}>"
+      "#<#{self.class}#{opts_inspection if opts && opts.any?}#{children_inspection if children.any?}>"
     end
     
     def ==(other)
