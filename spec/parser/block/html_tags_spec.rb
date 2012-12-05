@@ -23,5 +23,10 @@ describe RedClothParslet::Parser::Block do
       it { should parse("<pre>\n<code>\nNo breaks</code>\n</pre>").with(transform).
            as(pre(["\n", code("\nNo breaks", :open_tag => '<code>'), "\n"], :open_tag => "<pre>")) }
     end
+
+    describe "unknown tag is a block tag by default" do
+      it { should parse(%Q{<abc def="a=1&b=2">}).with(transform).
+           as(html_tag(%Q{<abc def="a=1&b=2">})) }
+    end
   end
 end
