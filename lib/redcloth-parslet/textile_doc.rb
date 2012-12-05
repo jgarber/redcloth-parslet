@@ -24,14 +24,6 @@ module RedClothParslet
     #
     attr_accessor :filter_html, :sanitize_html, :filter_styles, :filter_classes, :filter_ids
 
-    #
-    # Accessor for toggling hard breaks.
-    #
-    # Set to +true+ by default, RedCloth converts single newlines 
-    # to HTML BR tags. It is not advisable to disable hard breaks.
-    #
-    attr_accessor :hard_breaks
-
     # Accessor for toggling lite mode.
     #
     # In lite mode, block-level rules are ignored.  This means
