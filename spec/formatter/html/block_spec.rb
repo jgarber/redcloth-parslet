@@ -49,7 +49,7 @@ describe RedClothParslet::Formatter::HTML do
     let(:element) { code("\nThe bold tag is <b>\n", :open_tag => '<code>') }
     it { should == "<code>\nThe bold tag is &lt;b&gt;\n</code>" }
   end
-  
+
   describe "blockcode" do
     let(:element) { blockcode("def leopard()\n\tpurr\nend") }
     it { should == "<pre><code>def leopard()\n\tpurr\nend</code></pre>" }
@@ -150,5 +150,4 @@ describe RedClothParslet::Formatter::HTML do
     let(:element) { footnote("A footnote", :number => "1") }
     it { should == '<p class="footnote" id="fn1"><a href="#fnr1"><sup>1</sup></a> A footnote</p>' }
   end
-
 end

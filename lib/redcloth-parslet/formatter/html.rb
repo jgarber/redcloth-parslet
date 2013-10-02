@@ -7,9 +7,14 @@ module RedClothParslet::Formatter
     end
 
     def convert(root)
+      @root = root
       @output = ""
       @stack = []
       send(root.type, root)
+    end
+
+    def filter_html?
+      @root.filter_html
     end
 
     ESCAPE_MAP = {
@@ -32,8 +37,9 @@ module RedClothParslet::Formatter
     }
     TYPOGRAPHIC_ESCAPE_MAP = ESCAPE_MAP.merge("'" => "&#8217;")
     CHARS_TO_BE_ESCAPED = {
-      :all => /<|>|&|\n|"|'/,
-      :pre => /<|>|&|'|"/,
+      :all => /<|>|&|\n|'/,
+      :pre => /<|>|&|'/,
+      :tag => /<|>|&/,
       :attribute => /<|>|&|"/
     }
 
@@ -163,11 +169,13 @@ module RedClothParslet::Formatter
     end
 
     def notextile(el)
-      el.children.join
+      out = el.children.join
+      filter_html? ? escape_html(out) : out
     end
 
     def html_tag(el)
-      el.children.join
+      out = el.children.join
+      filter_html? ? escape_html(out, :tag) : out
     end
 
     def entity(el)

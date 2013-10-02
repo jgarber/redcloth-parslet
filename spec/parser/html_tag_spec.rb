@@ -14,9 +14,9 @@ describe RedClothParslet::Parser::HtmlTag do
     let(:parser) { described_class.new.attribute }
     subject { described_class.new.attribute }
 
-    it { should parse(" class=''") }    
+    it { should parse(" class=''") }
     it { should parse(' class=""') }
-    it { should parse(" class='awesome'") }    
+    it { should parse(" class='awesome'") }
     it { should parse(' class="rad"') }
 
     it { should_not parse(' 9kittens="cute"') }
