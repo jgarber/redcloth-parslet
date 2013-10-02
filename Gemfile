@@ -12,6 +12,5 @@ end
 group :development do
   gem 'yard'
   gem 'RedCloth' # <- needed for YARD; this will be problematic
-  gem 'ruby-debug', :platforms => :ruby_18
-  gem 'ruby-debug19', :platforms => :ruby_19
+  gem 'pry'
 end
