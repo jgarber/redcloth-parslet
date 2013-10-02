@@ -3,6 +3,7 @@ module RedClothParslet::Ast
   class Notextile < Element; end
   class Pre < Element; end
   class HtmlTag < Element; end
+  class HtmlElement < Element; end
   class EscapedHtml < Element; end
   class H1 < Element; end
   class H2 < Element; end

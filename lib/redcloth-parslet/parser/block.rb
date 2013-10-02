@@ -22,6 +22,7 @@ class RedClothParslet::Parser::Block < Parslet::Parser
     extended_pre_block |
     pre_block |
     pre_tag_block |
+    block_html |
     block_html_tag |
     self_closing_block_elements |
     section_break |
@@ -78,6 +79,7 @@ class RedClothParslet::Parser::Block < Parslet::Parser
   rule(:unfinished_quote_paragraph) { (str('"').present? >> undecorated_block).as(:p_open_quote) }
 
   rule(:content) { RedClothParslet::Parser::Inline.new }
+  rule(:block_html) { RedClothParslet::Parser::BlockHtmlElement.new }
   rule(:block_html_tag) { RedClothParslet::Parser::BlockHtmlTag.new >> (str("\n").repeat(1) | eof) }
 
   rule(:attributes?) { RedClothParslet::Parser::Attributes.new.attribute.repeat }

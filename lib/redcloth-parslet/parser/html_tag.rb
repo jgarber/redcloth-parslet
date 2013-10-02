@@ -40,6 +40,12 @@ module RedClothParslet::Parser
     rule(:space) { match("[ \t]") }
     rule(:spaces) { space.repeat(1) }
     rule(:spaces?) { space.repeat }
+
+    rule(:element) do
+      open_tag.as(:open_tag) >>
+      ((close_tag).absent? >> any.as(:s)).repeat.as(:content) >>
+      close_tag.as(:close_tag)
+    end
   end
 
   class BlockHtmlTag < HtmlTag
@@ -54,22 +60,22 @@ module RedClothParslet::Parser
     end
   end
 
-  class CodeTag < HtmlTag
-    rule(:tag_name) { str("code") }
-
-    rule(:tag) do
-      (open_tag.as(:open_tag) >>
-      ((close_tag).absent? >> any.as(:s)).repeat.as(:content) >>
-      close_tag.as(:close_tag)).as(:code_tag)
-    end
+  class BlockHtmlElement < BlockHtmlTag
+    root(:element)
   end
+
+  class CodeElement < HtmlTag
+    root(:element)
+    rule(:tag_name) { str("code") }
+  end
+
   class PreTag < HtmlTag
     rule(:tag_name) { str("pre") }
 
     rule(:tag) do
       (open_tag.as(:open_tag) >>
-      ((close_tag).absent? >> (CodeTag.new | any.as(:s))).repeat.as(:content) >>
-      close_tag.as(:close_tag)).as(:pre_tag)
+      ((close_tag).absent? >> (CodeElement.new.as(:code_element) | any.as(:s))).repeat.as(:content) >>
+      close_tag.as(:close_tag)).as(:pre_element)
     end
   end
 end

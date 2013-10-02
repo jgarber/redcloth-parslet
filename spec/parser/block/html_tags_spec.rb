@@ -3,11 +3,20 @@ describe RedClothParslet::Parser::Block do
 
   describe "HTML tags" do
     describe "div" do
-      it { should parse("<div>\nSomething inside.\n\n</div>").with(transform).
-           as([
-             html_tag("<div>"),
-             p("Something inside."),
-             html_tag("</div>") ]) }
+      context "with line breaks" do
+        it { should parse("<div>\nSomething inside.\n\n</div>").with(transform).
+             as([
+               html_tag("<div>"),
+               p("Something inside."),
+               html_tag("</div>") ]) }
+      end
+
+      context "without line breaks" do
+        it { should parse("<div>Something inside.</div>").with(transform).
+             as([
+               html_element("Something inside.", :open_tag => "<div>", :close_tag => "</div>")
+        ]) }
+      end
     end
 
     describe "pre" do

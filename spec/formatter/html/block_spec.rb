@@ -16,6 +16,11 @@ describe RedClothParslet::Formatter::HTML do
     end
   end
 
+  describe "html_element" do
+    let(:element) { html_element(["content"], :open_tag => "<div>", :close_tag => "</div>") }
+    it { should == "<div>content</div>" }
+  end
+
   describe "bq" do
     let(:element) { blockquote([ p(["My paragraph."]) ]) }
     it { should == "<blockquote>\n<p>My paragraph.</p>\n</blockquote>" }

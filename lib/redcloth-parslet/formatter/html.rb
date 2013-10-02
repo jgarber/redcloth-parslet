@@ -13,10 +13,6 @@ module RedClothParslet::Formatter
       send(root.type, root)
     end
 
-    def filter_html?
-      @root.filter_html
-    end
-
     ESCAPE_MAP = {
       '<' => '&lt;',
       '>' => '&gt;',
@@ -170,12 +166,18 @@ module RedClothParslet::Formatter
 
     def notextile(el)
       out = el.children.join
-      filter_html? ? escape_html(out) : out
+      filter_html(out)
+    end
+
+    def html_element(el)
+      filter_html(el.opts[:open_tag], :tag) +
+      inner(el) +
+      filter_html(el.opts[:close_tag], :tag)
     end
 
     def html_tag(el)
       out = el.children.join
-      filter_html? ? escape_html(out, :tag) : out
+      filter_html(out, :tag)
     end
 
     def entity(el)
@@ -252,6 +254,11 @@ module RedClothParslet::Formatter
         attrs[key.to_s] = value
         attrs
       end.sort
+    end
+
+    def filter_html(str, type = :all)
+      return str unless @root.respond_to?(:filter_html) && @root.filter_html
+      escape_html(str, type)
     end
 
     def escape_html(str, type = :all)
