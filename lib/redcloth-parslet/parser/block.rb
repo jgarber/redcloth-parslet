@@ -19,11 +19,11 @@ class RedClothParslet::Parser::Block < Parslet::Parser
     blockcode |
     footnote |
     link_alias |
+    pre_tag_block |
+    block_html_tag |
     extended_pre_block |
     pre_block |
-    pre_tag_block |
     block_html |
-    block_html_tag |
     self_closing_block_elements |
     section_break |
     undecorated_paragraph

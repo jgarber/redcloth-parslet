@@ -33,5 +33,14 @@ module RedClothParslet::Ast
       children == other.children &&
       opts == other.opts
     end
+
+    # Is this what's supposed to be???
+    def [](symbol)
+      case symbol
+      when :content
+        children
+      else opts[symbol]
+      end
+    end
   end
 end
