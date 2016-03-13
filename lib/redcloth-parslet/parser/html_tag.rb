@@ -1,5 +1,5 @@
 module RedClothParslet::Parser
-  INLINE_TAGS = %w(a applet basefont bdo br font iframe img map object param embed q script span sub sup abbr acronym cite code del dfn em ins kbd samp strong var b big i s small strike tt u)
+  INLINE_TAGS = %w(a applet basefont bdo br font iframe img map object param embed q script span sub sup abbr acronym cite code del dfn em ins kbd samp strong var b big i s small strike tt u notextile)
 
   class HtmlTag < Parslet::Parser
     root(:tag)
@@ -62,6 +62,12 @@ module RedClothParslet::Parser
 
   class BlockHtmlElement < BlockHtmlTag
     root(:element)
+  end
+
+  class BrTag < HtmlTag
+    rule(:tag_name) { str("br") }
+    rule(:self_closing_tag) { str("<") >> tag_name >> attributes? >> (spaces? >> str("/")) >> str(">") >> spaces? >> str("\n").maybe }
+    rule(:open_tag) { str("<") >> tag_name >> attributes? >> str(">") >> spaces? >> str("\n").maybe }
   end
 
   class CodeElement < HtmlTag

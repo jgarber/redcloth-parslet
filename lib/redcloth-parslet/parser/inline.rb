@@ -61,6 +61,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
       acronym |
       all_caps_word |
       dimensions |
+      br_tag |
       html_tag )
   end
 
@@ -141,10 +142,10 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     html_tag.absent? >>
     forced_inline_term.absent? >>
     footnote_reference.absent? >>
-    # TODO: make this the same rule as in parser/block/lists.rb so it's DRY.
-    (match("[*#]").repeat(1) >> str(" ")).absent?.if_excluded(:li_start) >>
-    # TODO: make this the same rule as in parser/block/lists.rb so it's DRY.
-    (str("- ") | str(":=")).absent?.if_excluded(:dt_start) >>
+    # is_li.absent? >>
+    # (is_dt | is_dd.nif_excluded(:dt_start)).absent? >>
+    is_li.absent?.if_excluded(:li_start) >>
+    (is_dt | is_dd).absent?.if_excluded(:dt_start) >>
     # TODO: make this the same rule as in parser/block/tables.rb so it's DRY.
     str("|").absent?.if_excluded(:table_cell_start) >>
     str(')').absent?.if_excluded(:paren) >>
@@ -170,10 +171,15 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   rule(:inline_sp?) { inline_sp.maybe }
   rule(:sp) { inline_sp | str("\n").unless_excluded(:newline) }
 
+  rule(:br_tag) { RedClothParslet::Parser::BrTag.new }
   rule(:html_tag) { RedClothParslet::Parser::HtmlTag.new }
 
+  rule(:is_li) { RedClothParslet::Parser::Block.new.li_start }
+  rule(:is_dt) { RedClothParslet::Parser::Block.new.dt_start }
+  rule(:is_dd) { RedClothParslet::Parser::Block.new.dd_start }
+
   def maybe_preceded_by_attributes(content_rule)
-    attributes?.as(:attributes) >> inline_sp.maybe >> content_rule |
+    attributes?.as(:attributes) >> str(".").maybe >> inline_sp.maybe >> content_rule |
     content_rule
   end
 

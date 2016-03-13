@@ -7,8 +7,16 @@ class Parslet::Atoms::Base
     ExclusiveCompare.new(self, name)
   end
 
+  def nif_excluded(name)
+    ExclusiveCompare.new(self, name, true, true)
+  end
+
   def unless_excluded(name)
     ExclusiveCompare.new(self, name, false)
+  end
+
+  def nunless_excluded(name)
+    ExclusiveCompare.new(self, name, false, true)
   end
 end
 
@@ -54,12 +62,12 @@ private
 end
 
 class ExclusiveCompare < Parslet::Atoms::Base
-  attr_reader :parslet, :name, :positive
-  def initialize(parslet, name, positive=true)
+  attr_reader :parslet, :name, :positive, :flip
+  def initialize(parslet, name, positive=true, flip=false)
     super()
-    @parslet, @name, @positive = parslet, name, positive
+    @parslet, @name, @positive, @flip = parslet, name, positive, flip
     @error_msgs = {
-      :excluded  => "#{name} is excluded in this context", 
+      :excluded  => "#{name} is #{"reverse-" if flip}excluded in this context", 
     }
   end
 
@@ -67,7 +75,8 @@ class ExclusiveCompare < Parslet::Atoms::Base
     if positive ^ exclusion_stack(context).include?(name)
       # skip evaluation of the parslet because it is
       # excluded in this context
-      return positive ? succ(nil) : context.err(self, source, @error_msgs[:excluded])
+      judgment = flip ^ positive
+      return judgment ? succ(nil) : context.err(self, source, @error_msgs[:excluded])
     else
       parslet.try(source, context)
     end

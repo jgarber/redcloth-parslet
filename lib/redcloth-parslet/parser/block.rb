@@ -1,5 +1,6 @@
 class RedClothParslet::Parser::Block < Parslet::Parser
   include RedClothParslet::Parser::Common
+  require 'pry-byebug'
 
   root(:textile_doc)
   rule(:textile_doc) do
@@ -20,10 +21,10 @@ class RedClothParslet::Parser::Block < Parslet::Parser
     footnote |
     link_alias |
     pre_tag_block |
-    block_html_tag |
     extended_pre_block |
     pre_block |
     block_html |
+    block_html_tag |
     self_closing_block_elements |
     section_break |
     undecorated_paragraph
@@ -85,11 +86,13 @@ class RedClothParslet::Parser::Block < Parslet::Parser
   rule(:attributes?) { RedClothParslet::Parser::Attributes.new.attribute.repeat }
 
   rule(:eof) { str("\n").repeat >> any.absent? }
-  rule(:block_end) { eof | double_newline }
-  rule(:extended_block_end) { (eof | next_block_start).present? }
+  rule(:basic_block_end) { eof | double_newline }
+  rule(:block_end) { basic_block_end | immediate_li }
+  rule(:extended_block_end) { (eof | next_block_start | immediate_li).present? }
   rule(:next_block_start) { match("[a-z]").repeat(1) >> attributes? >> (str('. ') | str('.. ')) }
   rule(:double_newline) { str("\n") >> (match("[\s\t]").repeat >> str("\n")).repeat(1) }
   rule(:spaces) { match("[\t ]").repeat }
+  rule(:immediate_li) { str("\n") >> (li_start | dt).present? }
 end
 
 require 'redcloth-parslet/parser/block/lists'

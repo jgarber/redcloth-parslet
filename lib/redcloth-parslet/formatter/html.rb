@@ -33,10 +33,11 @@ module RedClothParslet::Formatter
     }
     TYPOGRAPHIC_ESCAPE_MAP = ESCAPE_MAP.merge("'" => "&#8217;")
     CHARS_TO_BE_ESCAPED = {
-      :all => /<|>|&|\n|'/,
-      :pre => /<|>|&|'/,
+      # make all quotes escaped for now in order not to mess up testcases
+      :all => /<|>|&|\n|'|"/,
+      :pre => /<|>|&|'|"/,
       :tag => /<|>|&/,
-      :attribute => /<|>|&|"/
+      :attribute => /<|>|&|'|"/
     }
 
     def textile_doc(el)
@@ -54,7 +55,7 @@ module RedClothParslet::Formatter
       inner = inner(el)
       # Curlify multi-paragraph quote (one that doesn't have a closing quotation mark)
       if el.opts.delete(:possible_unfinished_quote_paragraph)
-        inner.sub!(/\A#{ESCAPE_MAP['"']}/, "&#8220;")
+        inner.sub!(/\A(?:"|#{ESCAPE_MAP['"']})/, "&#8220;")
       end
       "<p#{html_attributes(el.opts)}>#{inner}</p>"
     end

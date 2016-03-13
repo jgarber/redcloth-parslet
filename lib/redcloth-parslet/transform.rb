@@ -23,6 +23,9 @@ class RedClothParslet::Transform < Parslet::Transform
   rule(:layout => simple(:l), :continuation => simple(:cont), :attributes => subtree(:a), :content => subtree(:c)) {|dict|
     {:layout => dict[:l], :continuation => dict[:cont], :content => dict[:c], :opts => RedClothParslet::Ast::Attributes.new(dict[:a])}
   }
+  rule(:layout => simple(:l), :attributes => subtree(:a), :content => subtree(:c)) {|dict|
+    {:layout => dict[:l], :content => dict[:c], :opts => RedClothParslet::Ast::Attributes.new(dict[:a])}
+  }
   rule(:dl => subtree(:c)) { RedClothParslet::Ast::Dl.new(c) }
   rule(:dt => subtree(:dt), :dd => subtree(:dd)) do
     [ RedClothParslet::Ast::Dt.new(dt[:content]),

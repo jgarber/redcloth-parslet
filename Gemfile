@@ -12,5 +12,5 @@ end
 group :development do
   gem 'yard'
   gem 'RedCloth' # <- needed for YARD; this will be problematic
-  gem 'pry'
+  gem 'pry-byebug'
 end
