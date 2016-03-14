@@ -60,7 +60,8 @@ module RedClothParslet::Ast
         list_nesting.last.children << closed_list
       end
       list_start_number = list_nesting.first.opts[:start] || 1
-      @@last_list_count = list_start_number + list_nesting.first.children.size - 1
+      list_count = list_nesting.first.children.select { |ch| ch.is_a? RedClothParslet::Ast::Li }.size
+      @@last_list_count = list_start_number + list_count - 1
       list_nesting.first
     end
   end

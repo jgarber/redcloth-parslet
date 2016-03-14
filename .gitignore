@@ -46,4 +46,4 @@ Temporary Items
 .yardoc/
 *.sublime-project
 *.sublime-workspace
-format-html-errors.txt
+*-errors.txt

@@ -19,18 +19,17 @@ class RedClothParslet::Parser::Block < Parslet::Parser
   rule(:end_table_row) { str("|") >> (block_end.present? | (str("\n"))) }
   
   rule(:table_header) do
-    (str("|_. ") >> table_content.as(:content)).as(:table_header)
+    (str("|_") >> (td_attributes | dotspace) >> table_content.as(:content)).as(:table_header)
   end
   rule(:table_data) do
     (str("|") >> str("\n").absent? >> td_attributes? >> table_content.as(:content)).as(:table_data)
   end
   
-  rule(:table_content) { (end_table_row.absent? >> RedClothParslet::Parser::Inline.new.inline_element.exclude(:table_cell_start) | inline_sp.as(:s)).repeat(1) }
-  rule(:td_attributes?) do
-    (RedClothParslet::Parser::Attributes.new.td_attributes >>
-    str(".") >> match("[\t ]")).as(:attributes).maybe
+  rule(:table_content) { RedClothParslet::Parser::Inline.new.table_contents }
+  rule(:td_attributes) do
+    (RedClothParslet::Parser::Attributes.new.td_attributes >> dotspace
+    ).as(:attributes)
   end
-
-  rule(:inline_sp) { match('[ \t]').repeat(1) }
-  
+  rule(:td_attributes?) { td_attributes.maybe }
+  rule(:dotspace) { str(".") >> match("[\t ]").maybe }
 end

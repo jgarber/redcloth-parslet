@@ -11,7 +11,8 @@ class RedClothParslet::Parser::Attributes::ImageUri < RedClothParslet::Parser::A
   rule(:query) { (unsafe.absent? >> uric).repeat }
   
   # Don't allow these in a URI
-  rule(:unsafe) { match('[()]') | terminal_punctuation }
+  # decided to allow parentheses but not at the end
+  rule(:unsafe) { terminal_punctuation | RedClothParslet::Parser::Inline.new.image_alt >> (str('!') | (pchar | match['#/;']).absent?) }
   
   # Greedy punctuation is okay inside a URI, but not at the e
   rule(:terminal_punctuation) { greedy_punctuation >> (str(':') | (pchar | match['#/;']).absent?) }

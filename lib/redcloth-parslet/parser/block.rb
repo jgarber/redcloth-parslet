@@ -4,6 +4,7 @@ class RedClothParslet::Parser::Block < Parslet::Parser
 
   root(:textile_doc)
   rule(:textile_doc) do
+    blank.repeat >>
     block_element.repeat(1)
   end
 
@@ -90,8 +91,9 @@ class RedClothParslet::Parser::Block < Parslet::Parser
   rule(:block_end) { basic_block_end | immediate_li }
   rule(:extended_block_end) { (eof | next_block_start | immediate_li).present? }
   rule(:next_block_start) { match("[a-z]").repeat(1) >> attributes? >> (str('. ') | str('.. ')) }
-  rule(:double_newline) { str("\n") >> (match("[\s\t]").repeat >> str("\n")).repeat(1) }
+  rule(:double_newline) { str("\n") >> blank.repeat(1) }
   rule(:spaces) { match("[\t ]").repeat }
+  rule(:blank) { spaces >> str("\n") }
   rule(:immediate_li) { str("\n") >> (li_start | dt).present? }
 end
 

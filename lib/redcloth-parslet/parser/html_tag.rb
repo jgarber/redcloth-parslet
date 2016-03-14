@@ -43,7 +43,7 @@ module RedClothParslet::Parser
 
     rule(:element) do
       open_tag.as(:open_tag) >>
-      ((close_tag).absent? >> any.as(:s)).repeat.as(:content) >>
+      ((close_tag | RedClothParslet::Parser::Block.new.double_newline).absent? >> any.as(:s)).repeat.as(:content) >>
       close_tag.as(:close_tag)
     end
   end

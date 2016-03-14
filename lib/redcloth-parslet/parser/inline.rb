@@ -34,11 +34,17 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   end
 
   rule(:space_between_terms) do
+    (str("\n") >> is_li).absent?.nunless_excluded(:li_start) >>
+    (str("\n") >> is_dt).absent?.nunless_excluded(:dt_start) >>
+    dd_terminator.absent?.if_excluded(:dt_start) >>
     sp.as(:s) >> term.present?
   end
   
   rule(:list_contents) do
     inline.exclude(:li_start)
+  end  
+  rule(:list_contents_in_dd) do
+    inline.exclude(:li_start).exclude(:dt_start)
   end
   
   rule(:definition_list_contents) do
@@ -46,7 +52,8 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   end
   
   rule(:table_contents) do
-    (inline_element.exclude(:table_cell_start) | inline_sp.as(:s)).repeat(1)
+    (tr_terminator.absent? >> inline_element.exclude(:table_cell_start) | inline_sp.as(:s)).repeat(1) |
+    tr_terminator.present? >> match('[^|]').repeat.as(:s) # I mean, zero length empty
   end
   
   rule(:sovereign_term) do
@@ -142,10 +149,9 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     html_tag.absent? >>
     forced_inline_term.absent? >>
     footnote_reference.absent? >>
-    # is_li.absent? >>
-    # (is_dt | is_dd.nif_excluded(:dt_start)).absent? >>
     is_li.absent?.if_excluded(:li_start) >>
     (is_dt | is_dd).absent?.if_excluded(:dt_start) >>
+    dd_terminator.absent?.if_excluded(:dt_start) >>
     # TODO: make this the same rule as in parser/block/tables.rb so it's DRY.
     str("|").absent?.if_excluded(:table_cell_start) >>
     str(')').absent?.if_excluded(:paren) >>
@@ -175,11 +181,13 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   rule(:html_tag) { RedClothParslet::Parser::HtmlTag.new }
 
   rule(:is_li) { RedClothParslet::Parser::Block.new.li_start }
-  rule(:is_dt) { RedClothParslet::Parser::Block.new.dt_start }
+  rule(:is_dt) { RedClothParslet::Parser::Block.new.definition }
   rule(:is_dd) { RedClothParslet::Parser::Block.new.dd_start }
+  rule(:dd_terminator) { RedClothParslet::Parser::Block.new.dd_end }
+  rule(:tr_terminator) { RedClothParslet::Parser::Block.new.end_table_row }
 
   def maybe_preceded_by_attributes(content_rule)
-    attributes?.as(:attributes) >> str(".").maybe >> inline_sp.maybe >> content_rule |
+    attributes?.as(:attributes) >> (str(".").maybe >> inline_sp).maybe >> content_rule |
     content_rule
   end
 

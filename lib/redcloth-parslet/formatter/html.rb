@@ -37,7 +37,7 @@ module RedClothParslet::Formatter
       :all => /<|>|&|\n|'|"/,
       :pre => /<|>|&|'|"/,
       :tag => /<|>|&/,
-      :attribute => /<|>|&|'|"/
+      :attribute => /<|>|&|"/
     }
 
     def textile_doc(el)
