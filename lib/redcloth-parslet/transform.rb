@@ -60,12 +60,27 @@ class RedClothParslet::Transform < Parslet::Transform
   rule(:list => subtree(:a)) { RedClothParslet::Ast::List.build(a[:content], a[:opts]) }
   rule(:footnote => subtree(:a)) { RedClothParslet::Ast::Footnote.new(a[:content], a[:opts]) }
   rule(:link_alias => subtree(:a)) { link_aliases[String(a[:alias])] = String(a[:href]); nil }
+
+  # tables
+  rule(:thead => subtree(:h), :tfoot => subtree(:f), :tbody => subtree(:b)) {
+    [RedClothParslet::Ast::THead.new(h[:content], h[:opts]), RedClothParslet::Ast::TFoot.new(f[:content], f[:opts]), RedClothParslet::Ast::TBody.new(b)]
+  }
+  rule(:col_width_num => simple(:w)) {} # TODO
+  rule(:col_width => simple(:w)) {}
+  rule(:col_width_num => simple(:w), :attributes => subtree(:a)) {}
+  rule(:col_width => simple(:w), :attributes => subtree(:a)) {}
+  rule(:col_width_num => simple(:w), :attributes => subtree(:a), :content => subtree(:c)) {}
+  rule(:col_width => simple(:w), :attributes => subtree(:a), :content => subtree(:c)) {}
+  rule(:col_data => subtree(:a)) { RedClothParslet::Ast::Col.new([], a) }
+  rule(:colgroup => subtree(:a)) { RedClothParslet::Ast::ColGroup.new(a) }
+
   rule(:table => subtree(:a)) { RedClothParslet::Ast::Table.new(a[:content], a[:opts]) }
   rule(:table_row => subtree(:a)) { RedClothParslet::Ast::TableRow.new(a[:content], a[:opts]) }
-  rule(:table_data => subtree(:a) ) do #, :leading_space => simple(:ls), :trailing_space => simple(:ts)) do
+  rule(:table_data => subtree(:a) ) do
     RedClothParslet::Ast::TableData.new(a[:content], a[:opts])
   end
   rule(:table_header => subtree(:a)) { RedClothParslet::Ast::TableHeader.new(a[:content], a[:opts]) }
+
   rule(:section_break => simple(:s)) { RedClothParslet::Ast::Hr.new }
   rule(:hr => subtree(:a)) { RedClothParslet::Ast::Hr.new(a[:opts]) }
   rule(:br => subtree(:a)) { RedClothParslet::Ast::Br.new(a[:opts]) }

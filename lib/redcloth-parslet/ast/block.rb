@@ -28,6 +28,11 @@ module RedClothParslet::Ast
   class TableRow < Element; end
   class TableData < Element; end
   class TableHeader < Element; end
+  class THead < Element; end
+  class TFoot < Element; end
+  class TBody < Element; end
+  class ColGroup < Element; end
+  class Col < Element; end
 
   class Footnote < Element; end
 

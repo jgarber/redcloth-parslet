@@ -31,7 +31,19 @@ module RedClothParslet::Formatter
       "(R)"=>"&#174;",
       "(r)"=>"&#174;"
     }
-    TYPOGRAPHIC_ESCAPE_MAP = ESCAPE_MAP.merge("'" => "&#8217;")
+    # TYPOGRAPHIC_ESCAPE_MAP = ESCAPE_MAP.merge("'" => "&#8217;")
+    Q_START = %q/([^\p{C}\p{Pe}\p{Z}])/
+    Q_END = %q/([^\p{C}\p{Ps}\p{Z}])/
+    Q_KEEP = %q/([^\p{C}\p{Z}])/
+    Q_BEFORE = %q/(\A|[\p{C}\p{Ps}\p{Po}\p{Z}])/
+    Q_AFTER = %q/(\Z|[\p{C}\p{Pe}\p{Po}\p{Z}])/
+    TYPOGRAPHIC_QUOTES = {
+      /#{Q_BEFORE}#{ESCAPE_MAP['"']}#{Q_START}/ => '&#8220;',
+      /#{Q_END}#{ESCAPE_MAP['"']}#{Q_AFTER}/ => '&#8221;',
+      /#{Q_BEFORE}#{ESCAPE_MAP["'"]}#{Q_START}/ => '&#8216;',
+      /#{Q_END}#{ESCAPE_MAP["'"]}#{Q_AFTER}/ => '&#8217;',
+      /#{Q_KEEP}#{ESCAPE_MAP["'"]}#{Q_KEEP}/ => '&#8217;',
+    }
     CHARS_TO_BE_ESCAPED = {
       # make all quotes escaped for now in order not to mess up testcases
       :all => /<|>|&|\n|'|"/,
@@ -114,6 +126,12 @@ module RedClothParslet::Formatter
     def table(el)
       "<table#{html_attributes(el.opts)}>\n#{inner(el)}</table>"
     end
+    [:t_head, :t_foot, :t_body].each do |m|
+      m_ = m.delete("_")
+      define_method(m) do |el|
+        "\t<#{m_}#{html_attributes(el.opts)}>#{inner(el)}\t</#{m_}>\n"
+      end
+    end
     def table_row(el)
       "\t<tr#{html_attributes(el.opts)}>\n#{inner(el)}\t</tr>\n"
     end
@@ -122,6 +140,12 @@ module RedClothParslet::Formatter
     end
     def table_header(el)
       "\t\t<th#{html_attributes(el.opts)}>#{inner(el)}</th>\n"
+    end
+    def col_group(el)
+      "\t<colgroup#{html_attributes(el.opts, :col)}>\n#{inner(el)}\t</colgroup>\n"
+    end
+    def col(el)
+      "\t\t<col#{html_attributes(el.opts, :col)} />\n"
     end
 
     def double_quoted_phrase(el)
@@ -234,6 +258,7 @@ module RedClothParslet::Formatter
         attr[:style].sort! if options[:sort_attributes]
         attr[:style] = attr[:style].join(";") + ";"
       end
+      attr[:span] = attr.delete(:colspan) if type == :col && attr[:colspan]
       sort_attributes(attr).map {|k,v| v.nil? ? '' : " #{k}=\"#{escape_html(v.to_s, :attribute)}\"" }.join('')
     end
 
@@ -264,8 +289,15 @@ module RedClothParslet::Formatter
 
     def escape_html(str, type = :all)
       type = :all unless CHARS_TO_BE_ESCAPED.keys.include? type
-      escape_map = type == :pre ? ESCAPE_MAP : TYPOGRAPHIC_ESCAPE_MAP
-      str.gsub(CHARS_TO_BE_ESCAPED[type]) {|m| escape_map[m] || m }
+      # escape_map = type == :pre ? ESCAPE_MAP : TYPOGRAPHIC_ESCAPE_MAP
+      estr = str.gsub(CHARS_TO_BE_ESCAPED[type]) {|m| ESCAPE_MAP[m] || m }
+      [:pre, :attribute].include?(type) ? estr : typographic_quotes(estr)
+    end
+
+    def typographic_quotes(str)
+      TYPOGRAPHIC_QUOTES.inject(str) { |result, (pattern, replace)|
+        result.gsub(pattern) { |matched| "#{$1}#{replace}#{$2}" }
+      }
     end
 
   end

@@ -53,7 +53,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
   
   rule(:table_contents) do
     (tr_terminator.absent? >> inline_element.exclude(:table_cell_start) | inline_sp.as(:s)).repeat(1) |
-    tr_terminator.present? >> match('[^|]').repeat.as(:s) # I mean, zero length empty
+    str("|").present? >> match('[^|]').maybe.as(:s) # I mean, zero length empty
   end
   
   rule(:sovereign_term) do

@@ -35,6 +35,13 @@ describe RedClothParslet::Parser::Block do
            ])
     ])]) }
 
+    it { should parse("||||\n|a|||").with(transform).
+         as([table([
+           table_row([table_data([""]), table_data([""]), table_data([""])]),
+           table_row([table_data(["a"]), table_data([""]), table_data([""])])
+         ])])
+    }
+
     describe "table attributes" do
       it { should parse("table{border:1px solid black}.\n|This|is|a|row|").with(transform).
            as([table([
@@ -91,6 +98,19 @@ describe RedClothParslet::Parser::Block do
                table_data([" three "])
              ])
       ])]) }
+    end
+
+    describe "advanced table" do
+      it { should parse("|^.\n|_. First Header |_. Second Header |\n|~.\n|\\2=. A footer, centered & across two columns |\n|-.\n| Content Cell | Content Cell |\n| Content Cell | Content Cell |").with(transform).
+        as([table([
+            t_head([table_row([table_header(["First Header "]), table_header(["Second Header "])])]),
+            t_foot([table_row([table_data(["A footer, centered & across two columns "], {:colspan => '2', :style => {"align" => "center"}})])]),
+            t_body([
+              table_row([table_data([" Content Cell "]), table_data([" Content Cell "])]),
+              table_row([table_data([" Content Cell "]), table_data([" Content Cell "])])
+            ])
+        ])])
+      }
     end
   end
 
