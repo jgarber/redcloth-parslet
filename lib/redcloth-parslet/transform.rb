@@ -62,17 +62,20 @@ class RedClothParslet::Transform < Parslet::Transform
   rule(:link_alias => subtree(:a)) { link_aliases[String(a[:alias])] = String(a[:href]); nil }
 
   # tables
-  rule(:thead => subtree(:h), :tfoot => subtree(:f), :tbody => subtree(:b)) {
-    [RedClothParslet::Ast::THead.new(h[:content], h[:opts]), RedClothParslet::Ast::TFoot.new(f[:content], f[:opts]), RedClothParslet::Ast::TBody.new(b)]
-  }
-  rule(:col_width_num => simple(:w)) {} # TODO
-  rule(:col_width => simple(:w)) {}
-  rule(:col_width_num => simple(:w), :attributes => subtree(:a)) {}
-  rule(:col_width => simple(:w), :attributes => subtree(:a)) {}
-  rule(:col_width_num => simple(:w), :attributes => subtree(:a), :content => subtree(:c)) {}
-  rule(:col_width => simple(:w), :attributes => subtree(:a), :content => subtree(:c)) {}
+  rule(:thead => subtree(:h), :tfoot => subtree(:f), :tbody => subtree(:b)) do
+    # sort to be HTML4-compatible
+    {:THead => h, :TFoot => f, :TBody => b}.inject([]) { |array, (type, s)|
+      ast = lambda {|e| RedClothParslet::Ast::const_get(type).new(e[:content], e[:opts]) }
+      array + (type == :TBody ? s.map{|n| ast[n]} : [ast[s]]) if s && !s.empty?
+    }
+  end
+  rule(:col_width => simple(:w)) {|dict| {:opts => RedClothParslet::Ast::Attributes.new([{:style => "width:#{String(dict[:w])}"}])} }
+  rule(:col_width => simple(:w), :attributes => subtree(:a)) {|dict| {:opts => RedClothParslet::Ast::Attributes.new(dict[:a].push({:style => "width:#{String(dict[:w])}"}))} }
+  rule(:col_width => simple(:w), :content => subtree(:c)) {|dict| {:content => dict[:c], :opts => RedClothParslet::Ast::Attributes.new([{:style => "width:#{String(dict[:w])}"}])} }
+  rule(:col_width => simple(:w), :attributes => subtree(:a), :content => subtree(:c)) {|dict| {:content => dict[:c], :opts => RedClothParslet::Ast::Attributes.new(dict[:a].push({:style => "width:#{String(dict[:w])}"}))} }
   rule(:col_data => subtree(:a)) { RedClothParslet::Ast::Col.new([], a) }
-  rule(:colgroup => subtree(:a)) { RedClothParslet::Ast::ColGroup.new(a) }
+  rule(:colgroup => subtree(:g), :content => subtree(:c)) {|dict| {:content => dict[:c].unshift(RedClothParslet::Ast::ColGroup.new(dict[:g])), :opts => {}} }
+  rule(:colgroup => subtree(:g), :content => subtree(:c), :attributes => subtree(:a)) {|dict| {:content => dict[:c].unshift(RedClothParslet::Ast::ColGroup.new(dict[:g])), :opts => RedClothParslet::Ast::Attributes.new(dict[:a])} }
 
   rule(:table => subtree(:a)) { RedClothParslet::Ast::Table.new(a[:content], a[:opts]) }
   rule(:table_row => subtree(:a)) { RedClothParslet::Ast::TableRow.new(a[:content], a[:opts]) }

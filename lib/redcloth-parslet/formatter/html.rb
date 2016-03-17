@@ -127,7 +127,7 @@ module RedClothParslet::Formatter
       "<table#{html_attributes(el.opts)}>\n#{inner(el)}</table>"
     end
     [:t_head, :t_foot, :t_body].each do |m|
-      m_ = m.delete("_")
+      m_ = m.to_s.delete("_")
       define_method(m) do |el|
         "\t<#{m_}#{html_attributes(el.opts)}>#{inner(el)}\t</#{m_}>\n"
       end
@@ -142,10 +142,10 @@ module RedClothParslet::Formatter
       "\t\t<th#{html_attributes(el.opts)}>#{inner(el)}</th>\n"
     end
     def col_group(el)
-      "\t<colgroup#{html_attributes(el.opts, :col)}>\n#{inner(el)}\t</colgroup>\n"
+      "\t<colgroup#{col_attributes(el.opts)}>\n#{inner(el)}\t</colgroup>\n"
     end
     def col(el)
-      "\t\t<col#{html_attributes(el.opts, :col)} />\n"
+      "\t\t<col#{col_attributes(el.opts)} />\n"
     end
 
     def double_quoted_phrase(el)
@@ -258,8 +258,16 @@ module RedClothParslet::Formatter
         attr[:style].sort! if options[:sort_attributes]
         attr[:style] = attr[:style].join(";") + ";"
       end
-      attr[:span] = attr.delete(:colspan) if type == :col && attr[:colspan]
       sort_attributes(attr).map {|k,v| v.nil? ? '' : " #{k}=\"#{escape_html(v.to_s, :attribute)}\"" }.join('')
+    end
+
+    def col_attributes(attr)
+      if attr[:style]
+        width = attr[:style]['width'].to_s
+        attr[:style]['width'] = "#{width}px" if width =~ /\A\d+\Z/
+      end
+      attr[:span] = attr.delete(:colspan) if attr[:colspan]
+      html_attributes(attr, :col)
     end
 
     def align_attribute(v, type)
