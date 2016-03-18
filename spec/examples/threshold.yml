@@ -356,7 +356,7 @@ html: |-
   </blockquote>
   <p>Back to paragraph text.</p>
 ---
-name: extended block code
+name: extended block code [dubious]
 desc: Extended blocks are useful for displaying longer examples of code that contain blank lines.
 in: |-
   A PHP code example.
@@ -406,7 +406,7 @@ html: |-
   <p class="myclass">Paragraph 2.</p>
   </blockquote>
 ---
-name: extended block code attributes
+name: extended block code attributes [dubious]
 desc: Attributes on bc.. extended blocks will be included on both the inner and outer blocks.
 in: |-
   bc(myclass).. Code block 1.

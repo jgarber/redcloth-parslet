@@ -17,6 +17,12 @@ describe RedClothParslet::Parser::Block do
                html_element("Something inside.", :open_tag => "<div>", :close_tag => "</div>")
         ]) }
       end
+
+      context "partial enclosure" do
+        it { should parse("<div>inside</div> and outside.").with(transform).
+             as([html_element("inside", :open_tag => "<div>", :close_tag => "</div>"), p("and outside.")])
+        }
+      end
     end
 
     describe "pre" do

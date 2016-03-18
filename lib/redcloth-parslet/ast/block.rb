@@ -23,6 +23,8 @@ module RedClothParslet::Ast
 
   class Blockquote < Element; end
   class Blockcode < Element; end
+  class ExtendedBlock < Element; end
+  class RawBlock < Element; end
 
   class Table < Element; end
   class TableRow < Element; end
@@ -45,8 +47,11 @@ module RedClothParslet::Ast
       li_hashes.each do |li|
         if li[:layout] == list_layout
         elsif li[:layout].size < list_layout.size
-          closed_list = list_nesting.pop
-          list_nesting.last.children << closed_list
+          gap = list_layout.size - li[:layout].size
+          gap.times {
+            closed_list = list_nesting.pop
+            list_nesting.last.children << closed_list
+          }
         else
           list_nesting << ((li[:layout].to_s[-1,1] == "*") ? Ul.new : Ol.new)
           if cont = li[:continuation]

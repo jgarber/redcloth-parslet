@@ -45,7 +45,7 @@ module RedClothParslet::Formatter
       /#{Q_KEEP}#{ESCAPE_MAP["'"]}#{Q_KEEP}/ => '&#8217;',
     }
     CHARS_TO_BE_ESCAPED = {
-      # make all quotes escaped for now in order not to mess up testcases
+      # NOTE: Tests conflict about escaping. Need revise.
       :all => /<|>|&|\n|'|"/,
       :pre => /<|>|&|'|"/,
       :tag => /<|>|&/,
@@ -72,10 +72,19 @@ module RedClothParslet::Formatter
       "<p#{html_attributes(el.opts)}>#{inner}</p>"
     end
 
-    [:blockquote, :dl].each do |m|
-      define_method(m) do |el|
-        "<#{m}#{html_attributes(el.opts)}>\n#{inner(el, true)}</#{m}>"
-      end
+    def blockquote(el)
+      el.children.each { |ch|
+        ch.opts = ch.opts.merge(el.opts.reject{|op, v| [:cite, :lang].include? op })
+      }
+      "<blockquote#{html_attributes(el.opts)}>\n#{inner(el, true)}</blockquote>"
+    end
+
+    def raw_block(el)
+      inner(el)
+    end
+
+    def dl(el)
+      "<dl#{html_attributes(el.opts)}>\n#{inner(el, true)}</dl>"
     end
 
     [:ul, :ol].each do |m|
@@ -186,7 +195,12 @@ module RedClothParslet::Formatter
     end
 
     def blockcode(el)
-      "<pre#{html_attributes(el.opts)}><code>#{escape_html(el.to_s, :pre)}</code></pre>"
+      "<pre#{html_attributes(el.opts)}><code#{html_attributes(el.opts)}>#{escape_html(el.to_s, :pre)}</code></pre>"
+    end
+
+    def extended_block(el)
+      el.children.each { |ch| ch.opts = ch.opts.merge(el.opts) }
+      inner(el, true).chomp # because it doesn't have the end tag
     end
 
     def notextile(el)
@@ -248,7 +262,7 @@ module RedClothParslet::Formatter
         attr[:style] = attr[:style].map do |k,v|
           case k
           when /padding/
-            "#{k}:#{v}em"
+            /\A\d+\Z/ =~ v.to_s ? "#{k}:#{v}em" : "#{k}:#{v}"
           when 'align'
             align_attribute(v, type)
           else
