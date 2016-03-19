@@ -1,6 +1,5 @@
 class RedClothParslet::Parser::Block < Parslet::Parser
   include RedClothParslet::Parser::Common
-  require 'pry-byebug'
 
   root(:textile_doc)
   rule(:textile_doc) do
