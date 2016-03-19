@@ -95,7 +95,7 @@ class RedClothParslet::Parser::Block < Parslet::Parser
   rule(:eof) { str("\n").repeat >> any.absent? }
   rule(:basic_block_end) { eof | double_newline }
   rule(:block_end) { basic_block_end | immediate_li }
-  rule(:extended_block_end) { blank.repeat >> (eof | next_block_start | immediate_li).present? }
+  rule(:extended_block_end) { blank.repeat >> (eof | next_block_start | li_start | dt).present? }
   rule(:next_block_start) { match("[a-z]").repeat(1) >> attributes? >> (str('. ') | str('.. ')) }
   rule(:double_newline) { str("\n") >> blank.repeat(1) }
   rule(:spaces) { match("[\t ]").repeat }

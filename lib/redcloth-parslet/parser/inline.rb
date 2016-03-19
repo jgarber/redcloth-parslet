@@ -37,7 +37,7 @@ class RedClothParslet::Parser::Inline < Parslet::Parser
     (str("\n") >> is_li).absent?.nunless_excluded(:li_start) >>
     (str("\n") >> is_dt).absent?.nunless_excluded(:dt_start) >>
     dd_terminator.absent?.if_excluded(:dt_start) >>
-    sp.as(:s) >> term.present?
+    (sp >> inline_sp?).as(:s) >> term.present?
   end
   
   rule(:list_contents) do

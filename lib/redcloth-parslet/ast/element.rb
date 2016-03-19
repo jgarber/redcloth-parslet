@@ -37,10 +37,16 @@ module RedClothParslet::Ast
     # Is this what's supposed to be???
     def [](symbol)
       case symbol
-      when :content
-        children
-      else opts[symbol]
-      end
+      when :content; @children
+      when :opts;        @opts
+      else @opts[symbol];  end
+    end
+
+    def []=(symbol, value)
+      case symbol
+      when :content; @children = value
+      when :opts;        @opts = value
+      else @opts[symbol] = value;  end
     end
   end
 end
