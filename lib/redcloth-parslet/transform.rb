@@ -4,24 +4,32 @@ class RedClothParslet::Transform < Parslet::Transform
   rule(:s => simple(:s), :footnote_reference => simple(:footnote_reference)) { [String(s), RedClothParslet::Ast::FootnoteReference.new(String(footnote_reference))] }
   rule(:caps => simple(:s)) { RedClothParslet::Ast::Caps.new(String(s)) }
   rule(:attributes => subtree(:a)) {|dict| {:opts => RedClothParslet::Ast::Attributes.new(dict[:a])} }
+  rule(:attributes => subtree(:a), :s => simple(:s)) {|dict| {:opts => RedClothParslet::Ast::Attributes.new(dict[:a]), :content => String(dict[:s])} }
 
   # content
   rule(:content => subtree(:c)) {|dict| {:content => dict[:c], :opts => {}} }
   rule(:content => subtree(:c), :attributes => subtree(:a)) {|dict| {:content => dict[:c], :opts => RedClothParslet::Ast::Attributes.new(dict[:a])} }
 
   # links
-  rule(:content => subtree(:c), :href => simple(:h)) {|dict| {:content => dict[:c], :opts => RedClothParslet::Ast::Attributes.new({:href => dict[:h]})} }
+  # rule(:content => subtree(:c), :href => simple(:h)) {|dict| {:content => dict[:c], :opts => RedClothParslet::Ast::Attributes.new({:href => dict[:h]})} }
   rule(:content => subtree(:c), :attributes => subtree(:a), :href => simple(:h)) {|dict| {:content => dict[:c], :opts => RedClothParslet::Ast::Attributes.new(dict[:a].push({:href => dict[:h]}))} }
+  # rule(:content => subtree(:c), :bq_cite => simple(:h)) {|dict| {:content => dict[:c], :opts => RedClothParslet::Ast::Attributes.new({:cite => dict[:h]})} }
+  rule(:content => subtree(:c), :attributes => subtree(:a), :bq_cite => simple(:h)) {|dict| {:content => dict[:c], :opts => RedClothParslet::Ast::Attributes.new(dict[:a].push({:cite => dict[:h]}))} }
   rule(:content => subtree(:c), :attributes => subtree(:a), :href => simple(:h), :title => simple(:t)) {|dict| {:content => dict[:c], :opts => RedClothParslet::Ast::Attributes.new(dict[:a].push({:href => dict[:h], :title => String(dict[:t])}))} }
 
   # images
-  rule(:attributes => subtree(:a), :src => simple(:s)) {|dict| {:opts => RedClothParslet::Ast::Attributes.new(dict[:a].push({:src => dict[:s]}))} }
+  # Making the @alt@ property obligatory
+  rule(:attributes => subtree(:a), :src => simple(:s)) {|dict| {:opts => RedClothParslet::Ast::Attributes.new(dict[:a].push({:src => dict[:s], :alt => dict[:alt]}))} }
   rule(:attributes => subtree(:a), :src => simple(:s), :alt => simple(:alt)) {|dict| {:opts => RedClothParslet::Ast::Attributes.new(dict[:a].push({:src => dict[:s], :alt => dict[:alt]}))} }
   rule(:attributes => subtree(:a), :src => subtree(:s), :href => simple(:h)) {|dict| {:opts => RedClothParslet::Ast::Attributes.new(dict[:a].push({:src => dict[:s], :alt => dict[:alt], :href => dict[:h]}))} }
+  rule(:attributes => subtree(:a), :src => subtree(:s), :alt => simple(:alt), :href => simple(:h)) {|dict| {:opts => RedClothParslet::Ast::Attributes.new(dict[:a].push({:src => dict[:s], :alt => dict[:alt], :href => dict[:h]}))} }
 
   # lists
   rule(:layout => simple(:l), :continuation => simple(:cont), :attributes => subtree(:a), :content => subtree(:c)) {|dict|
     {:layout => dict[:l], :continuation => dict[:cont], :content => dict[:c], :opts => RedClothParslet::Ast::Attributes.new(dict[:a])}
+  }
+  rule(:layout => simple(:l), :attributes => subtree(:a), :content => subtree(:c)) {|dict|
+    {:layout => dict[:l], :content => dict[:c], :opts => RedClothParslet::Ast::Attributes.new(dict[:a])}
   }
   rule(:dl => subtree(:c)) { RedClothParslet::Ast::Dl.new(c) }
   rule(:dt => subtree(:dt), :dd => subtree(:dd)) do
@@ -31,7 +39,7 @@ class RedClothParslet::Transform < Parslet::Transform
   rule(:dt => subtree(:dt)) { RedClothParslet::Ast::Dt.new(dt[:content]) }
   rule(:dd => subtree(:dd)) { RedClothParslet::Ast::Dd.new(dd[:content]) }
 
-  rule(:extended => subtree(:ext)) { ext[:successive].unshift(ext[:first]) }
+  rule(:extended => subtree(:ext)) { RedClothParslet::Ast::ExtendedBlock.new(ext[:content], ext[:opts]) }
   RedClothParslet::Parser::Block::SIMPLE_BLOCK_ELEMENTS.each do |block_type|
     rule(block_type => subtree(:a)) do
       RedClothParslet::Ast::const_get(block_type.to_s.capitalize).new(a[:content], a[:opts])
@@ -53,16 +61,35 @@ class RedClothParslet::Transform < Parslet::Transform
     )
   end
   rule(:bq => subtree(:a)) { RedClothParslet::Ast::Blockquote.new(a[:content], a[:opts]) }
-  rule(:bc => simple(:c)) { RedClothParslet::Ast::Blockcode.new(c) }
+  rule(:bc => subtree(:c)) { RedClothParslet::Ast::Blockcode.new(c[:content], c[:opts]) }
   rule(:list => subtree(:a)) { RedClothParslet::Ast::List.build(a[:content], a[:opts]) }
   rule(:footnote => subtree(:a)) { RedClothParslet::Ast::Footnote.new(a[:content], a[:opts]) }
   rule(:link_alias => subtree(:a)) { link_aliases[String(a[:alias])] = String(a[:href]); nil }
+  rule(:raw_block => subtree(:a)) { RedClothParslet::Ast::RawBlock.new(a[:content]) }
+
+  # tables
+  rule(:thead => subtree(:h), :tfoot => subtree(:f), :tbody => subtree(:b)) do
+    # sort to be HTML4-compatible
+    [[:THead, h], [:TFoot, f], [:TBody, b]].inject([]) { |array, (type, s)|
+      ast = lambda {|e| RedClothParslet::Ast::const_get(type).new(e[:content], e[:opts]) }
+      array + (type == :TBody ? s.map{|n| ast[n]} : [ast[s]]) if s && !s.empty?
+    }
+  end
+  # rule(:col_width => simple(:w)) {|dict| {:opts => RedClothParslet::Ast::Attributes.new([{:style => "width:#{String(dict[:w])}"}])} }
+  rule(:col_width => simple(:w), :attributes => subtree(:a)) {|dict| {:opts => RedClothParslet::Ast::Attributes.new(dict[:a].push({:style => "width:#{String(dict[:w])}"}))} }
+  # rule(:col_width => simple(:w), :content => subtree(:c)) {|dict| {:content => dict[:c], :opts => RedClothParslet::Ast::Attributes.new([{:style => "width:#{String(dict[:w])}"}])} }
+  rule(:col_width => simple(:w), :attributes => subtree(:a), :content => subtree(:c)) {|dict| {:content => dict[:c], :opts => RedClothParslet::Ast::Attributes.new(dict[:a].push({:style => "width:#{String(dict[:w])}"}))} }
+  rule(:col_data => subtree(:a)) { RedClothParslet::Ast::Col.new([], a) }
+  # rule(:colgroup => subtree(:g), :content => subtree(:c)) {|dict| {:content => dict[:c].unshift(RedClothParslet::Ast::ColGroup.new(dict[:g])), :opts => {}} }
+  rule(:colgroup => subtree(:g), :content => subtree(:c), :attributes => subtree(:a)) {|dict| {:content => dict[:c].unshift(RedClothParslet::Ast::ColGroup.new(dict[:g])), :opts => RedClothParslet::Ast::Attributes.new(dict[:a])} }
+
   rule(:table => subtree(:a)) { RedClothParslet::Ast::Table.new(a[:content], a[:opts]) }
   rule(:table_row => subtree(:a)) { RedClothParslet::Ast::TableRow.new(a[:content], a[:opts]) }
-  rule(:table_data => subtree(:a) ) do #, :leading_space => simple(:ls), :trailing_space => simple(:ts)) do
+  rule(:table_data => subtree(:a) ) do
     RedClothParslet::Ast::TableData.new(a[:content], a[:opts])
   end
   rule(:table_header => subtree(:a)) { RedClothParslet::Ast::TableHeader.new(a[:content], a[:opts]) }
+
   rule(:section_break => simple(:s)) { RedClothParslet::Ast::Hr.new }
   rule(:hr => subtree(:a)) { RedClothParslet::Ast::Hr.new(a[:opts]) }
   rule(:br => subtree(:a)) { RedClothParslet::Ast::Br.new(a[:opts]) }
@@ -77,7 +104,8 @@ class RedClothParslet::Transform < Parslet::Transform
   rule(:forced_quote => subtree(:q)) { ['[', q, ']'] }
   rule(:parentheses => subtree(:a)) { ['(', a[:content], ')'] }
   rule(:image => subtree(:a)) do
-    if href = a[:opts].delete(:href)
+    if href = a[:opts][:href]
+      a[:opts] = a[:opts].reject{|k,v| k == :href}
       RedClothParslet::Ast::Link.new(RedClothParslet::Ast::Img.new([], a[:opts]), {:href => href})
     else
       RedClothParslet::Ast::Img.new([], a[:opts])

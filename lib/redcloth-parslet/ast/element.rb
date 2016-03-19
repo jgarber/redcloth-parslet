@@ -33,5 +33,20 @@ module RedClothParslet::Ast
       children == other.children &&
       opts == other.opts
     end
+
+    # Is this what's supposed to be???
+    def [](symbol)
+      case symbol
+      when :content; @children
+      when :opts;        @opts
+      else @opts[symbol];  end
+    end
+
+    def []=(symbol, value)
+      case symbol
+      when :content; @children = value
+      when :opts;        @opts = value
+      else @opts[symbol] = value;  end
+    end
   end
 end

@@ -31,10 +31,23 @@ module RedClothParslet::Formatter
       "(R)"=>"&#174;",
       "(r)"=>"&#174;"
     }
-    TYPOGRAPHIC_ESCAPE_MAP = ESCAPE_MAP.merge("'" => "&#8217;")
+    # TYPOGRAPHIC_ESCAPE_MAP = ESCAPE_MAP.merge("'" => "&#8217;")
+    Q_START = %q/([^\p{C}\p{Pe}\p{Z}])/
+    Q_END = %q/([^\p{C}\p{Ps}\p{Z}])/
+    Q_KEEP = %q/([^\p{C}\p{Z}])/
+    Q_BEFORE = %q/(\A|[\p{C}\p{Ps}\p{Po}\p{Z}])/
+    Q_AFTER = %q/(\Z|[\p{C}\p{Pe}\p{Po}\p{Z}])/
+    TYPOGRAPHIC_QUOTES = {
+      /#{Q_BEFORE}#{ESCAPE_MAP['"']}#{Q_START}/ => '&#8220;',
+      /#{Q_END}#{ESCAPE_MAP['"']}#{Q_AFTER}/ => '&#8221;',
+      /#{Q_BEFORE}#{ESCAPE_MAP["'"]}#{Q_START}/ => '&#8216;',
+      /#{Q_END}#{ESCAPE_MAP["'"]}#{Q_AFTER}/ => '&#8217;',
+      /#{Q_KEEP}#{ESCAPE_MAP["'"]}#{Q_KEEP}/ => '&#8217;',
+    }
     CHARS_TO_BE_ESCAPED = {
-      :all => /<|>|&|\n|'/,
-      :pre => /<|>|&|'/,
+      # NOTE: Tests conflict about escaping. Need revise.
+      :all => /<|>|&|\n|'|"/,
+      :pre => /<|>|&|'|"/,
       :tag => /<|>|&/,
       :attribute => /<|>|&|"/
     }
@@ -54,15 +67,24 @@ module RedClothParslet::Formatter
       inner = inner(el)
       # Curlify multi-paragraph quote (one that doesn't have a closing quotation mark)
       if el.opts.delete(:possible_unfinished_quote_paragraph)
-        inner.sub!(/\A#{ESCAPE_MAP['"']}/, "&#8220;")
+        inner.sub!(/\A(?:"|#{ESCAPE_MAP['"']})/, "&#8220;")
       end
       "<p#{html_attributes(el.opts)}>#{inner}</p>"
     end
 
-    [:blockquote, :dl].each do |m|
-      define_method(m) do |el|
-        "<#{m}#{html_attributes(el.opts)}>\n#{inner(el, true)}</#{m}>"
-      end
+    def blockquote(el)
+      el.children.each { |ch|
+        ch.opts = ch.opts.merge(el.opts.reject{|op, v| [:cite, :lang].include? op })
+      }
+      "<blockquote#{html_attributes(el.opts)}>\n#{inner(el, true)}</blockquote>"
+    end
+
+    def raw_block(el)
+      inner(el)
+    end
+
+    def dl(el)
+      "<dl#{html_attributes(el.opts)}>\n#{inner(el, true)}</dl>"
     end
 
     [:ul, :ol].each do |m|
@@ -113,6 +135,12 @@ module RedClothParslet::Formatter
     def table(el)
       "<table#{html_attributes(el.opts)}>\n#{inner(el)}</table>"
     end
+    [:t_head, :t_foot, :t_body].each do |m|
+      m_ = m.to_s.delete("_")
+      define_method(m) do |el|
+        "\t<#{m_}#{html_attributes(el.opts)}>#{inner(el)}\t</#{m_}>\n"
+      end
+    end
     def table_row(el)
       "\t<tr#{html_attributes(el.opts)}>\n#{inner(el)}\t</tr>\n"
     end
@@ -121,6 +149,12 @@ module RedClothParslet::Formatter
     end
     def table_header(el)
       "\t\t<th#{html_attributes(el.opts)}>#{inner(el)}</th>\n"
+    end
+    def col_group(el)
+      "\t<colgroup#{col_attributes(el.opts)}>\n#{inner(el)}\t</colgroup>\n"
+    end
+    def col(el)
+      "\t\t<col#{col_attributes(el.opts)} />\n"
     end
 
     def double_quoted_phrase(el)
@@ -161,7 +195,12 @@ module RedClothParslet::Formatter
     end
 
     def blockcode(el)
-      "<pre#{html_attributes(el.opts)}><code>#{escape_html(el.to_s, :pre)}</code></pre>"
+      "<pre#{html_attributes(el.opts)}><code#{html_attributes(el.opts)}>#{escape_html(el.to_s, :pre)}</code></pre>"
+    end
+
+    def extended_block(el)
+      el.children.each { |ch| ch.opts = ch.opts.merge(el.opts) }
+      inner(el, true).chomp # because it doesn't have the end tag
     end
 
     def notextile(el)
@@ -223,7 +262,7 @@ module RedClothParslet::Formatter
         attr[:style] = attr[:style].map do |k,v|
           case k
           when /padding/
-            "#{k}:#{v}em"
+            /\A\d+\Z/ =~ v.to_s ? "#{k}:#{v}em" : "#{k}:#{v}"
           when 'align'
             align_attribute(v, type)
           else
@@ -234,6 +273,15 @@ module RedClothParslet::Formatter
         attr[:style] = attr[:style].join(";") + ";"
       end
       sort_attributes(attr).map {|k,v| v.nil? ? '' : " #{k}=\"#{escape_html(v.to_s, :attribute)}\"" }.join('')
+    end
+
+    def col_attributes(attr)
+      if attr[:style]
+        width = attr[:style]['width'].to_s
+        attr[:style]['width'] = "#{width}px" if width =~ /\A\d+\Z/
+      end
+      attr[:span] = attr.delete(:colspan) if attr[:colspan]
+      html_attributes(attr, :col)
     end
 
     def align_attribute(v, type)
@@ -263,8 +311,15 @@ module RedClothParslet::Formatter
 
     def escape_html(str, type = :all)
       type = :all unless CHARS_TO_BE_ESCAPED.keys.include? type
-      escape_map = type == :pre ? ESCAPE_MAP : TYPOGRAPHIC_ESCAPE_MAP
-      str.gsub(CHARS_TO_BE_ESCAPED[type]) {|m| escape_map[m] || m }
+      # escape_map = type == :pre ? ESCAPE_MAP : TYPOGRAPHIC_ESCAPE_MAP
+      estr = str.gsub(CHARS_TO_BE_ESCAPED[type]) {|m| ESCAPE_MAP[m] || m }
+      [:pre, :attribute].include?(type) ? estr : typographic_quotes(estr)
+    end
+
+    def typographic_quotes(str)
+      TYPOGRAPHIC_QUOTES.inject(str) { |result, (pattern, replace)|
+        result.gsub(pattern) { |matched| "#{$1}#{replace}#{$2}" }
+      }
     end
 
   end

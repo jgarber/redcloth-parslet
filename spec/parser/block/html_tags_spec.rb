@@ -17,6 +17,12 @@ describe RedClothParslet::Parser::Block do
                html_element("Something inside.", :open_tag => "<div>", :close_tag => "</div>")
         ]) }
       end
+
+      context "partial enclosure" do
+        it { should parse("<div>inside</div> and outside.").with(transform).
+             as([html_element("inside", :open_tag => "<div>", :close_tag => "</div>"), p("and outside.")])
+        }
+      end
     end
 
     describe "pre" do
@@ -36,6 +42,13 @@ describe RedClothParslet::Parser::Block do
     describe "unknown tag is a block tag by default" do
       it { should parse(%Q{<abc def="a=1&b=2">}).with(transform).
            as(html_tag(%Q{<abc def="a=1&b=2">})) }
+    end
+
+    describe "unclosed html tags" do
+      it { should parse("<notextile>\n# *test*").with(transform).
+           as([ p(html_tag("<notextile>")), ol([li([strong("test")])]) ]) }
+      it { should parse("<script>\nfunction main(){}").with(transform).
+           as(html_element("function main(){}", :open_tag => '<script>', :close_tag => '')) }
     end
   end
 end

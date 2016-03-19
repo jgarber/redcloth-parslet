@@ -22,7 +22,7 @@ module RedClothParslet::Ast
           when :style
             String(v).split(';').each do |declaration|
               property_name, value = declaration.split(':')
-              style[property_name] = value
+              style[property_name.strip] = value.rstrip
             end
           else
             self[k] = String(v)

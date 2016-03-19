@@ -16,4 +16,7 @@ class RedClothParslet::Parser::Attributes::LinkUri < RedClothParslet::Parser::At
   rule(:safe_uric) { (unsafe.absent? >> uric) }
   rule(:parenthesized__uric) { str("(") >> safe_uric.repeat >> str(")") }
   
+  # TODO: copied; seek to reconcile with ImageUri
+  rule(:terminal_punctuation) { greedy_punctuation >> (str(':') | (pchar | match['#/;']).absent?) }
+  rule(:greedy_punctuation) { match('[;!.",]').repeat }
 end

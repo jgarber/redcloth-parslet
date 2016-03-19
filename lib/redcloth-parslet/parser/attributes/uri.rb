@@ -152,7 +152,7 @@ class RedClothParslet::Parser::Attributes::Uri < Parslet::Parser
   # mark          = "-" | "_" | "." | "!" | "~" | "*" | "'" |
   #                 "(" | ")"
   # unreserved    = alphanum | mark
-  rule(:unreserved) { match('[-_.!~*''()a-zA-Z\d]') }
+  rule(:unreserved) { match('[-_.!~*\'()a-zA-Z\d]') }
   
   # escaped       = "%" hex hex
   rule(:escaped) { str('%') >> hex >> hex }

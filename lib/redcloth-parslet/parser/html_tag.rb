@@ -1,5 +1,5 @@
 module RedClothParslet::Parser
-  INLINE_TAGS = %w(a applet basefont bdo br font iframe img map object param embed q script span sub sup abbr acronym cite code del dfn em ins kbd samp strong var b big i s small strike tt u)
+  INLINE_TAGS = %w(a applet basefont bdo br font iframe img map object param embed q script span sub sup abbr acronym cite code del dfn em ins kbd samp strong var b big i s small strike tt u notextile)
 
   class HtmlTag < Parslet::Parser
     root(:tag)
@@ -43,7 +43,7 @@ module RedClothParslet::Parser
 
     rule(:element) do
       open_tag.as(:open_tag) >>
-      ((close_tag).absent? >> any.as(:s)).repeat.as(:content) >>
+      ((close_tag | RedClothParslet::Parser::Block.new.double_newline).absent? >> any.as(:s)).repeat.as(:content) >>
       close_tag.as(:close_tag)
     end
   end
@@ -64,8 +64,18 @@ module RedClothParslet::Parser
     root(:element)
   end
 
+  class BrTag < HtmlTag
+    rule(:tag_name) { str("br") }
+    rule(:self_closing_tag) { str("<") >> tag_name >> attributes? >> (spaces? >> str("/")) >> str(">") >> spaces? >> str("\n").maybe }
+    rule(:open_tag) { str("<") >> tag_name >> attributes? >> str(">") >> spaces? >> str("\n").maybe }
+  end
+
   class CodeElement < HtmlTag
     root(:element)
+    rule(:tag_name) { str("code") }
+  end
+
+  class CodeTag < HtmlTag
     rule(:tag_name) { str("code") }
   end
 
@@ -74,7 +84,7 @@ module RedClothParslet::Parser
 
     rule(:tag) do
       (open_tag.as(:open_tag) >>
-      ((close_tag).absent? >> (CodeElement.new.as(:code_element) | any.as(:s))).repeat.as(:content) >>
+      ((close_tag).absent? >> (CodeElement.new.as(:code_element) | CodeTag.new | any.as(:s))).repeat.as(:content) >>
       close_tag.as(:close_tag)).as(:pre_element)
     end
   end

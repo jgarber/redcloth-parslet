@@ -62,6 +62,10 @@ describe RedClothParslet::Parser::Block do
 
     it { should parse("- hangover := the wrath of grapes\n- raisin := a grape with a sunburn").with(transform).
          as(dl( dt("hangover"), dd("the wrath of grapes"), dt("raisin"), dd("a grape with a sunburn") )) }
+    it { should parse("here is a long definition\n\n- some term := \n*sweet*\n\nyes\n\nok =:\n- regular term := no").with(transform).
+         as([p("here is a long definition"), dl([ dt("some term"), dd([ p(strong("sweet")), p("yes"), p("ok") ]), dt("regular term"), dd("no") ])]) }
+    it { should parse("- textile\n- fabric\n- cloth").with(transform).
+         as([p("- textile\n- fabric\n- cloth") ]) }
 
     describe "inline content" do
       its(:definition_list_content) { should parse("gossip") }

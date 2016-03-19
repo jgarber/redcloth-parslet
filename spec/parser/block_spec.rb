@@ -46,16 +46,19 @@ describe RedClothParslet::Parser::Block do
 
   describe "extended blocks" do
     it { should parse("p.. This is a paragraph.\n\nAnd so is this.").with(transform).
-         as([p("This is a paragraph."), p("And so is this.")]) }
+         as(extended_block([p("This is a paragraph."), p("And so is this.")])) }
 
     it { should parse("div.. This is a div.\n\nAnd so is this.\n\np. Return to paragraph.").with(transform).
-         as([div("This is a div."), div("And so is this."), p("Return to paragraph.")]) }
+         as([extended_block([div("This is a div."), div("And so is this.")]), p("Return to paragraph.")]) }
 
     it { should parse("bq.. This is a paragraph in a blockquote.\n\nAnd so is this.").with(transform).
          as(blockquote(
            p("This is a paragraph in a blockquote."),
            p("And so is this.")
     )) }
+    it { should parse("bc.. This is a paragraph in a blockcode.\n\nAnd so is this.\n\n").with(transform).
+         as(blockcode("This is a paragraph in a blockcode.\n\nAnd so is this."))
+    }
     %w(div notextile pre p).each do |block_type|
       its(:next_block_start) { should parse("#{block_type}. ") }
       its(:next_block_start) { should parse("#{block_type}.. ") }
@@ -65,10 +68,11 @@ describe RedClothParslet::Parser::Block do
          as(notextile("Don't touch this!\n\nOr this!")) }
   end
 
-  describe "list start in a paragraph" do
-    it { should parse("Two for the price of one!\n* Offer not valid in Alaska").with(transform).
-         as(p("Two for the price of one!\n* Offer not valid in Alaska")) }
-  end
+  # This doesn't seem to make sense...
+  # describe "list start in a paragraph [obsolete]" do
+  #   it { should parse("Two for the price of one!\n* Offer not valid in Alaska").with(transform).
+  #        as(p("Two for the price of one!\n* Offer not valid in Alaska")) }
+  # end
 
   describe "Block quote" do
     it { should parse("bq. Injustice anywhere is a threat to justice everywhere.").with(transform).
